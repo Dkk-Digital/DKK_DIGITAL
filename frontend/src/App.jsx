@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Analytics } from '@vercel/analytics/react';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -90,6 +91,7 @@ function App() {
         <AuthProvider>
           <AppRoutes />
           <Toaster position="bottom-right" />
+          <Analytics />
         </AuthProvider>
       </Router>
     </ThemeProvider>
