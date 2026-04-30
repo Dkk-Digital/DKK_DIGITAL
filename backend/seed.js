@@ -167,7 +167,7 @@ const seedDatabase = async () => {
         title: 'Understanding Web Design Trends 2024',
         content: '<h2>Introduction</h2><p>Web design trends change rapidly. Let\'s explore what\'s trending in 2024.</p><h2>Minimalist Design</h2><p>Less is more. Clean, minimalist designs are becoming increasingly popular.</p><h2>Dark Mode</h2><p>Dark mode options are now expected on modern websites.</p>',
         excerpt: 'Explore the latest web design trends that are shaping the internet in 2024.',
-        category: 'Web Design',
+        category: 'Trends',
         tags: ['Web Design', 'Trends', 'UI/UX'],
         author: admin._id,
         published: true,

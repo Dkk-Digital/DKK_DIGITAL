@@ -84,6 +84,8 @@ Key variables:
 - `MONGODB_URI` - MongoDB connection string
 - `JWT_SECRET` - Secret key for JWT signing
 - `PORT` - Server port (default: 5000)
+- `SMTP_USER` / `SMTP_PASS` - Gmail account and app password used to send contact emails
+- `OWNER_EMAIL` - Optional inbox that receives inquiry notifications
 
 ## Database Models
 

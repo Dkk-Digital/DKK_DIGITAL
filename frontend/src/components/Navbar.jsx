@@ -12,12 +12,26 @@ const StyledToolbar = styled(Toolbar)({
 });
 
 const LogoText = styled(RouterLink)({
-  fontSize: '24px',
-  fontWeight: 700,
-  color: '#1976d2',
-  textDecoration: 'none',
   display: 'flex',
   alignItems: 'center',
+  textDecoration: 'none',
+  gap: '10px',
+});
+
+const LogoImage = styled('img')({
+  height: '44px',
+  width: 'auto',
+  display: 'block',
+});
+
+const BrandText = styled('span')({
+  fontSize: '22px',
+  fontWeight: 700,
+  whiteSpace: 'nowrap',
+  background: 'linear-gradient(90deg, #1976d2, #0ea5e9)',
+  WebkitBackgroundClip: 'text',
+  backgroundClip: 'text',
+  color: 'transparent',
 });
 
 const NavButton = styled(Button)({
@@ -50,10 +64,22 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#ffffff', color: '#333' }}>
+    <AppBar
+      position="sticky"
+      sx={{
+        backgroundColor: 'transparent',
+        color: '#333',
+        boxShadow: 'none',
+        backdropFilter: 'blur(6px)',
+        borderBottom: '1px solid rgba(16,24,40,0.04)'
+      }}
+    >
       <Container maxWidth="lg">
         <StyledToolbar>
-          <LogoText to="/">DKK Digital</LogoText>
+          <LogoText to="/" aria-label="DKK Digital home">
+            <LogoImage src="/logo.png" alt="DKK Digital logo" />
+            <BrandText className="brand-gradient">DKK Digital</BrandText>
+          </LogoText>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <NavButton component={RouterLink} to="/">
               Home
@@ -73,10 +99,7 @@ const Navbar = () => {
 
             {isAuthenticated ? (
               <>
-                <Button
-                  onClick={handleMenuOpen}
-                  sx={{ textTransform: 'capitalize', color: '#333', ml: 2 }}
-                >
+                <Button onClick={handleMenuOpen} sx={{ textTransform: 'capitalize', color: '#333', ml: 2 }}>
                   {user?.name}
                 </Button>
                 <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
@@ -98,14 +121,15 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <NavButton component={RouterLink} to="/login" sx={{ color: '#1976d2' }}>
+                <NavButton component={RouterLink} to="/login" sx={{ color: 'var(--primary)' }}>
                   Login
                 </NavButton>
                 <NavButton
                   component={RouterLink}
                   to="/register"
                   variant="contained"
-                  sx={{ backgroundColor: '#1976d2', color: '#fff', ml: 1 }}
+                  className="btn-gradient"
+                  sx={{ ml: 1 }}
                 >
                   Register
                 </NavButton>

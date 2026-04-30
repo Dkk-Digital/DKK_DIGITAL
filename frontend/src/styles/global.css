@@ -1,0 +1,52 @@
+:root{
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --primary: #1976d2;
+  --accent: #7c4dff;
+  --muted: #666666;
+  --card-shadow: 0 10px 30px rgba(16,24,40,0.06);
+  --glass: rgba(255,255,255,0.6);
+  --radius: 12px;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: linear-gradient(180deg,#fbfdff 0%, #f7fbff 100%);
+  color: var(--muted);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.app-container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+.hero{
+  background: linear-gradient(135deg, rgba(25,118,210,0.06), rgba(124,77,255,0.04));
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
+
+.btn-gradient{
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(25,118,210,0.12);
+}
+
+.brand-gradient{
+  background: linear-gradient(90deg,var(--primary),#0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card-elevated{border-radius:var(--radius);box-shadow:var(--card-shadow)}
+
+@keyframes floatUp {
+  from{transform:translateY(0)}
+  to{transform:translateY(-6px)}
+}
+.float:hover{animation:floatUp .4s ease forwards}
+
+/* Utils */
+.muted{color:var(--muted)}

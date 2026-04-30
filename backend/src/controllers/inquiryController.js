@@ -1,4 +1,5 @@
 import Inquiry from '../models/Inquiry.js';
+import { sendEmail } from '../utils/mailer.js';
 
 export const createInquiry = async (req, res) => {
   try {
@@ -16,6 +17,52 @@ export const createInquiry = async (req, res) => {
       message,
       serviceInterest,
     });
+
+    const ownerEmail = process.env.OWNER_EMAIL || process.env.SMTP_USER;
+    const brandName = 'DKK Digital';
+
+    const clientEmailSubject = `We received your message - ${brandName}`;
+    const clientEmailHtml = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+        <h2 style="color: #1976d2;">Thanks for contacting ${brandName}</h2>
+        <p>Hi ${name},</p>
+        <p>We received your message and our team will get back to you soon.</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong><br />${message.replace(/\n/g, '<br />')}</p>
+        ${serviceInterest ? `<p><strong>Service Interest:</strong> ${serviceInterest}</p>` : ''}
+        ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+        <p>Regards,<br />${brandName} Team</p>
+      </div>
+    `;
+
+    const ownerEmailSubject = `New contact inquiry from ${name}`;
+    const ownerEmailHtml = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #222;">
+        <h2 style="color: #1976d2;">New contact inquiry</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+        ${serviceInterest ? `<p><strong>Service Interest:</strong> ${serviceInterest}</p>` : ''}
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong><br />${message.replace(/\n/g, '<br />')}</p>
+      </div>
+    `;
+
+    await Promise.all([
+      sendEmail({
+        to: email,
+        subject: clientEmailSubject,
+        html: clientEmailHtml,
+        text: `Thanks for contacting ${brandName}. We received your message about "${subject}" and will get back to you soon.`,
+      }),
+      sendEmail({
+        to: ownerEmail,
+        subject: ownerEmailSubject,
+        html: ownerEmailHtml,
+        text: `New inquiry from ${name} (${email}) about "${subject}".`,
+        replyTo: email,
+      }),
+    ]);
 
     res.status(201).json({
       success: true,
