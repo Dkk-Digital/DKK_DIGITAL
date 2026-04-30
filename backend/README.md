@@ -39,8 +39,8 @@ npm run dev
 
 ### Services
 - `GET /api/services` - Get all services
-- `POST /api/services` - Create service (admin)
-- `PUT /api/services/:id` - Update service (admin)
+- `POST /api/services` - Create service with optional image upload (admin)
+- `PUT /api/services/:id` - Update service and replace image if provided (admin)
 - `DELETE /api/services/:id` - Delete service (admin)
 
 ### Projects
@@ -58,9 +58,9 @@ npm run dev
 
 ### Blog
 - `GET /api/blogs` - Get all blogs
-- `POST /api/blogs` - Create blog (admin)
+- `POST /api/blogs` - Create blog with optional image upload (admin)
 - `GET /api/blogs/:slug` - Get blog by slug
-- `PUT /api/blogs/:id` - Update blog
+- `PUT /api/blogs/:id` - Update blog and replace image if provided
 - `DELETE /api/blogs/:id` - Delete blog
 
 ### Messages
@@ -93,7 +93,7 @@ Key variables:
 - name, email, password, role, phone, company, profileImage
 
 ### Service
-- title, description, shortDescription, price, category, features
+- title, description, shortDescription, image, price, category, features
 
 ### Project
 - title, description, client, service, status, progress, budget, startDate, endDate
@@ -102,7 +102,7 @@ Key variables:
 - name, email, phone, subject, message, serviceInterest, status
 
 ### Blog
-- title, slug, content, excerpt, author, category, tags, published, views
+- title, slug, content, excerpt, image, author, category, tags, published, views
 
 ### Message
 - conversationId, sender, recipient, message, attachments, isRead

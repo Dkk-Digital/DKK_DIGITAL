@@ -6,16 +6,36 @@ import Layout from '../components/Layout';
 import { blogService } from '../services';
 import toast from 'react-hot-toast';
 
+const HeroSection = styled(Box)(() => ({
+  background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
+  padding: '80px 0',
+  borderRadius: '16px',
+  marginBottom: '60px',
+  textAlign: 'center',
+}));
+
 const BlogCard = styled(Card)(({ theme }) => ({
-  padding: '20px',
+  padding: '25px',
   cursor: 'pointer',
-  transition: 'all 0.3s ease',
+  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
   height: '100%',
+  border: '1px solid rgba(25,118,210,0.08)',
+  borderRadius: '16px',
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
   '&:hover': {
-    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-    transform: 'translateY(-5px)',
+    boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
+    transform: 'translateY(-8px)',
+    borderColor: 'rgba(25,118,210,0.2)',
   },
 }));
+
+const BlogImage = styled('img')({
+  width: '100%',
+  height: '200px',
+  objectFit: 'cover',
+  borderRadius: '12px',
+  marginBottom: '16px',
+});
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -49,10 +69,15 @@ const Blog = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ textAlign: 'center', mb: 6, fontWeight: 700 }}>
-          Our Blog
-        </Typography>
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <HeroSection className="fade-in-down">
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            Our Blog
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+            Stay informed with insights, tips, and strategies from our digital marketing experts.
+          </Typography>
+        </HeroSection>
 
         {blogs.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
@@ -62,9 +87,10 @@ const Blog = () => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {blogs.map((blog) => (
+            {blogs.map((blog, index) => (
               <Grid item xs={12} sm={6} md={4} key={blog._id}>
-                <BlogCard>
+                <BlogCard className={`fade-in-up stagger-${(index % 5) + 1} float`}>
+                  {blog.image?.url && <BlogImage src={blog.image.url} alt={blog.title} />}
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" sx={{ backgroundColor: '#f0f4ff', color: '#1976d2', p: '4px 8px', borderRadius: '4px' }}>
                       {blog.category}

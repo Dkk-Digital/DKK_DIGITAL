@@ -50,18 +50,28 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ mb: 2, fontWeight: 700 }}>
-          {blog.title}
-        </Typography>
+      <Container maxWidth="md" sx={{ py: 12 }}>
+        <Box className="fade-in-up">
+          {blog.image?.url && (
+            <Box
+              component="img"
+              src={blog.image.url}
+              alt={blog.title}
+              sx={{ width: '100%', maxHeight: 420, objectFit: 'cover', borderRadius: 3, mb: 4 }}
+            />
+          )}
+          <Typography variant="h3" sx={{ mb: 2, fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            {blog.title}
+          </Typography>
+        </Box>
 
-        <Box sx={{ mb: 3, display: 'flex', gap: 2, color: '#999', fontSize: '14px' }}>
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, color: '#999', fontSize: '14px', animation: 'fadeInUp 0.8s ease' }}>
           <span>By {blog.author?.name}</span>
           <span>{new Date(blog.publishedAt).toLocaleDateString()}</span>
           <span>Category: {blog.category}</span>
         </Box>
 
-        <Box sx={{ mb: 3, py: 2, borderTop: '1px solid #e0e0e0', borderBottom: '1px solid #e0e0e0' }}>
+        <Box sx={{ mb: 3, py: 2, borderTop: '1px solid #e0e0e0', borderBottom: '1px solid #e0e0e0', animation: 'fadeInUp 1s ease' }}>
           <Typography variant="body1" sx={{ color: '#666', fontStyle: 'italic' }}>
             {blog.excerpt}
           </Typography>
@@ -71,6 +81,7 @@ const BlogDetail = () => {
           sx={{
             color: '#333',
             lineHeight: 1.8,
+            animation: 'fadeInUp 1.2s ease',
             '& p': { mb: 2 },
             '& h2': { mt: 4, mb: 2, fontWeight: 600 },
             '& h3': { mt: 3, mb: 2, fontWeight: 600 },
@@ -81,7 +92,7 @@ const BlogDetail = () => {
         />
 
         {blog.tags && blog.tags.length > 0 && (
-          <Box sx={{ mt: 4, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+          <Box sx={{ mt: 4, pt: 2, borderTop: '1px solid #e0e0e0', animation: 'fadeInUp 1.4s ease' }}>
             <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
               Tags:
             </Typography>
@@ -89,6 +100,7 @@ const BlogDetail = () => {
               {blog.tags.map((tag, i) => (
                 <Box
                   key={i}
+                  className={`stagger-${(i % 5) + 1}`}
                   sx={{
                     backgroundColor: '#f0f4ff',
                     color: '#1976d2',
@@ -96,6 +108,7 @@ const BlogDetail = () => {
                     py: 1,
                     borderRadius: '4px',
                     fontSize: '12px',
+                    animation: 'fadeInRight 0.6s ease',
                   }}
                 >
                   #{tag}

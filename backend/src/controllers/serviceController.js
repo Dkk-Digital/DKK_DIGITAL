@@ -1,8 +1,57 @@
 import Service from '../models/Service.js';
+import cloudinary from '../config/cloudinary.js';
+
+const uploadToCloudinary = (fileBuffer, folder) =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(result);
+      }
+    );
+
+    stream.end(fileBuffer);
+  });
+
+const parseFeatures = (features) => {
+  if (!features) {
+    return [];
+  }
+
+  if (Array.isArray(features)) {
+    return features.filter(Boolean);
+  }
+
+  if (typeof features === 'string') {
+    return features
+      .split(',')
+      .map((feature) => feature.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+};
 
 export const createService = async (req, res) => {
   try {
-    const { title, description, shortDescription, price, category, features } = req.body;
+    const { title, description, shortDescription, price, category } = req.body;
+    const features = parseFeatures(req.body.features);
+    let image = null;
+
+    if (req.file) {
+      const uploadedImage = await uploadToCloudinary(req.file.buffer, 'dkk-digital/services');
+      image = {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+      };
+    }
 
     const service = await Service.create({
       title,
@@ -10,7 +59,8 @@ export const createService = async (req, res) => {
       shortDescription,
       price,
       category,
-      features: features || [],
+      features,
+      image,
       createdBy: req.user._id,
     });
 
@@ -61,7 +111,8 @@ export const getServiceById = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-    const { title, description, shortDescription, price, category, features } = req.body;
+    const { title, description, shortDescription, price, category } = req.body;
+    const features = parseFeatures(req.body.features);
 
     let service = await Service.findById(req.params.id);
     if (!service) {
@@ -73,11 +124,32 @@ export const updateService = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to update this service' });
     }
 
-    service = await Service.findByIdAndUpdate(
-      req.params.id,
-      { title, description, shortDescription, price, category, features, updatedAt: Date.now() },
-      { new: true, runValidators: true }
-    );
+    const updateData = {
+      title,
+      description,
+      shortDescription,
+      price,
+      category,
+      features,
+      updatedAt: Date.now(),
+    };
+
+    if (req.file) {
+      if (service.image?.publicId) {
+        await cloudinary.uploader.destroy(service.image.publicId);
+      }
+
+      const uploadedImage = await uploadToCloudinary(req.file.buffer, 'dkk-digital/services');
+      updateData.image = {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+      };
+    }
+
+    service = await Service.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       success: true,
@@ -99,6 +171,10 @@ export const deleteService = async (req, res) => {
     // Check authorization
     if (service.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this service' });
+    }
+
+    if (service.image?.publicId) {
+      await cloudinary.uploader.destroy(service.image.publicId);
     }
 
     await Service.findByIdAndDelete(req.params.id);

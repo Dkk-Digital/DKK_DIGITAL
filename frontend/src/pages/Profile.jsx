@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services';
 import toast from 'react-hot-toast';
+
+const ProfileForm = styled(Box)(() => ({
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
+  padding: '50px',
+  borderRadius: '16px',
+  border: '1px solid rgba(25,118,210,0.08)',
+  boxShadow: '0 10px 30px rgba(16,24,40,0.06)',
+  animation: 'fadeInUp 0.8s ease',
+}));
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
@@ -38,21 +48,14 @@ const Profile = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ mb: 6, fontWeight: 700 }}>
-          My Profile
-        </Typography>
+      <Container maxWidth="md" sx={{ py: 12 }}>
+        <Box className="fade-in-down" sx={{ mb: 6 }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            My Profile
+          </Typography>
+        </Box>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            backgroundColor: '#f9f9f9',
-            p: 4,
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          }}
-        >
+        <ProfileForm component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
             label="Full Name"
@@ -108,7 +111,7 @@ const Profile = () => {
               Member Since: <strong>{new Date(user?.createdAt).toLocaleDateString()}</strong>
             </Typography>
           </Box>
-        </Box>
+        </ProfileForm>
       </Container>
     </Layout>
   );

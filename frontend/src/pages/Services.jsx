@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Card, Typography, CircularProgress, Box } from '@mui/material';
+import { Container, Grid, Card, Typography, CircularProgress, Box, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Link as RouterLink } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { serviceService } from '../services';
 import toast from 'react-hot-toast';
 
+const HeroSection = styled(Box)(() => ({
+  background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
+  padding: '80px 0',
+  borderRadius: '16px',
+  marginBottom: '60px',
+  textAlign: 'center',
+}));
+
 const ServiceCard = styled(Card)(({ theme }) => ({
   padding: '30px',
   cursor: 'pointer',
-  transition: 'all 0.3s ease',
+  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
   height: '100%',
+  border: '1px solid rgba(25,118,210,0.08)',
+  borderRadius: '16px',
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
   '&:hover': {
-    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-    transform: 'translateY(-5px)',
+    boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
+    transform: 'translateY(-8px)',
+    borderColor: 'rgba(25,118,210,0.2)',
   },
+}));
+
+const ServiceImage = styled('img')(() => ({
+  width: '100%',
+  height: '180px',
+  objectFit: 'cover',
+  borderRadius: '12px',
+  marginBottom: '18px',
 }));
 
 const Services = () => {
@@ -48,10 +69,15 @@ const Services = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ textAlign: 'center', mb: 6, fontWeight: 700 }}>
-          Our Services
-        </Typography>
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <HeroSection className="fade-in-down">
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            Our Services
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+            Explore our comprehensive range of digital marketing solutions designed to accelerate your business growth.
+          </Typography>
+        </HeroSection>
 
         {services.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4 }}>
@@ -61,10 +87,13 @@ const Services = () => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {services.map((service) => (
+            {services.map((service, index) => (
               <Grid item xs={12} sm={6} md={4} key={service._id}>
-                <ServiceCard>
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#1976d2' }}>
+                <ServiceCard className={`fade-in-up stagger-${(index % 5) + 1} float`}>
+                  {service.image?.url && (
+                    <ServiceImage src={service.image.url} alt={service.title} />
+                  )}
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
                     {service.title}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
@@ -90,6 +119,15 @@ const Services = () => {
                       </ul>
                     </Box>
                   )}
+                  <Button
+                    component={RouterLink}
+                    to={`/services/${service._id}`}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ mt: 1, borderRadius: '10px', textTransform: 'none', fontWeight: 600 }}
+                  >
+                    View Service Page
+                  </Button>
                 </ServiceCard>
               </Grid>
             ))}

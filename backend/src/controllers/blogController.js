@@ -1,4 +1,43 @@
 import Blog from '../models/Blog.js';
+import cloudinary from '../config/cloudinary.js';
+
+const uploadToCloudinary = (fileBuffer, folder) =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder },
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(result);
+      }
+    );
+
+    stream.end(fileBuffer);
+  });
+
+const parseTags = (tags) => {
+  if (!tags) return [];
+
+  if (Array.isArray(tags)) return tags.filter(Boolean);
+
+  if (typeof tags === 'string') {
+    return tags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
+const parsePublished = (published) => {
+  if (published === true || published === 'true') return true;
+  if (published === false || published === 'false') return false;
+  return Boolean(published);
+};
 
 export const createBlog = async (req, res) => {
   try {
@@ -8,15 +47,26 @@ export const createBlog = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
     }
 
+    let image = null;
+
+    if (req.file) {
+      const uploadedImage = await uploadToCloudinary(req.file.buffer, 'dkk-digital/blogs');
+      image = {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+      };
+    }
+
     const blog = await Blog.create({
       title,
       content,
       excerpt,
       category,
-      tags: tags || [],
+      tags: parseTags(tags),
+      image,
       author: req.user._id,
-      published: published || false,
-      publishedAt: published ? Date.now() : null,
+      published: parsePublished(published),
+      publishedAt: parsePublished(published) ? Date.now() : null,
     });
 
     await blog.populate('author', 'name email');
@@ -94,20 +144,33 @@ export const updateBlog = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to update this blog' });
     }
 
-    blog = await Blog.findByIdAndUpdate(
-      req.params.id,
-      {
-        title,
-        content,
-        excerpt,
-        category,
-        tags,
-        published,
-        publishedAt: published && !blog.publishedAt ? Date.now() : blog.publishedAt,
-        updatedAt: Date.now(),
-      },
-      { new: true, runValidators: true }
-    );
+    const updateData = {
+      title,
+      content,
+      excerpt,
+      category,
+      tags: parseTags(tags),
+      published: parsePublished(published),
+      publishedAt: parsePublished(published) && !blog.publishedAt ? Date.now() : blog.publishedAt,
+      updatedAt: Date.now(),
+    };
+
+    if (req.file) {
+      if (blog.image?.publicId) {
+        await cloudinary.uploader.destroy(blog.image.publicId);
+      }
+
+      const uploadedImage = await uploadToCloudinary(req.file.buffer, 'dkk-digital/blogs');
+      updateData.image = {
+        url: uploadedImage.secure_url,
+        publicId: uploadedImage.public_id,
+      };
+    }
+
+    blog = await Blog.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true,
+    });
 
     await blog.populate('author', 'name email');
 
@@ -131,6 +194,10 @@ export const deleteBlog = async (req, res) => {
     // Check authorization
     if (blog.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized to delete this blog' });
+    }
+
+    if (blog.image?.publicId) {
+      await cloudinary.uploader.destroy(blog.image.publicId);
     }
 
     await Blog.findByIdAndDelete(req.params.id);

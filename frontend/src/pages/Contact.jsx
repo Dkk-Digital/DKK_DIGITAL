@@ -5,12 +5,23 @@ import Layout from '../components/Layout';
 import { inquiryService } from '../services';
 import toast from 'react-hot-toast';
 
+const HeroSection = styled(Box)(() => ({
+  background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
+  padding: '60px 0',
+  borderRadius: '16px',
+  marginBottom: '60px',
+  textAlign: 'center',
+}));
+
 const ContactForm = styled(Box)(({ theme }) => ({
   maxWidth: '600px',
   margin: '0 auto',
-  padding: '40px',
-  backgroundColor: '#f9f9f9',
-  borderRadius: '8px',
+  padding: '50px',
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
+  borderRadius: '16px',
+  border: '1px solid rgba(25,118,210,0.08)',
+  boxShadow: '0 10px 30px rgba(16,24,40,0.06)',
+  animation: 'fadeInUp 0.8s ease',
 }));
 
 const Contact = () => {
@@ -61,10 +72,15 @@ const Contact = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ textAlign: 'center', mb: 6, fontWeight: 700 }}>
-          Contact Us
-        </Typography>
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <HeroSection className="fade-in-down">
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            Contact Us
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+            Have a question or ready to get started? We'd love to hear from you. Let's connect!
+          </Typography>
+        </HeroSection>
 
         <ContactForm component="form" onSubmit={handleSubmit}>
           <TextField

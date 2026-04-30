@@ -42,11 +42,73 @@ body{
 
 .card-elevated{border-radius:var(--radius);box-shadow:var(--card-shadow)}
 
+/* Animation Keyframes */
 @keyframes floatUp {
   from{transform:translateY(0)}
   to{transform:translateY(-6px)}
 }
+
+@keyframes fadeInUp {
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes fadeInDown {
+  from{opacity:0;transform:translateY(-20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes fadeInLeft {
+  from{opacity:0;transform:translateX(-30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+@keyframes fadeInRight {
+  from{opacity:0;transform:translateX(30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+@keyframes scaleIn {
+  from{opacity:0;transform:scale(0.95)}
+  to{opacity:1;transform:scale(1)}
+}
+
+@keyframes slideInUp {
+  from{transform:translateY(40px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+
+@keyframes slideInDown {
+  from{transform:translateY(-40px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+
+@keyframes pulse {
+  0%,100%{opacity:1}
+  50%{opacity:0.5}
+}
+
+@keyframes shimmer {
+  0%{background-position:-1000px 0}
+  100%{background-position:1000px 0}
+}
+
 .float:hover{animation:floatUp .4s ease forwards}
+.fade-in-up{animation:fadeInUp .6s ease forwards}
+.fade-in-down{animation:fadeInDown .6s ease forwards}
+.fade-in-left{animation:fadeInLeft .6s ease forwards}
+.fade-in-right{animation:fadeInRight .6s ease forwards}
+.scale-in{animation:scaleIn .5s ease forwards}
+.slide-in-up{animation:slideInUp .6s ease forwards}
+.slide-in-down{animation:slideInDown .6s ease forwards}
+
+/* Stagger animations */
+.stagger-1{animation-delay:.1s}
+.stagger-2{animation-delay:.2s}
+.stagger-3{animation-delay:.3s}
+.stagger-4{animation-delay:.4s}
+.stagger-5{animation-delay:.5s}
 
 /* Utils */
 .muted{color:var(--muted)}
+.gradient-text{background:linear-gradient(90deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}

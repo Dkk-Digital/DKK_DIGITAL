@@ -6,11 +6,15 @@ import { projectService, serviceService } from '../services';
 import toast from 'react-hot-toast';
 
 const ProjectCard = styled(Card)(({ theme }) => ({
-  padding: '20px',
+  padding: '25px',
   cursor: 'pointer',
-  transition: 'all 0.3s ease',
+  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+  border: '1px solid rgba(25,118,210,0.08)',
+  borderRadius: '16px',
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
   '&:hover': {
-    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+    boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
+    transform: 'translateY(-8px)',
   },
 }));
 
@@ -101,14 +105,14 @@ const ClientDashboard = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }}>
-          <Typography variant="h3" sx={{ fontWeight: 700 }}>
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }} className="fade-in-down">
+          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             My Dashboard
           </Typography>
           <Button
             variant="contained"
-            sx={{ backgroundColor: '#1976d2' }}
+            sx={{ background: 'linear-gradient(90deg, #1976d2, #7c4dff)', px: 3 }}
             onClick={() => setShowNewProjectDialog(true)}
           >
             + New Project

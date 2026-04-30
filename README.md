@@ -27,6 +27,7 @@ Welcome to **DKK Digital Marketing Company** - A comprehensive full-stack web ap
 ### Admin Dashboard
 - ✅ View and manage all services
 - ✅ Add/Edit/Delete marketing services
+- ✅ Upload and replace service images with Cloudinary
 - ✅ View client inquiries and projects
 - ✅ Analytics dashboard with stats
 - ✅ Manage user accounts
@@ -42,7 +43,7 @@ Welcome to **DKK Digital Marketing Company** - A comprehensive full-stack web ap
 - ✅ Home page with service overview
 - ✅ Services page with detailed listings
 - ✅ About page with company information
-- ✅ Blog section with full CRUD
+- ✅ Blog section with full CRUD and image support
 - ✅ Contact form with inquiry submission
 - ✅ Responsive design for all devices
 
@@ -239,6 +240,8 @@ SMTP_PASS=your_app_password
 CLOUDINARY_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+
+# If Cloudinary credentials are left as placeholders, local image tests fall back to a mock uploader.
 
 # Admin Details for Seeding
 ADMIN_EMAIL=admin@dkkdigital.com

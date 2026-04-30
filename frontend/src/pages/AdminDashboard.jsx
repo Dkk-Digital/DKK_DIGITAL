@@ -8,12 +8,20 @@ import toast from 'react-hot-toast';
 const StatsCard = styled(Card)(({ theme }) => ({
   padding: '30px',
   textAlign: 'center',
-  backgroundColor: '#f0f4ff',
+  background: 'linear-gradient(135deg, rgba(25,118,210,0.08), rgba(124,77,255,0.06))',
+  border: '1px solid rgba(25,118,210,0.1)',
+  borderRadius: '16px',
+  transition: 'all 0.4s ease',
+  '&:hover': {
+    transform: 'translateY(-8px)',
+    boxShadow: '0 15px 30px rgba(25,118,210,0.15)',
+  },
 }));
 
 const AdminDashboard = () => {
   const [inquiryStats, setInquiryStats] = useState(null);
   const [inquiries, setInquiries] = useState([]);
+  const [servicesList, setServicesList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newService, setNewService] = useState({
     title: '',
@@ -23,10 +31,13 @@ const AdminDashboard = () => {
     category: 'SEO',
     features: '',
   });
+  const [serviceImage, setServiceImage] = useState(null);
   const [showServiceForm, setShowServiceForm] = useState(false);
+  const [editingServiceId, setEditingServiceId] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
+    fetchServices();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -45,14 +56,35 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchServices = async () => {
+    try {
+      const res = await serviceService.getAll();
+      setServicesList(res.data.services || []);
+    } catch (err) {
+      // ignore
+    }
+  };
+
   const handleAddService = async (e) => {
     e.preventDefault();
     try {
-      await serviceService.create({
-        ...newService,
-        features: newService.features.split(',').map((f) => f.trim()),
-      });
-      toast.success('Service added successfully');
+      const formData = new FormData();
+      formData.append('title', newService.title);
+      formData.append('description', newService.description);
+      formData.append('shortDescription', newService.shortDescription);
+      formData.append('price', newService.price);
+      formData.append('category', newService.category);
+      formData.append('features', newService.features);
+
+      if (serviceImage) formData.append('image', serviceImage);
+
+      if (editingServiceId) {
+        await serviceService.update(editingServiceId, formData);
+        toast.success('Service updated successfully');
+      } else {
+        await serviceService.create(formData);
+        toast.success('Service added successfully');
+      }
       setNewService({
         title: '',
         description: '',
@@ -61,9 +93,37 @@ const AdminDashboard = () => {
         category: 'SEO',
         features: '',
       });
+      setServiceImage(null);
       setShowServiceForm(false);
+      setEditingServiceId(null);
+      fetchServices();
     } catch (error) {
       toast.error('Failed to add service');
+    }
+  };
+
+  const handleEdit = (service) => {
+    setEditingServiceId(service._id);
+    setNewService({
+      title: service.title || '',
+      description: service.description || '',
+      shortDescription: service.shortDescription || '',
+      price: service.price || '',
+      category: service.category || 'SEO',
+      features: (service.features || []).join(', '),
+    });
+    setServiceImage(null);
+    setShowServiceForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('Delete this service?')) return;
+    try {
+      await serviceService.delete(id);
+      toast.success('Service deleted');
+      fetchServices();
+    } catch (err) {
+      toast.error('Failed to delete service');
     }
   };
 
@@ -79,17 +139,19 @@ const AdminDashboard = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h3" sx={{ mb: 6, fontWeight: 700 }}>
-          Admin Dashboard
-        </Typography>
+      <Container maxWidth="lg" sx={{ py: 12 }}>
+        <Box className="fade-in-down" sx={{ mb: 8 }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+            Admin Dashboard
+          </Typography>
+        </Box>
 
         {/* Stats */}
         {inquiryStats && (
           <Grid container spacing={3} sx={{ mb: 6 }}>
             <Grid item xs={12} sm={6} md={3}>
-              <StatsCard>
-                <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 700 }}>
+              <StatsCard className="fade-in-up stagger-1">
+                <Typography variant="h6" sx={{ background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', fontWeight: 700 }}>
                   {inquiryStats.total}
                 </Typography>
                 <Typography variant="body2" sx={{ color: '#666' }}>
@@ -201,6 +263,20 @@ const AdminDashboard = () => {
                 onChange={(e) => setNewService({ ...newService, features: e.target.value })}
                 sx={{ mb: 2 }}
               />
+              <Button component="label" variant="outlined" sx={{ mb: 2 }}>
+                Upload Service Image
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => setServiceImage(e.target.files?.[0] || null)}
+                />
+              </Button>
+              {serviceImage && (
+                <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
+                  Selected image: {serviceImage.name}
+                </Typography>
+              )}
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <Button variant="contained" sx={{ backgroundColor: '#1976d2' }} type="submit">
                   Add Service
@@ -214,6 +290,37 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Recent Inquiries */}
+        {/* Services List */}
+        <Card sx={{ p: 3, mb: 6 }}>
+          <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+            Services
+          </Typography>
+          {servicesList.length === 0 ? (
+            <Typography sx={{ color: '#666' }}>No services created yet</Typography>
+          ) : (
+            <Box sx={{ display: 'grid', gap: 2 }}>
+              {servicesList.map((s) => (
+                <Box key={s._id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    {s.image?.url && <img src={s.image.url} alt={s.title} style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 8 }} />}
+                    <Box>
+                      <Typography sx={{ fontWeight: 700 }}>{s.title}</Typography>
+                      <Typography sx={{ color: '#666', fontSize: 13 }}>{s.shortDescription}</Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Button variant="outlined" sx={{ mr: 1 }} onClick={() => handleEdit(s)}>
+                      Edit
+                    </Button>
+                    <Button variant="outlined" color="error" onClick={() => handleDelete(s._id)}>
+                      Delete
+                    </Button>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          )}
+        </Card>
         <Card sx={{ p: 3 }}>
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
             Recent Inquiries
