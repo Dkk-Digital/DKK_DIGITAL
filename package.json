@@ -1,4 +1,9 @@
 {
   "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node -e \"const { spawn } = require('child_process'); const spawnDev = (folder) => spawn(`npm --prefix ${folder} run dev`, { stdio: 'inherit', shell: true }); const processes = [spawnDev('backend'), spawnDev('frontend')]; const stop = () => processes.forEach((child) => child.kill('SIGINT')); process.on('SIGINT', () => { stop(); process.exit(0); }); process.on('SIGTERM', () => { stop(); process.exit(0); }); processes.forEach((child) => child.on('exit', (code) => { stop(); process.exit(code ?? 0); }));\"",
+    "start": "npm run dev"
+  },
   "dependencies": {}
 }
