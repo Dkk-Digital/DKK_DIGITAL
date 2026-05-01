@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Button, Card, CircularProgress, Container, Divider, Drawer, IconButton, MenuItem, Select, Stack, Typography, Chip } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Box, Button, Card, CircularProgress, Container, Divider, Drawer, IconButton, MenuItem, Select, Stack, Typography, Chip, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import toast from 'react-hot-toast';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,7 +23,21 @@ const statuses = ['new', 'contacted', 'converted', 'rejected'];
 
 const AdminInquiries = () => {
   const { stats, allInquiries, loading, refresh } = useAdminPanelData();
-  const [selectedInquiry, setSelectedInquiry] = React.useState(null);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+
+  const paginatedInquiries = useMemo(
+    () => allInquiries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [allInquiries, page, rowsPerPage]
+  );
+
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(allInquiries.length / rowsPerPage) - 1);
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [allInquiries.length, page, rowsPerPage]);
 
   const handleStatusChange = async (id, status) => {
     try {
@@ -45,6 +59,15 @@ const AdminInquiries = () => {
     } catch (error) {
       toast.error('Failed to delete inquiry');
     }
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handlePageChange = (_, newPage) => {
+    setPage(newPage);
   };
 
   if (loading) {
@@ -105,7 +128,7 @@ const AdminInquiries = () => {
                 </tr>
               </thead>
               <tbody>
-                {allInquiries.map((inquiry) => {
+                {paginatedInquiries.map((inquiry) => {
                   const tone = statusTone[inquiry.status] || statusTone.new;
 
                   return (
@@ -152,6 +175,19 @@ const AdminInquiries = () => {
               </tbody>
             </table>
           </Box>
+        )}
+
+        {allInquiries.length > 0 && (
+          <TablePagination
+            component="div"
+            count={allInquiries.length}
+            page={page}
+            onPageChange={handlePageChange}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            rowsPerPageOptions={[5, 8, 15]}
+            sx={{ mt: 1 }}
+          />
         )}
       </PanelCard>
 

@@ -14,6 +14,7 @@ import {
   Stack,
   Toolbar,
   Typography,
+  Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -29,21 +30,39 @@ import { useAuth } from '../../context/AuthContext';
 
 const drawerWidth = 286;
 
+const accentMap = {
+  Overview: '#38bdf8',
+  Services: '#a78bfa',
+  Users: '#34d399',
+  Inquiries: '#f59e0b',
+};
+
 const Shell = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   background:
-    'radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 28%), radial-gradient(circle at top right, rgba(14,165,233,0.08), transparent 24%), #f3f6fb',
+    'radial-gradient(circle at top left, rgba(56,189,248,0.16), transparent 24%), radial-gradient(circle at 82% 12%, rgba(167,139,250,0.16), transparent 20%), radial-gradient(circle at 20% 82%, rgba(52,211,153,0.12), transparent 18%), #eef3f9',
   [theme.breakpoints.up('md')]: {
     display: 'grid',
-    gridTemplateColumns: `${drawerWidth}px 1fr`,
+    gridTemplateColumns: `${drawerWidth}px minmax(0, 1fr)`,
   },
 }));
 
 const Sidebar = styled(Box)(({ theme }) => ({
-  background: 'linear-gradient(180deg, #0f172a 0%, #111827 100%)',
+  background:
+    'linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(17,24,39,0.98) 100%)',
   color: '#e5eefc',
   padding: '24px 18px',
-  borderRight: '1px solid rgba(148,163,184,0.12)',
+  borderRight: '1px solid rgba(148,163,184,0.14)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    background:
+      'radial-gradient(circle at top right, rgba(56,189,248,0.18), transparent 18%), radial-gradient(circle at bottom left, rgba(167,139,250,0.14), transparent 16%)',
+    pointerEvents: 'none',
+  },
   [theme.breakpoints.down('md')]: {
     width: drawerWidth,
     height: '100%',
@@ -51,8 +70,8 @@ const Sidebar = styled(Box)(({ theme }) => ({
 }));
 
 const ShellHeader = styled(AppBar)({
-  background: 'rgba(243,246,251,0.86)',
-  backdropFilter: 'blur(16px)',
+  background: 'rgba(238,243,249,0.72)',
+  backdropFilter: 'blur(22px)',
   color: '#0f172a',
   boxShadow: 'none',
   borderBottom: '1px solid rgba(148,163,184,0.18)',
@@ -75,7 +94,7 @@ const ShellListItem = styled(ListItemButton)({
   borderRadius: 14,
   marginBottom: 8,
   color: 'rgba(226,232,240,0.9)',
-  transition: 'background 0.2s ease, transform 0.2s ease',
+  transition: 'background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
   '&:hover': {
     background: 'rgba(148,163,184,0.12)',
     transform: 'translateX(2px)',
@@ -100,6 +119,8 @@ const AdminLayout = () => {
     return item?.label || 'Overview';
   }, [location.pathname]);
 
+  const currentAccent = accentMap[currentSection] || '#38bdf8';
+
   const handleLogout = () => {
     logout();
     navigate('/login', { replace: true });
@@ -112,7 +133,7 @@ const AdminLayout = () => {
       <Stack spacing={3} sx={{ height: '100%' }}>
         <Box>
           <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 3 }}>
-            <Avatar sx={{ bgcolor: 'rgba(59,130,246,0.18)', color: '#93c5fd', fontWeight: 700 }}>D</Avatar>
+            <Avatar sx={{ bgcolor: 'rgba(56,189,248,0.18)', color: '#e0f2fe', fontWeight: 800, boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset' }}>D</Avatar>
             <Box>
               <Typography variant="subtitle1" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
                 DKK Admin
@@ -123,7 +144,7 @@ const AdminLayout = () => {
             </Box>
           </Stack>
 
-          <Box sx={{ mb: 3, p: 2, borderRadius: 3, background: 'rgba(15,23,42,0.72)', border: '1px solid rgba(148,163,184,0.12)' }}>
+          <Box sx={{ mb: 3, p: 2.25, borderRadius: 3, background: 'rgba(15,23,42,0.72)', border: '1px solid rgba(148,163,184,0.12)', position: 'relative', zIndex: 1 }}>
             <Typography variant="caption" sx={{ color: 'rgba(226,232,240,0.64)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
               Signed in as
             </Typography>
@@ -194,7 +215,7 @@ const AdminLayout = () => {
 
       <Box sx={{ minWidth: 0 }}>
         <ShellHeader position="sticky">
-          <Toolbar sx={{ minHeight: 80, px: { xs: 2, md: 4 } }}>
+          <Toolbar sx={{ minHeight: 88, px: { xs: 2, md: 4 }, gap: 2 }}>
             <Stack direction="row" alignItems="center" spacing={1.5} sx={{ flex: 1 }}>
               <IconButton
                 onClick={() => setMobileOpen(true)}
@@ -203,28 +224,32 @@ const AdminLayout = () => {
               >
                 <MenuIcon />
               </IconButton>
-              <Box>
-                <Typography variant="caption" sx={{ color: '#64748b', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                  {currentSection}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
-                  Admin Panel
-                </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ width: 12, height: 42, borderRadius: 99, background: `linear-gradient(180deg, ${currentAccent}, rgba(255,255,255,0.85))`, boxShadow: `0 0 0 6px ${currentAccent}18` }} />
+                <Box>
+                  <Typography variant="caption" sx={{ color: '#64748b', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                    {currentSection}
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 900, lineHeight: 1.1 }}>
+                    Admin Panel
+                  </Typography>
+                </Box>
               </Box>
             </Stack>
 
-            <Stack direction="row" alignItems="center" spacing={1} sx={{ display: { xs: 'none', sm: 'flex' } }}>
-              <Button component={RouterLink} to="/" variant="outlined" sx={{ textTransform: 'none' }}>
+            <Stack direction="row" alignItems="center" spacing={1.25} sx={{ display: { xs: 'none', sm: 'flex' } }}>
+              <Chip label="Live workspace" size="small" sx={{ backgroundColor: `${currentAccent}18`, color: '#0f172a', fontWeight: 700 }} />
+              <Button component={RouterLink} to="/" variant="outlined" sx={{ textTransform: 'none', borderRadius: 3 }}>
                 Website
               </Button>
-              <Button onClick={handleLogout} variant="contained" sx={{ textTransform: 'none', background: 'linear-gradient(90deg, #2563eb, #0ea5e9)' }}>
+              <Button onClick={handleLogout} variant="contained" sx={{ textTransform: 'none', background: 'linear-gradient(90deg, #2563eb, #0ea5e9)', borderRadius: 3, boxShadow: '0 10px 24px rgba(37,99,235,0.22)' }}>
                 Logout
               </Button>
             </Stack>
           </Toolbar>
         </ShellHeader>
 
-        <Box component="main" sx={{ px: { xs: 2, sm: 3, md: 4 }, py: { xs: 3, md: 4 } }}>
+        <Box component="main" sx={{ px: { xs: 2, sm: 3, md: 4 }, py: { xs: 3, md: 4 }, position: 'relative' }}>
           <Outlet />
         </Box>
       </Box>

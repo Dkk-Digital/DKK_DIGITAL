@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -7,13 +7,21 @@ import {
   Container,
   Divider,
   Drawer,
+  FormControl,
   IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
+  TextField,
   Typography,
   Chip,
+  TablePagination,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import toast from 'react-hot-toast';
 import { authService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
@@ -33,12 +41,50 @@ const AdminUsers = () => {
   const { users, loading, refresh } = useAdminPanelData();
   const [selectedUser, setSelectedUser] = useState(null);
   const [savingRoleId, setSavingRoleId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const summary = useMemo(() => ({
     total: users.length,
     admins: users.filter((user) => user.role === 'admin').length,
     clients: users.filter((user) => user.role === 'client').length,
   }), [users]);
+
+  const filteredUsers = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return users.filter((user) => {
+      const matchesQuery = !normalizedQuery
+        || user.name?.toLowerCase().includes(normalizedQuery)
+        || user.email?.toLowerCase().includes(normalizedQuery);
+      const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+      return matchesQuery && matchesRole;
+    });
+  }, [users, roleFilter, searchQuery]);
+
+  const paginatedUsers = useMemo(
+    () => filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredUsers, page, rowsPerPage]
+  );
+
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(filteredUsers.length / rowsPerPage) - 1);
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [filteredUsers.length, page, rowsPerPage]);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+    setPage(0);
+  };
+
+  const handleRoleFilterChange = (event) => {
+    setRoleFilter(event.target.value);
+    setPage(0);
+  };
 
   const handleRoleChange = async (id, role) => {
     try {
@@ -66,6 +112,15 @@ const AdminUsers = () => {
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to delete user');
     }
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handlePageChange = (_, newPage) => {
+    setPage(newPage);
   };
 
   if (loading) {
@@ -104,12 +159,45 @@ const AdminUsers = () => {
         ))}
       </Stack>
 
+      <PanelCard sx={{ p: { xs: 2, md: 3 }, mb: 3 }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'stretch', md: 'center' }}>
+          <TextField
+            fullWidth
+            label="Search users"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search by name or email"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <FormControl sx={{ minWidth: { xs: '100%', md: 180 } }}>
+            <InputLabel id="role-filter-label">Role</InputLabel>
+            <Select
+              labelId="role-filter-label"
+              value={roleFilter}
+              label="Role"
+              onChange={handleRoleFilterChange}
+            >
+              <MenuItem value="all">All roles</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="client">Client</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+      </PanelCard>
+
       <PanelCard sx={{ p: { xs: 2, md: 3 } }}>
         <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
           User list
         </Typography>
 
-        {users.length === 0 ? (
+        {filteredUsers.length === 0 ? (
           <Typography sx={{ color: '#64748b' }}>No users found.</Typography>
         ) : (
           <Box sx={{ overflowX: 'auto' }}>
@@ -124,7 +212,7 @@ const AdminUsers = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => {
+                {paginatedUsers.map((user) => {
                   const tone = statusTone[user.role] || statusTone.client;
 
                   return (
@@ -161,6 +249,19 @@ const AdminUsers = () => {
               </tbody>
             </table>
           </Box>
+        )}
+
+        {filteredUsers.length > 0 && (
+          <TablePagination
+            component="div"
+            count={filteredUsers.length}
+            page={page}
+            onPageChange={handlePageChange}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleRowsPerPageChange}
+            rowsPerPageOptions={[5, 10, 20]}
+            sx={{ mt: 1 }}
+          />
         )}
       </PanelCard>
 
