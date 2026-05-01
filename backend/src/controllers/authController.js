@@ -274,3 +274,33 @@ export const getUserStats = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getUserActivity = async (req, res) => {
+  try {
+    const { limit = 50, skip = 0 } = req.query;
+    const { getUserActivityLogs } = await import('../utils/userActivity.js');
+
+    const userId = req.params.id || req.user._id;
+
+    const logs = await getUserActivityLogs(userId, parseInt(limit, 10), parseInt(skip, 10));
+
+    res.status(200).json({ success: true, count: logs.length, logs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserActivityStats = async (req, res) => {
+  try {
+    const { days = 30 } = req.query;
+    const { getUserActivityStats } = await import('../utils/userActivity.js');
+
+    const userId = req.params.id || req.user._id;
+
+    const stats = await getUserActivityStats(userId, parseInt(days, 10));
+
+    res.status(200).json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
