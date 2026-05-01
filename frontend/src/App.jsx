@@ -17,9 +17,12 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import Profile from './pages/Profile';
+import AdminLayout from './components/admin/AdminLayout';
+import AdminOverview from './pages/admin/AdminOverview';
+import AdminServices from './pages/admin/AdminServices';
+import AdminInquiries from './pages/admin/AdminInquiries';
 
 let theme = createTheme({
   palette: {
@@ -65,13 +68,18 @@ const AppRoutes = () => {
 
       {/* Protected Routes */}
       <Route
-        path="/admin/dashboard"
+        path="/admin"
         element={
           <ProtectedRoute requiredRole="admin">
-            <AdminDashboard />
+            <AdminLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<AdminOverview />} />
+        <Route path="services" element={<AdminServices />} />
+        <Route path="inquiries" element={<AdminInquiries />} />
+      </Route>
       <Route
         path="/client/dashboard"
         element={

@@ -124,7 +124,7 @@ const Navbar = () => {
         <List sx={{ px: 0 }}>
           {user?.role === 'admin' && (
             <ListItemButton component={RouterLink} to="/admin/dashboard" onClick={closeMobileMenu} sx={{ borderRadius: 2 }}>
-              <ListItemText primary="Admin Dashboard" />
+              <ListItemText primary="Admin Panel" />
             </ListItemButton>
           )}
           {user?.role === 'client' && (
@@ -184,7 +184,7 @@ const Navbar = () => {
                 <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                   {user?.role === 'admin' && (
                     <MenuItem component={RouterLink} to="/admin/dashboard" onClick={handleMenuClose}>
-                      Admin Dashboard
+                      Admin Panel
                     </MenuItem>
                   )}
                   {user?.role === 'client' && (
