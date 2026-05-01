@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { generateToken } from '../utils/jwt.js';
+import { logUserActivity } from '../utils/userActivity.js';
 
 export const register = async (req, res) => {
   try {
@@ -26,6 +27,15 @@ export const register = async (req, res) => {
       email,
       password: hashedPassword,
       role: role || 'client',
+    });
+
+    // Log registration activity
+    await logUserActivity({
+      userId: user._id,
+      action: 'register',
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      status: 'success',
     });
 
     // Generate token
@@ -59,14 +69,41 @@ export const login = async (req, res) => {
     // Find user and select password
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
+      // Log failed login attempt
+      await logUserActivity({
+        userId: null,
+        action: 'failed_login',
+        details: { email, reason: 'user_not_found' },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+        status: 'failure',
+      });
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      // Log failed login attempt
+      await logUserActivity({
+        userId: user._id,
+        action: 'failed_login',
+        details: { reason: 'invalid_password' },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+        status: 'failure',
+      });
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
+
+    // Log successful login
+    await logUserActivity({
+      userId: user._id,
+      action: 'login',
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      status: 'success',
+    });
 
     // Generate token
     const token = generateToken(user._id, user.role);
@@ -109,6 +146,16 @@ export const updateProfile = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    // Log profile update
+    await logUserActivity({
+      userId: req.user._id,
+      action: 'update_profile',
+      details: { name, phone, company },
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      status: 'success',
+    });
+
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
@@ -144,6 +191,8 @@ export const updateUserRole = async (req, res) => {
       return res.status(400).json({ success: false, message: 'You cannot change your own role from the admin panel' });
     }
 
+    const oldRole = (await User.findById(req.params.id)).role;
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { role, updatedAt: Date.now() },
@@ -153,6 +202,16 @@ export const updateUserRole = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
+
+    // Log role change
+    await logUserActivity({
+      userId: req.params.id,
+      action: 'role_changed',
+      details: { oldRole, newRole: role, changedBy: req.user._id },
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      status: 'success',
+    });
 
     res.status(200).json({
       success: true,
@@ -177,9 +236,39 @@ export const deleteUser = async (req, res) => {
     }
 
     await User.findByIdAndDelete(req.params.id);
+
+    // Log user deletion
+    await logUserActivity({
+      userId: req.params.id,
+      action: 'account_deleted',
+      details: { deletedBy: req.user._id, email: user.email },
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+      status: 'success',
+    });
+
     res.status(200).json({
       success: true,
       message: 'User deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getUserStats = async (req, res) => {
+  try {
+    const total = await User.countDocuments();
+    const admins = await User.countDocuments({ role: 'admin' });
+    const clients = await User.countDocuments({ role: 'client' });
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        total,
+        admins,
+        clients,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

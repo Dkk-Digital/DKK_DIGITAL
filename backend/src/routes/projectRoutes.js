@@ -7,12 +7,14 @@ import {
   getProjectById,
   updateProject,
   deleteProject,
+  getProjectStats,
 } from '../controllers/projectController.js';
 
 const router = express.Router();
 
 router.post('/', protect, createProject);
 router.get('/client/my-projects', protect, getClientProjects);
+router.get('/stats/overview', protect, adminOnly, getProjectStats);
 router.get('/', protect, adminOnly, getAllProjects);
 router.get('/:id', protect, getProjectById);
 router.put('/:id', protect, adminOnly, updateProject);

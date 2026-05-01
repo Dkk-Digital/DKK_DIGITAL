@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Card, Typography, Box, Button, TextField, CircularProgress } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Card,
+  Typography,
+  Box,
+  Button,
+  TextField,
+  CircularProgress,
+  MenuItem,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import PeopleIcon from '@mui/icons-material/People';
+import EmailIcon from '@mui/icons-material/Email';
 import Layout from '../components/Layout';
-import { inquiryService, serviceService } from '../services';
+import {
+  inquiryService,
+  serviceService,
+  projectService,
+  authService,
+  messageService,
+} from '../services';
+import {
+  InquiryStatusChart,
+  ServiceCategoryChart,
+  QuickStatCard,
+} from '../components/admin/DashboardCharts';
 import { confirmAlert, errorAlert, successAlert } from '../utils/alerts';
 
-const StatsCard = styled(Card)(({ theme }) => ({
-  padding: '30px',
-  textAlign: 'center',
-  background: 'linear-gradient(135deg, rgba(25,118,210,0.08), rgba(124,77,255,0.06))',
-  border: '1px solid rgba(25,118,210,0.1)',
-  borderRadius: '16px',
-  transition: 'all 0.4s ease',
-  [theme.breakpoints.down('sm')]: {
-    padding: '22px',
-  },
-  '&:hover': {
-    transform: 'translateY(-8px)',
-    boxShadow: '0 15px 30px rgba(25,118,210,0.15)',
-  },
-}));
-
 const AdminDashboard = () => {
-  const [inquiryStats, setInquiryStats] = useState(null);
+  const [allStats, setAllStats] = useState({
+    inquiries: null,
+    services: null,
+    projects: null,
+    users: null,
+    messages: null,
+  });
   const [inquiries, setInquiries] = useState([]);
   const [servicesList, setServicesList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,21 +54,33 @@ const AdminDashboard = () => {
   const [editingServiceId, setEditingServiceId] = useState(null);
 
   useEffect(() => {
-    fetchDashboardData();
+    fetchAllDashboardData();
     fetchServices();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchAllDashboardData = async () => {
     try {
       setLoading(true);
-      const [statsRes, inquiriesRes] = await Promise.all([
-        inquiryService.getStats(),
-        inquiryService.getAll({ status: 'new' }),
-      ]);
-      setInquiryStats(statsRes.data.stats);
+      const [inquiryStatsRes, inquiriesRes, serviceStatsRes, projectStatsRes, userStatsRes, messageStatsRes] =
+        await Promise.all([
+          inquiryService.getStats(),
+          inquiryService.getAll({ status: 'new' }),
+          serviceService.getStats(),
+          projectService.getStats(),
+          authService.getStats(),
+          messageService.getStats(),
+        ]);
+
+      setAllStats({
+        inquiries: inquiryStatsRes.data.stats,
+        services: serviceStatsRes.data.stats,
+        projects: projectStatsRes.data.stats,
+        users: userStatsRes.data.stats,
+        messages: messageStatsRes.data.stats,
+      });
       setInquiries(inquiriesRes.data.inquiries);
     } catch (error) {
-      errorAlert('Failed to load dashboard data');
+      errorAlert('Error', 'Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
@@ -83,10 +110,10 @@ const AdminDashboard = () => {
 
       if (editingServiceId) {
         await serviceService.update(editingServiceId, formData);
-        successAlert('Service updated successfully');
+        successAlert('Success', 'Service updated successfully');
       } else {
         await serviceService.create(formData);
-        successAlert('Service added successfully');
+        successAlert('Success', 'Service added successfully');
       }
       setNewService({
         title: '',
@@ -100,8 +127,9 @@ const AdminDashboard = () => {
       setShowServiceForm(false);
       setEditingServiceId(null);
       fetchServices();
+      fetchAllDashboardData();
     } catch (error) {
-      errorAlert('Failed to add service');
+      errorAlert('Error', 'Failed to save service');
     }
   };
 
@@ -120,14 +148,19 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmed = await confirmAlert('Delete this service?', 'This will permanently remove the service.');
+    const confirmed = await confirmAlert(
+      'Delete Service',
+      'Are you sure you want to delete this service?',
+      () => {}
+    );
     if (!confirmed) return;
     try {
       await serviceService.delete(id);
-      successAlert('Service deleted');
+      successAlert('Success', 'Service deleted successfully');
       fetchServices();
+      fetchAllDashboardData();
     } catch (err) {
-      errorAlert('Failed to delete service');
+      errorAlert('Error', 'Failed to delete service');
     }
   };
 
@@ -143,68 +176,166 @@ const AdminDashboard = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 7, md: 12 } }}>
+        {/* Header */}
         <Box className="fade-in-down" sx={{ mb: 8 }}>
-          <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' },
+              background: 'linear-gradient(90deg, #1976d2, #0ea5e9)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }}
+          >
             Admin Dashboard
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#666', mt: 1 }}>
+            Manage your business metrics and operations
           </Typography>
         </Box>
 
-        {/* Stats */}
-        {inquiryStats && (
-          <Grid container spacing={3} sx={{ mb: 6 }}>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard className="fade-in-up stagger-1">
-                <Typography variant="h6" sx={{ background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', fontWeight: 700 }}>
-                  {inquiryStats.total}
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  Total Inquiries
-                </Typography>
-              </StatsCard>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard>
-                <Typography variant="h6" sx={{ color: '#ff9800', fontWeight: 700 }}>
-                  {inquiryStats.new}
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  New Inquiries
-                </Typography>
-              </StatsCard>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard>
-                <Typography variant="h6" sx={{ color: '#2196f3', fontWeight: 700 }}>
-                  {inquiryStats.contacted}
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  Contacted
-                </Typography>
-              </StatsCard>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatsCard>
-                <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 700 }}>
-                  {inquiryStats.converted}
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  Converted
-                </Typography>
-              </StatsCard>
-            </Grid>
+        {/* Quick Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 6 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <QuickStatCard
+              icon={AssignmentIcon}
+              title="Total Inquiries"
+              value={allStats.inquiries?.total || 0}
+              color="#1976d2"
+            />
           </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <QuickStatCard
+              icon={AddBusinessIcon}
+              title="Services"
+              value={allStats.services?.total || 0}
+              color="#ff9800"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <QuickStatCard
+              icon={AssignmentIcon}
+              title="Active Projects"
+              value={allStats.projects?.total || 0}
+              color="#2196f3"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <QuickStatCard
+              icon={PeopleIcon}
+              title="Total Users"
+              value={allStats.users?.total || 0}
+              color="#4caf50"
+            />
+          </Grid>
+        </Grid>
+
+        {/* Charts Section */}
+        <Grid container spacing={3} sx={{ mb: 6 }}>
+          <InquiryStatusChart data={allStats.inquiries} />
+          <ServiceCategoryChart data={allStats.services?.categories || []} />
+          <Grid item xs={12} sm={6} md={4}>
+            <Card
+              sx={{
+                p: 3,
+                background: 'linear-gradient(135deg, rgba(25,118,210,0.04), rgba(124,77,255,0.04))',
+                border: '1px solid rgba(25,118,210,0.1)',
+                borderRadius: '16px',
+              }}
+            >
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Team Overview
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2">
+                  <strong>Admins:</strong> {allStats.users?.admins || 0}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Clients:</strong> {allStats.users?.clients || 0}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Messages:</strong> {allStats.messages?.total || 0}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Unread:</strong>{' '}
+                  <span style={{ color: '#ff5722' }}>
+                    {allStats.messages?.unread || 0}
+                  </span>
+                </Typography>
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* Recent Inquiries */}
+        {inquiries.length > 0 && (
+          <Card sx={{ p: { xs: 2, md: 3 }, mb: 6 }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Recent New Inquiries
+            </Typography>
+            <Box
+              sx={{
+                maxHeight: 300,
+                overflowY: 'auto',
+              }}
+            >
+              {inquiries.slice(0, 5).map((inquiry, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    p: 2,
+                    borderBottom:
+                      idx !== inquiries.length - 1
+                        ? '1px solid rgba(0,0,0,0.1)'
+                        : 'none',
+                    '&:hover': { backgroundColor: 'rgba(0,0,0,0.02)' },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                    <Box>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {inquiry.name}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: '#666' }}>
+                        {inquiry.email}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          mt: 0.5,
+                          color: '#333',
+                          fontSize: '0.85rem',
+                        }}
+                      >
+                        {inquiry.subject}
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" sx={{ color: '#999' }}>
+                      {new Date(inquiry.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Card>
         )}
 
-        {/* Add Service Section */}
+        {/* Services Management */}
         <Card sx={{ p: { xs: 2, md: 3 }, mb: 6 }}>
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-            {showServiceForm ? 'Add New Service' : 'Services Management'}
+            {showServiceForm ? 'Add/Edit Service' : 'Services Management'}
           </Typography>
 
           {!showServiceForm ? (
-            <Button variant="contained" sx={{ backgroundColor: '#1976d2' }} onClick={() => setShowServiceForm(true)}>
-              + Add Service
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#1976d2' }}
+              onClick={() => setShowServiceForm(true)}
+            >
+              + Add New Service
             </Button>
           ) : (
             <Box component="form" onSubmit={handleAddService}>
@@ -212,7 +343,9 @@ const AdminDashboard = () => {
                 fullWidth
                 label="Service Title"
                 value={newService.title}
-                onChange={(e) => setNewService({ ...newService, title: e.target.value })}
+                onChange={(e) =>
+                  setNewService({ ...newService, title: e.target.value })
+                }
                 required
                 sx={{ mb: 2 }}
               />
@@ -220,7 +353,12 @@ const AdminDashboard = () => {
                 fullWidth
                 label="Short Description"
                 value={newService.shortDescription}
-                onChange={(e) => setNewService({ ...newService, shortDescription: e.target.value })}
+                onChange={(e) =>
+                  setNewService({
+                    ...newService,
+                    shortDescription: e.target.value,
+                  })
+                }
                 required
                 sx={{ mb: 2 }}
               />
@@ -228,7 +366,12 @@ const AdminDashboard = () => {
                 fullWidth
                 label="Description"
                 value={newService.description}
-                onChange={(e) => setNewService({ ...newService, description: e.target.value })}
+                onChange={(e) =>
+                  setNewService({
+                    ...newService,
+                    description: e.target.value,
+                  })
+                }
                 multiline
                 rows={3}
                 required
@@ -239,7 +382,9 @@ const AdminDashboard = () => {
                 label="Price"
                 type="number"
                 value={newService.price}
-                onChange={(e) => setNewService({ ...newService, price: e.target.value })}
+                onChange={(e) =>
+                  setNewService({ ...newService, price: e.target.value })
+                }
                 required
                 sx={{ mb: 2 }}
               />
@@ -248,113 +393,145 @@ const AdminDashboard = () => {
                 label="Category"
                 select
                 value={newService.category}
-                onChange={(e) => setNewService({ ...newService, category: e.target.value })}
+                onChange={(e) =>
+                  setNewService({ ...newService, category: e.target.value })
+                }
                 sx={{ mb: 2 }}
-                SelectProps={{
-                  native: true,
-                }}
               >
-                {['SEO', 'Social Media Marketing', 'PPC', 'Content Marketing', 'Email Marketing', 'Web Design'].map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
+                <MenuItem value="SEO">SEO</MenuItem>
+                <MenuItem value="Social Media Marketing">Social Media Marketing</MenuItem>
+                <MenuItem value="PPC">PPC</MenuItem>
+                <MenuItem value="Content Marketing">Content Marketing</MenuItem>
+                <MenuItem value="Email Marketing">Email Marketing</MenuItem>
+                <MenuItem value="Web Design">Web Design</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
               </TextField>
               <TextField
                 fullWidth
                 label="Features (comma-separated)"
                 value={newService.features}
-                onChange={(e) => setNewService({ ...newService, features: e.target.value })}
+                onChange={(e) =>
+                  setNewService({ ...newService, features: e.target.value })
+                }
+                multiline
+                rows={2}
                 sx={{ mb: 2 }}
               />
-              <Button component="label" variant="outlined" sx={{ mb: 2 }}>
-                Upload Service Image
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={(e) => setServiceImage(e.target.files?.[0] || null)}
-                />
-              </Button>
-              {serviceImage && (
-                <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
-                  Selected image: {serviceImage.name}
-                </Typography>
-              )}
-              <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                <Button variant="contained" sx={{ backgroundColor: '#1976d2' }} type="submit" fullWidth>
-                  Add Service
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 2 }}>
+                <Button variant="outlined" component="label">
+                  Upload Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={(e) =>
+                      setServiceImage(e.target.files?.[0] || null)
+                    }
+                  />
                 </Button>
-                <Button variant="outlined" onClick={() => setShowServiceForm(false)} fullWidth>
+                {serviceImage && (
+                  <Typography variant="body2">
+                    {serviceImage.name}
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button type="submit" variant="contained" sx={{ backgroundColor: '#1976d2' }}>
+                  {editingServiceId ? 'Update Service' : 'Add Service'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setShowServiceForm(false);
+                    setEditingServiceId(null);
+                    setNewService({
+                      title: '',
+                      description: '',
+                      shortDescription: '',
+                      price: '',
+                      category: 'SEO',
+                      features: '',
+                    });
+                  }}
+                >
                   Cancel
                 </Button>
               </Box>
             </Box>
           )}
-        </Card>
 
-        {/* Recent Inquiries */}
-        {/* Services List */}
-        <Card sx={{ p: 3, mb: 6 }}>
-          <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-            Services
-          </Typography>
-          {servicesList.length === 0 ? (
-            <Typography sx={{ color: '#666' }}>No services created yet</Typography>
-          ) : (
-            <Box sx={{ display: 'grid', gap: 2 }}>
-              {servicesList.map((s) => (
-                <Box key={s._id} sx={{ display: 'flex', alignItems: { xs: 'flex-start', md: 'center' }, justifyContent: 'space-between', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    {s.image?.url && <img src={s.image.url} alt={s.title} style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 8 }} />}
-                    <Box>
-                      <Typography sx={{ fontWeight: 700 }}>{s.title}</Typography>
-                      <Typography sx={{ color: '#666', fontSize: 13 }}>{s.shortDescription}</Typography>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 1, width: { xs: '100%', md: 'auto' } }}>
-                    <Button variant="outlined" sx={{ mr: 1 }} onClick={() => handleEdit(s)}>
-                      Edit
-                    </Button>
-                    <Button variant="outlined" color="error" onClick={() => handleDelete(s._id)}>
-                      Delete
-                    </Button>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          )}
-        </Card>
-        <Card sx={{ p: { xs: 2, md: 3 } }}>
-          <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-            Recent Inquiries
-          </Typography>
-          {inquiries.length === 0 ? (
-            <Typography sx={{ color: '#666' }}>No new inquiries</Typography>
-          ) : (
-            <Box sx={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#f5f5f5' }}>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e0e0e0' }}>Name</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e0e0e0' }}>Email</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e0e0e0' }}>Subject</th>
-                    <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #e0e0e0' }}>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inquiries.map((inquiry) => (
-                    <tr key={inquiry._id}>
-                      <td style={{ padding: '12px', borderBottom: '1px solid #f0f0f0' }}>{inquiry.name}</td>
-                      <td style={{ padding: '12px', borderBottom: '1px solid #f0f0f0' }}>{inquiry.email}</td>
-                      <td style={{ padding: '12px', borderBottom: '1px solid #f0f0f0' }}>{inquiry.subject}</td>
-                      <td style={{ padding: '12px', borderBottom: '1px solid #f0f0f0', color: '#999', fontSize: '14px' }}>
-                        {new Date(inquiry.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Services List */}
+          {!showServiceForm && servicesList.length > 0 && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                Your Services ({servicesList.length})
+              </Typography>
+              <Grid container spacing={2}>
+                {servicesList.map((service) => (
+                  <Grid item xs={12} sm={6} md={4} key={service._id}>
+                    <Card
+                      sx={{
+                        p: 2,
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        border: '1px solid rgba(0,0,0,0.1)',
+                      }}
+                    >
+                      {service.image && (
+                        <Box
+                          component="img"
+                          src={service.image.url}
+                          alt={service.title}
+                          sx={{
+                            width: '100%',
+                            height: 150,
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            mb: 2,
+                          }}
+                        />
+                      )}
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                        {service.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: '#666', mb: 2, flex: 1 }}
+                      >
+                        {service.shortDescription}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: 600,
+                          color: '#1976d2',
+                          mb: 2,
+                        }}
+                      >
+                        ${service.price}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => handleEdit(service)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleDelete(service._id)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           )}
         </Card>

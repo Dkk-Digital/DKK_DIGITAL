@@ -1,4 +1,5 @@
 import Project from '../models/Project.js';
+import { notifyProjectStatus } from '../utils/notifications.js';
 
 export const createProject = async (req, res) => {
   try {
@@ -47,17 +48,58 @@ export const getClientProjects = async (req, res) => {
 
 export const getAllProjects = async (req, res) => {
   try {
-    const { status } = req.query;
+    const { status, search, startDate, endDate, sortBy } = req.query;
     let filter = {};
 
+    // Status filter
     if (status) {
       filter.status = status;
+    }
+
+    // Search filter (full-text search in title and description)
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Date range filter
+    if (startDate || endDate) {
+      filter.createdAt = {};
+      if (startDate) {
+        filter.createdAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        const endDateObj = new Date(endDate);
+        endDateObj.setHours(23, 59, 59, 999);
+        filter.createdAt.$lte = endDateObj;
+      }
+    }
+
+    // Build sort object
+    let sort = { createdAt: -1 }; // Default: newest first
+    if (sortBy) {
+      switch (sortBy) {
+        case 'title':
+          sort = { title: 1 };
+          break;
+        case 'oldest':
+          sort = { createdAt: 1 };
+          break;
+        case 'recent':
+          sort = { createdAt: -1 };
+          break;
+        default:
+          sort = { createdAt: -1 };
+      }
     }
 
     const projects = await Project.find(filter)
       .populate('service')
       .populate('client', 'name email')
-      .populate('assignedTo', 'name email');
+      .populate('assignedTo', 'name email')
+      .sort(sort);
 
     res.status(200).json({
       success: true,
@@ -106,6 +148,13 @@ export const updateProject = async (req, res) => {
 
     await project.populate('service').populate('client', 'name email').populate('assignedTo', 'name email');
 
+    // Send notification email to client about status update
+    if (status && project.client) {
+      notifyProjectStatus(project, project.client).catch((err) => {
+        console.error('Failed to send project status notification:', err);
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Project updated successfully',
@@ -128,6 +177,40 @@ export const deleteProject = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Project deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getProjectStats = async (req, res) => {
+  try {
+    const total = await Project.countDocuments();
+    const statuses = await Project.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          status: '$_id',
+          count: 1,
+          _id: 0,
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        total,
+        statuses,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

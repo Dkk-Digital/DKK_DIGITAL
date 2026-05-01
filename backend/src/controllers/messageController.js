@@ -1,4 +1,5 @@
 import Message from '../models/Message.js';
+import { notifyNewMessage } from '../utils/notifications.js';
 
 export const sendMessage = async (req, res) => {
   try {
@@ -19,6 +20,13 @@ export const sendMessage = async (req, res) => {
     });
 
     await newMessage.populate('sender', 'name email').populate('recipient', 'name email');
+
+    // Send notification email to recipient
+    if (newMessage.recipient) {
+      notifyNewMessage(newMessage, newMessage.recipient).catch((err) => {
+        console.error('Failed to send message notification:', err);
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -96,6 +104,24 @@ export const deleteMessage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Message deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getMessageStats = async (req, res) => {
+  try {
+    const total = await Message.countDocuments();
+    const unreadCount = await Message.countDocuments({ isRead: false });
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        total,
+        unread: unreadCount,
+        read: total - unreadCount,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

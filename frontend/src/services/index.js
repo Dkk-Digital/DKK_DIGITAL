@@ -8,6 +8,7 @@ export const authService = {
   getAllUsers: () => api.get('/auth/users'),
   updateUserRole: (id, data) => api.put(`/auth/users/${id}/role`, data),
   deleteUser: (id) => api.delete(`/auth/users/${id}`),
+  getStats: () => api.get('/auth/users/stats/overview'),
 };
 
 export const serviceService = {
@@ -16,6 +17,11 @@ export const serviceService = {
   create: (data) => api.post('/services', data),
   update: (id, data) => api.put(`/services/${id}`, data),
   delete: (id) => api.delete(`/services/${id}`),
+  getStats: () => api.get('/services/stats/overview'),
+  search: (query, filters) => {
+    const params = { search: query, ...filters };
+    return api.get('/services', { params });
+  },
 };
 
 export const projectService = {
@@ -25,6 +31,11 @@ export const projectService = {
   create: (data) => api.post('/projects', data),
   update: (id, data) => api.put(`/projects/${id}`, data),
   delete: (id) => api.delete(`/projects/${id}`),
+  getStats: () => api.get('/projects/stats/overview'),
+  search: (query, filters) => {
+    const params = { search: query, ...filters };
+    return api.get('/projects', { params });
+  },
 };
 
 export const inquiryService = {
@@ -34,6 +45,10 @@ export const inquiryService = {
   updateStatus: (id, data) => api.put(`/inquiries/${id}`, data),
   delete: (id) => api.delete(`/inquiries/${id}`),
   getStats: () => api.get('/inquiries/stats/overview'),
+  search: (query, filters) => {
+    const params = { search: query, ...filters };
+    return api.get('/inquiries', { params });
+  },
 };
 
 export const blogService = {
@@ -42,6 +57,10 @@ export const blogService = {
   create: (data) => api.post('/blogs', data),
   update: (id, data) => api.put(`/blogs/${id}`, data),
   delete: (id) => api.delete(`/blogs/${id}`),
+  search: (query, filters) => {
+    const params = { search: query, ...filters };
+    return api.get('/blogs', { params });
+  },
 };
 
 export const messageService = {
@@ -49,4 +68,5 @@ export const messageService = {
   getConversations: () => api.get('/messages/conversations'),
   getConversation: (userId) => api.get(`/messages/${userId}`),
   delete: (id) => api.delete(`/messages/${id}`),
+  getStats: () => api.get('/messages/stats/overview'),
 };

@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.11.0",
+    "recharts": "^3.8.1",
     "sweetalert2": "^11.26.24"
   },
   "devDependencies": {

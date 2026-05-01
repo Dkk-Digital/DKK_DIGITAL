@@ -83,22 +83,64 @@ export const createBlog = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const { published, category } = req.query;
+    const { published, category, search, startDate, endDate, sortBy } = req.query;
     let filter = {};
 
+    // Published filter
     if (published === 'true') {
       filter.published = true;
     } else if (published === 'false') {
       filter.published = false;
     }
 
+    // Category filter
     if (category) {
       filter.category = category;
     }
 
+    // Search filter (full-text search in title, content, and tags)
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+        { tags: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Date range filter
+    if (startDate || endDate) {
+      filter.publishedAt = {};
+      if (startDate) {
+        filter.publishedAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        const endDateObj = new Date(endDate);
+        endDateObj.setHours(23, 59, 59, 999);
+        filter.publishedAt.$lte = endDateObj;
+      }
+    }
+
+    // Build sort object
+    let sort = { publishedAt: -1 }; // Default: newest first
+    if (sortBy) {
+      switch (sortBy) {
+        case 'title':
+          sort = { title: 1 };
+          break;
+        case 'oldest':
+          sort = { publishedAt: 1 };
+          break;
+        case 'recent':
+          sort = { publishedAt: -1 };
+          break;
+        default:
+          sort = { publishedAt: -1 };
+      }
+    }
+
     const blogs = await Blog.find(filter)
       .populate('author', 'name email')
-      .sort({ publishedAt: -1 });
+      .sort(sort);
 
     res.status(200).json({
       success: true,

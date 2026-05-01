@@ -76,14 +76,55 @@ export const createService = async (req, res) => {
 
 export const getAllServices = async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category, search, minPrice, maxPrice, sortBy } = req.query;
     let filter = {};
 
+    // Category filter
     if (category) {
       filter.category = category;
     }
 
-    const services = await Service.find(filter).populate('createdBy', 'name email');
+    // Search filter (full-text search in title and description)
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { shortDescription: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    // Build sort object
+    let sort = { createdAt: -1 }; // Default: newest first
+    if (sortBy) {
+      switch (sortBy) {
+        case 'price-asc':
+          sort = { price: 1 };
+          break;
+        case 'price-desc':
+          sort = { price: -1 };
+          break;
+        case 'title':
+          sort = { title: 1 };
+          break;
+        case 'oldest':
+          sort = { createdAt: 1 };
+          break;
+        default:
+          sort = { createdAt: -1 };
+      }
+    }
+
+    const services = await Service.find(filter)
+      .populate('createdBy', 'name email')
+      .sort(sort);
+
     res.status(200).json({
       success: true,
       count: services.length,
@@ -182,6 +223,40 @@ export const deleteService = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Service deleted successfully',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getServiceStats = async (req, res) => {
+  try {
+    const total = await Service.countDocuments();
+    const categories = await Service.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          category: '$_id',
+          count: 1,
+          _id: 0,
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        total,
+        categories,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

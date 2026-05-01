@@ -1,5 +1,7 @@
 import express from 'express';
 import { protect, adminOnly } from '../middleware/auth.js';
+import { generalLimiter, createLimiter } from '../middleware/rateLimiter.js';
+import { validateCreateInquiry, preventXSS } from '../middleware/validation.js';
 import {
   createInquiry,
   getAllInquiries,
@@ -11,7 +13,7 @@ import {
 
 const router = express.Router();
 
-router.post('/', createInquiry);
+router.post('/', generalLimiter, preventXSS, validateCreateInquiry, createInquiry);
 router.get('/stats/overview', protect, adminOnly, getInquiryStats);
 router.get('/', protect, adminOnly, getAllInquiries);
 router.get('/:id', protect, adminOnly, getInquiryById);
