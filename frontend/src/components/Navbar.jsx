@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '../context/AuthContext';
 
 const StyledToolbar = styled(Toolbar)({
@@ -105,7 +106,7 @@ const Navbar = () => {
           </BrandText>
         </Box>
         <IconButton onClick={closeMobileMenu} aria-label="Close menu">
-          <CloseIcon />
+          {/* <CloseIcon /> */}
         </IconButton>
       </Stack>
 
@@ -221,7 +222,7 @@ const Navbar = () => {
             sx={{ display: { xs: 'inline-flex', md: 'none' }, color: '#333' }}
             aria-label="Open navigation menu"
           >
-            <MenuIcon />
+            {/* <MenuIcon /> */}
           </IconButton>
         </StyledToolbar>
       </Container>
