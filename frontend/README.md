@@ -97,7 +97,6 @@ See `.env.example`
 
 Key variables:
 - `VITE_API_URL` - Backend API URL
-- `VITE_APP_NAME` - Application name
 
 ## Styling
 
