@@ -6,7 +6,8 @@ export const connectDB = async () => {
   const mongoUri = process.env.MONGODB_URI;
 
   if (!mongoUri) {
-    throw new Error('MONGODB_URI is not set. Configure it in your deployment environment.');
+    console.warn('MONGODB_URI is not set. Database connection skipped.');
+    return null;
   }
 
   if (mongoose.connection.readyState === 1) {
@@ -24,7 +25,7 @@ export const connectDB = async () => {
     return conn.connection;
   } catch (error) {
     cachedConnectionPromise = null;
-    console.error(`Error: ${error.message}`);
-    throw error;
+    console.warn(`Database connection unavailable: ${error.message}`);
+    return null;
   }
 };

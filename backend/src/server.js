@@ -27,8 +27,10 @@ app.use(
   })
 );
 
-// Connect to database
-connectDB();
+// Connect to database without failing the whole server on startup.
+connectDB().catch((error) => {
+  console.error(`Database connection failed: ${error.message}`);
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
