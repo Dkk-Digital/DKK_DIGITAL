@@ -494,28 +494,17 @@ You can also use MongoDB Compass or the admin dashboard to add data.
    git push heroku main
    ```
 
-### Frontend Deployment (Vercel)
+### Frontend Deployment
 
-1. **Install Vercel CLI**
-   ```bash
-   npm i -g vercel
-   ```
+Deploy the `frontend` folder to your preferred static hosting provider (Netlify, Surge, GitHub Pages, or a static file host).
 
-2. **Deploy**
-   ```bash
-   cd frontend
-   vercel --env VITE_API_URL=<backend_url>
-   ```
-
-### Alternative: Railway.app
-
+Build locally:
 ```bash
-# Backend
-railway up
-
-# Frontend
-vercel
+cd frontend
+npm run build
 ```
+
+Then follow your hosting provider's instructions to upload the generated `dist` or `build` folder.
 
 ---
 

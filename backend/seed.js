@@ -10,22 +10,26 @@ dotenv.config();
 
 const seedDatabase = async () => {
   try {
-    await connectDB();
+    await connectDB({ requireEnv: true });
 
     // Clear existing data
     await User.deleteMany({});
     await Service.deleteMany({});
     await Blog.deleteMany({});
 
+    // Admin credentials (can be overridden via env)
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@dkkdigital.com';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@123';
+
     // Create admin user
-    const hashedPassword = await bcrypt.hash('Admin@123', 10);
+    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
     const admin = await User.create({
       name: 'Admin User',
-      email: 'admin@dkkdigital.com',
+      email: ADMIN_EMAIL,
       password: hashedPassword,
       role: 'admin',
-      phone: '+91-9876543210',
-      company: 'DKK Digital',
+      phone: process.env.ADMIN_PHONE || '+91-9876543210',
+      company: process.env.ADMIN_COMPANY || 'DKK Digital',
     });
 
     // Create client users
@@ -176,14 +180,19 @@ const seedDatabase = async () => {
     ]);
 
     console.log('✓ Database seeded successfully!');
-    console.log('✓ Admin User: admin@dkkdigital.com / Admin@123');
-    console.log('✓ Client User: john@example.com / Admin@123');
+    console.log(`✓ Admin User: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
+    console.log(`✓ Client User: john@example.com / ${ADMIN_PASSWORD}`);
     console.log('✓ Services Created: 6');
     console.log('✓ Blog Posts Created: 3');
-
+    await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
     console.error('Error seeding database:', error);
+    try {
+      await mongoose.disconnect();
+    } catch (e) {
+      // ignore
+    }
     process.exit(1);
   }
 };

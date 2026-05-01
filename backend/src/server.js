@@ -55,10 +55,8 @@ app.use(errorHandler);
 
 export default app;
 
-// Start server only for local/dev runtime.
-if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+// Start server when this module is executed directly.
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
