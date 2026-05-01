@@ -17,8 +17,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
 const StyledToolbar = styled(Toolbar)({
