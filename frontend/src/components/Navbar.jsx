@@ -17,8 +17,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
 const StyledToolbar = styled(Toolbar)({
@@ -29,7 +28,7 @@ const StyledToolbar = styled(Toolbar)({
   minHeight: '72px',
 });
 
-const LogoText = styled(RouterLink)({
+const LogoText = styled('div')({
   display: 'flex',
   alignItems: 'center',
   textDecoration: 'none',
@@ -106,7 +105,7 @@ const Navbar = () => {
           </BrandText>
         </Box>
         <IconButton onClick={closeMobileMenu} aria-label="Close menu">
-          {/* <CloseIcon /> */}
+          <CloseIcon />
         </IconButton>
       </Stack>
 
@@ -165,7 +164,7 @@ const Navbar = () => {
     >
       <Container maxWidth="lg">
         <StyledToolbar>
-          <LogoText to="/" aria-label="DKK Digital home">
+          <LogoText component={RouterLink} to="/" aria-label="DKK Digital home">
             <LogoImage src="/logo.png" alt="DKK Digital logo" />
             <BrandText className="brand-gradient">DKK Digital</BrandText>
           </LogoText>
@@ -222,7 +221,7 @@ const Navbar = () => {
             sx={{ display: { xs: 'inline-flex', md: 'none' }, color: '#333' }}
             aria-label="Open navigation menu"
           >
-            {/* <MenuIcon /> */}
+            <MenuIcon />
           </IconButton>
         </StyledToolbar>
       </Container>
