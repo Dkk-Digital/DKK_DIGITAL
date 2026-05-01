@@ -29,7 +29,7 @@ const BlogDetail = () => {
   if (loading) {
     return (
       <Layout>
-        <Container sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+        <Container sx={{ display: 'flex', justifyContent: 'center', py: { xs: 6, md: 8 } }}>
           <CircularProgress />
         </Container>
       </Layout>
@@ -39,7 +39,7 @@ const BlogDetail = () => {
   if (!blog) {
     return (
       <Layout>
-        <Container sx={{ py: 8, textAlign: 'center' }}>
+        <Container sx={{ py: { xs: 6, md: 8 }, textAlign: 'center' }}>
           <Typography variant="h6" sx={{ color: '#666' }}>
             Blog not found
           </Typography>
@@ -50,22 +50,22 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ py: 12 }}>
+      <Container maxWidth="md" sx={{ py: { xs: 7, md: 12 } }}>
         <Box className="fade-in-up">
           {blog.image?.url && (
             <Box
               component="img"
               src={blog.image.url}
               alt={blog.title}
-              sx={{ width: '100%', maxHeight: 420, objectFit: 'cover', borderRadius: 3, mb: 4 }}
+              sx={{ width: '100%', maxHeight: { xs: 280, sm: 360, md: 420 }, objectFit: 'cover', borderRadius: 3, mb: 4 }}
             />
           )}
-          <Typography variant="h3" sx={{ mb: 2, fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ mb: 2, fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             {blog.title}
           </Typography>
         </Box>
 
-        <Box sx={{ mb: 3, display: 'flex', gap: 2, color: '#999', fontSize: '14px', animation: 'fadeInUp 0.8s ease' }}>
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap', color: '#999', fontSize: '14px', animation: 'fadeInUp 0.8s ease' }}>
           <span>By {blog.author?.name}</span>
           <span>{new Date(blog.publishedAt).toLocaleDateString()}</span>
           <span>Category: {blog.category}</span>

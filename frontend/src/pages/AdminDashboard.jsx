@@ -12,6 +12,9 @@ const StatsCard = styled(Card)(({ theme }) => ({
   border: '1px solid rgba(25,118,210,0.1)',
   borderRadius: '16px',
   transition: 'all 0.4s ease',
+  [theme.breakpoints.down('sm')]: {
+    padding: '22px',
+  },
   '&:hover': {
     transform: 'translateY(-8px)',
     boxShadow: '0 15px 30px rgba(25,118,210,0.15)',
@@ -130,7 +133,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <Layout>
-        <Container sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+        <Container sx={{ display: 'flex', justifyContent: 'center', py: { xs: 6, md: 8 } }}>
           <CircularProgress />
         </Container>
       </Layout>
@@ -139,9 +142,9 @@ const AdminDashboard = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 12 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
         <Box className="fade-in-down" sx={{ mb: 8 }}>
-          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Admin Dashboard
           </Typography>
         </Box>
@@ -193,7 +196,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Add Service Section */}
-        <Card sx={{ p: 3, mb: 6 }}>
+        <Card sx={{ p: { xs: 2, md: 3 }, mb: 6 }}>
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
             {showServiceForm ? 'Add New Service' : 'Services Management'}
           </Typography>
@@ -277,11 +280,11 @@ const AdminDashboard = () => {
                   Selected image: {serviceImage.name}
                 </Typography>
               )}
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button variant="contained" sx={{ backgroundColor: '#1976d2' }} type="submit">
+              <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+                <Button variant="contained" sx={{ backgroundColor: '#1976d2' }} type="submit" fullWidth>
                   Add Service
                 </Button>
-                <Button variant="outlined" onClick={() => setShowServiceForm(false)}>
+                <Button variant="outlined" onClick={() => setShowServiceForm(false)} fullWidth>
                   Cancel
                 </Button>
               </Box>
@@ -300,7 +303,7 @@ const AdminDashboard = () => {
           ) : (
             <Box sx={{ display: 'grid', gap: 2 }}>
               {servicesList.map((s) => (
-                <Box key={s._id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+                <Box key={s._id} sx={{ display: 'flex', alignItems: { xs: 'flex-start', md: 'center' }, justifyContent: 'space-between', gap: 2, flexDirection: { xs: 'column', md: 'row' } }}>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     {s.image?.url && <img src={s.image.url} alt={s.title} style={{ width: 80, height: 56, objectFit: 'cover', borderRadius: 8 }} />}
                     <Box>
@@ -308,7 +311,7 @@ const AdminDashboard = () => {
                       <Typography sx={{ color: '#666', fontSize: 13 }}>{s.shortDescription}</Typography>
                     </Box>
                   </Box>
-                  <Box>
+                  <Box sx={{ display: 'flex', gap: 1, width: { xs: '100%', md: 'auto' } }}>
                     <Button variant="outlined" sx={{ mr: 1 }} onClick={() => handleEdit(s)}>
                       Edit
                     </Button>
@@ -321,7 +324,7 @@ const AdminDashboard = () => {
             </Box>
           )}
         </Card>
-        <Card sx={{ p: 3 }}>
+        <Card sx={{ p: { xs: 2, md: 3 } }}>
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
             Recent Inquiries
           </Typography>

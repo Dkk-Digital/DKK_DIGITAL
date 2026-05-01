@@ -5,14 +5,21 @@ import Layout from '../components/Layout';
 
 const AboutSection = styled(Box)(({ theme }) => ({
   padding: '80px 0',
+  [theme.breakpoints.down('md')]: {
+    padding: '56px 0',
+  },
 }));
 
-const HeroSection = styled(Box)(() => ({
+const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
   padding: '60px 0',
   borderRadius: '16px',
   marginBottom: '60px',
   textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    padding: '48px 16px',
+    marginBottom: '40px',
+  },
 }));
 
 const ValueCard = styled(Paper)(({ theme }) => ({
@@ -32,10 +39,10 @@ const About = () => {
     <Layout>
       <Container maxWidth="lg">
         <HeroSection className="fade-in-down">
-          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             About DKK Digital
           </Typography>
-          <Typography variant="body1" sx={{ color: '#666', maxWidth: '700px', margin: '0 auto' }}>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '700px', margin: '0 auto', px: { xs: 2, sm: 0 } }}>
             Discover our story, mission, and the values that drive us to deliver excellence in digital marketing.
           </Typography>
         </HeroSection>

@@ -6,19 +6,27 @@ import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { serviceService } from '../services';
 
-const HeroSection = styled(Box)(() => ({
+const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.1) 0%, rgba(124,77,255,0.06) 100%)',
   borderRadius: '24px',
   padding: '56px 32px',
   marginTop: '40px',
   marginBottom: '32px',
+  [theme.breakpoints.down('sm')]: {
+    padding: '28px 16px',
+    borderRadius: '20px',
+    marginTop: '24px',
+  },
 }));
 
-const DetailCard = styled(Card)(() => ({
+const DetailCard = styled(Card)(({ theme }) => ({
   padding: '28px',
   borderRadius: '20px',
   border: '1px solid rgba(25,118,210,0.08)',
   background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,252,255,0.88) 100%)',
+  [theme.breakpoints.down('sm')]: {
+    padding: '20px',
+  },
 }));
 
 const ServiceImage = styled('img')(() => ({
@@ -58,7 +66,7 @@ const ServiceDetail = () => {
   if (loading) {
     return (
       <Layout>
-        <Container sx={{ display: 'flex', justifyContent: 'center', py: 12 }}>
+        <Container sx={{ display: 'flex', justifyContent: 'center', py: { xs: 7, md: 12 } }}>
           <CircularProgress />
         </Container>
       </Layout>
@@ -68,7 +76,7 @@ const ServiceDetail = () => {
   if (!service) {
     return (
       <Layout>
-        <Container sx={{ py: 12 }}>
+        <Container sx={{ py: { xs: 7, md: 12 } }}>
           <Typography variant="h5">Service not found.</Typography>
         </Container>
       </Layout>
@@ -77,7 +85,7 @@ const ServiceDetail = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
         <Button component={RouterLink} to="/services" variant="text" sx={{ mb: 3, textTransform: 'none' }}>
           Back to Services
         </Button>
@@ -87,13 +95,13 @@ const ServiceDetail = () => {
             <Grid item xs={12} md={8}>
               <Stack spacing={2}>
                 <Chip label={service.category} sx={{ width: 'fit-content', fontWeight: 600 }} />
-                <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+                <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
                   {service.title}
                 </Typography>
-                <Typography variant="h6" sx={{ color: '#555', maxWidth: 720 }}>
+                <Typography variant="h6" sx={{ color: '#555', maxWidth: 720, fontSize: { xs: '1rem', sm: '1.15rem', md: '1.25rem' } }}>
                   {service.shortDescription}
                 </Typography>
-                <Typography variant="h4" sx={{ color: '#1976d2', fontWeight: 800 }}>
+                <Typography variant="h4" sx={{ color: '#1976d2', fontWeight: 800, fontSize: { xs: '1.7rem', sm: '2rem', md: '2.5rem' } }}>
                   ₹{service.price}
                 </Typography>
               </Stack>

@@ -8,6 +8,10 @@ const FooterBox = styled(Box)(({ theme }) => ({
   marginTop: '80px',
   paddingTop: '60px',
   paddingBottom: '30px',
+  [theme.breakpoints.down('sm')]: {
+    marginTop: '56px',
+    paddingTop: '40px',
+  },
 }));
 
 const FooterLink = styled(Link)(({ theme }) => ({
@@ -27,7 +31,7 @@ const Footer = () => {
   return (
     <FooterBox>
       <Container maxWidth="lg">
-        <Grid container spacing={4} sx={{ mb: 4 }}>
+        <Grid container spacing={{ xs: 3, md: 4 }} sx={{ mb: { xs: 3, md: 4 }, textAlign: { xs: 'center', md: 'left' } }}>
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, background: 'linear-gradient(90deg, #7c4dff, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
               DKK Digital

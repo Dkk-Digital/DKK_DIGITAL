@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -20,7 +21,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import Profile from './pages/Profile';
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       main: '#1976d2',
@@ -33,6 +34,8 @@ const theme = createTheme({
     fontFamily: '"Segoe UI", "Roboto", "Oxygen", "Ubuntu", sans-serif',
   },
 });
+
+theme = responsiveFontSizes(theme);
 
 const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();

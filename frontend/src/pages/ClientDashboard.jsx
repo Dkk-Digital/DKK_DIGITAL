@@ -12,6 +12,9 @@ const ProjectCard = styled(Card)(({ theme }) => ({
   border: '1px solid rgba(25,118,210,0.08)',
   borderRadius: '16px',
   background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
+  [theme.breakpoints.down('sm')]: {
+    padding: '20px',
+  },
   '&:hover': {
     boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
     transform: 'translateY(-8px)',
@@ -96,7 +99,7 @@ const ClientDashboard = () => {
   if (loading) {
     return (
       <Layout>
-        <Container sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+        <Container sx={{ display: 'flex', justifyContent: 'center', py: { xs: 6, md: 8 } }}>
           <CircularProgress />
         </Container>
       </Layout>
@@ -105,14 +108,14 @@ const ClientDashboard = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 6 }} className="fade-in-down">
-          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'stretch', md: 'center' }, mb: 6, flexDirection: { xs: 'column', md: 'row' }, gap: 2 }} className="fade-in-down">
+          <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             My Dashboard
           </Typography>
           <Button
             variant="contained"
-            sx={{ background: 'linear-gradient(90deg, #1976d2, #7c4dff)', px: 3 }}
+            sx={{ background: 'linear-gradient(90deg, #1976d2, #7c4dff)', px: 3, width: { xs: '100%', md: 'auto' } }}
             onClick={() => setShowNewProjectDialog(true)}
           >
             + New Project
@@ -288,7 +291,7 @@ const ClientDashboard = () => {
               sx={{ mb: 3 }}
             />
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
               <Button
                 variant="contained"
                 sx={{ backgroundColor: '#1976d2' }}

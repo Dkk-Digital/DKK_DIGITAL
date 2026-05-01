@@ -1,7 +1,24 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Button, Container, Menu, MenuItem, Box } from '@mui/material';
+import React, { useMemo, useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Container,
+  Menu,
+  MenuItem,
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Divider,
+  Stack,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '../context/AuthContext';
 
 const StyledToolbar = styled(Toolbar)({
@@ -9,6 +26,7 @@ const StyledToolbar = styled(Toolbar)({
   justifyContent: 'space-between',
   backgroundColor: '#ffffff',
   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  minHeight: '72px',
 });
 
 const LogoText = styled(RouterLink)({
@@ -49,6 +67,18 @@ const NavButton = styled(Button)({
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = useMemo(
+    () => [
+      { label: 'Home', to: '/' },
+      { label: 'Services', to: '/services' },
+      { label: 'About', to: '/about' },
+      { label: 'Blog', to: '/blog' },
+      { label: 'Contact', to: '/contact' },
+    ],
+    []
+  );
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,7 +91,66 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     handleMenuClose();
+    setMobileOpen(false);
   };
+
+  const closeMobileMenu = () => setMobileOpen(false);
+
+  const renderDrawerContent = () => (
+    <Box sx={{ width: 300, p: 2 }} role="presentation">
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <LogoImage src="/logo.png" alt="DKK Digital logo" />
+          <BrandText className="brand-gradient" sx={{ fontSize: '20px' }}>
+            DKK Digital
+          </BrandText>
+        </Box>
+        <IconButton onClick={closeMobileMenu} aria-label="Close menu">
+          <CloseIcon />
+        </IconButton>
+      </Stack>
+
+      <List sx={{ px: 0 }}>
+        {navItems.map((item) => (
+          <ListItemButton key={item.to} component={RouterLink} to={item.to} onClick={closeMobileMenu} sx={{ borderRadius: 2 }}>
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))}
+      </List>
+
+      <Divider sx={{ my: 2 }} />
+
+      {isAuthenticated ? (
+        <List sx={{ px: 0 }}>
+          {user?.role === 'admin' && (
+            <ListItemButton component={RouterLink} to="/admin/dashboard" onClick={closeMobileMenu} sx={{ borderRadius: 2 }}>
+              <ListItemText primary="Admin Dashboard" />
+            </ListItemButton>
+          )}
+          {user?.role === 'client' && (
+            <ListItemButton component={RouterLink} to="/client/dashboard" onClick={closeMobileMenu} sx={{ borderRadius: 2 }}>
+              <ListItemText primary="My Dashboard" />
+            </ListItemButton>
+          )}
+          <ListItemButton component={RouterLink} to="/profile" onClick={closeMobileMenu} sx={{ borderRadius: 2 }}>
+            <ListItemText primary="Profile" />
+          </ListItemButton>
+          <ListItemButton onClick={handleLogout} sx={{ borderRadius: 2 }}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </List>
+      ) : (
+        <Stack spacing={1.5}>
+          <Button component={RouterLink} to="/login" onClick={closeMobileMenu} variant="outlined" fullWidth>
+            Login
+          </Button>
+          <Button component={RouterLink} to="/register" onClick={closeMobileMenu} variant="contained" className="btn-gradient" fullWidth>
+            Register
+          </Button>
+        </Stack>
+      )}
+    </Box>
+  );
 
   return (
     <AppBar
@@ -80,22 +169,12 @@ const Navbar = () => {
             <LogoImage src="/logo.png" alt="DKK Digital logo" />
             <BrandText className="brand-gradient">DKK Digital</BrandText>
           </LogoText>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <NavButton component={RouterLink} to="/">
-              Home
-            </NavButton>
-            <NavButton component={RouterLink} to="/services">
-              Services
-            </NavButton>
-            <NavButton component={RouterLink} to="/about">
-              About
-            </NavButton>
-            <NavButton component={RouterLink} to="/blog">
-              Blog
-            </NavButton>
-            <NavButton component={RouterLink} to="/contact">
-              Contact
-            </NavButton>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            {navItems.map((item) => (
+              <NavButton key={item.to} component={RouterLink} to={item.to}>
+                {item.label}
+              </NavButton>
+            ))}
 
             {isAuthenticated ? (
               <>
@@ -136,8 +215,21 @@ const Navbar = () => {
               </>
             )}
           </Box>
+
+          <IconButton
+            edge="end"
+            onClick={() => setMobileOpen(true)}
+            sx={{ display: { xs: 'inline-flex', md: 'none' }, color: '#333' }}
+            aria-label="Open navigation menu"
+          >
+            <MenuIcon />
+          </IconButton>
         </StyledToolbar>
       </Container>
+
+      <Drawer anchor="right" open={mobileOpen} onClose={closeMobileMenu}>
+        {renderDrawerContent()}
+      </Drawer>
     </AppBar>
   );
 };

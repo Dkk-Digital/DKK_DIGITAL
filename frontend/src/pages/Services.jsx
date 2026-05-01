@@ -6,12 +6,16 @@ import Layout from '../components/Layout';
 import { serviceService } from '../services';
 import toast from 'react-hot-toast';
 
-const HeroSection = styled(Box)(() => ({
+const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
   padding: '80px 0',
   borderRadius: '16px',
   marginBottom: '60px',
   textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    padding: '56px 16px',
+    marginBottom: '40px',
+  },
 }));
 
 const ServiceCard = styled(Card)(({ theme }) => ({
@@ -69,12 +73,12 @@ const Services = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 12 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
         <HeroSection className="fade-in-down">
-          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Our Services
           </Typography>
-          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto', px: { xs: 1, sm: 0 } }}>
             Explore our comprehensive range of digital marketing solutions designed to accelerate your business growth.
           </Typography>
         </HeroSection>

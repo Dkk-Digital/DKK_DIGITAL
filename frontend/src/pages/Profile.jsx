@@ -6,13 +6,16 @@ import { useAuth } from '../context/AuthContext';
 import { authService } from '../services';
 import toast from 'react-hot-toast';
 
-const ProfileForm = styled(Box)(() => ({
+const ProfileForm = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
   padding: '50px',
   borderRadius: '16px',
   border: '1px solid rgba(25,118,210,0.08)',
   boxShadow: '0 10px 30px rgba(16,24,40,0.06)',
   animation: 'fadeInUp 0.8s ease',
+  [theme.breakpoints.down('sm')]: {
+    padding: '24px',
+  },
 }));
 
 const Profile = () => {
@@ -48,9 +51,9 @@ const Profile = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ py: 12 }}>
+      <Container maxWidth="md" sx={{ py: { xs: 7, md: 12 } }}>
         <Box className="fade-in-down" sx={{ mb: 6 }}>
-          <Typography variant="h3" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             My Profile
           </Typography>
         </Box>
@@ -92,10 +95,10 @@ const Profile = () => {
             sx={{ mb: 3 }}
           />
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
             <Button
               variant="contained"
-              sx={{ backgroundColor: '#1976d2', px: 4 }}
+              sx={{ backgroundColor: '#1976d2', px: 4, width: { xs: '100%', sm: 'auto' } }}
               type="submit"
               disabled={loading}
             >

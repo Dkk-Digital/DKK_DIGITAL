@@ -5,12 +5,16 @@ import Layout from '../components/Layout';
 import { inquiryService } from '../services';
 import toast from 'react-hot-toast';
 
-const HeroSection = styled(Box)(() => ({
+const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
   padding: '60px 0',
   borderRadius: '16px',
   marginBottom: '60px',
   textAlign: 'center',
+  [theme.breakpoints.down('sm')]: {
+    padding: '48px 16px',
+    marginBottom: '40px',
+  },
 }));
 
 const ContactForm = styled(Box)(({ theme }) => ({
@@ -22,6 +26,9 @@ const ContactForm = styled(Box)(({ theme }) => ({
   border: '1px solid rgba(25,118,210,0.08)',
   boxShadow: '0 10px 30px rgba(16,24,40,0.06)',
   animation: 'fadeInUp 0.8s ease',
+  [theme.breakpoints.down('sm')]: {
+    padding: '24px',
+  },
 }));
 
 const Contact = () => {
@@ -72,12 +79,12 @@ const Contact = () => {
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ py: 12 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
         <HeroSection className="fade-in-down">
-          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Contact Us
           </Typography>
-          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+          <Typography variant="body1" sx={{ color: '#666', maxWidth: '600px', margin: '0 auto', px: { xs: 2, sm: 0 } }}>
             Have a question or ready to get started? We'd love to hear from you. Let's connect!
           </Typography>
         </HeroSection>

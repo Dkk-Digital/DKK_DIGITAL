@@ -38,6 +38,13 @@ const HeroSection = styled(Box)(({ theme }) => ({
     borderRadius: '50%',
     pointerEvents: 'none',
   },
+  [theme.breakpoints.down('md')]: {
+    minHeight: 'auto',
+    padding: '88px 16px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '64px 16px',
+  },
 }));
 
 const ServiceCard = styled(Card)(({ theme }) => ({
@@ -84,10 +91,10 @@ const Home = () => {
       {/* Hero Section */}
       <HeroSection>
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Typography variant="h2" sx={{ fontWeight: 800, mb: 2, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h2" sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2.2rem', sm: '3rem', md: '3.75rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Welcome to DKK Digital
           </Typography>
-          <Typography variant="h5" sx={{ color: '#666', mb: 4, fontWeight: 400, letterSpacing: '-0.5px' }}>
+          <Typography variant="h5" sx={{ color: '#666', mb: 4, fontWeight: 400, letterSpacing: '-0.5px', fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' } }}>
             Your Partner in Digital Marketing Excellence
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -97,7 +104,7 @@ const Home = () => {
               variant="contained"
               sx={{
                 background: 'linear-gradient(90deg, #1976d2, #7c4dff)',
-                px: 5,
+                px: { xs: 3, sm: 4, md: 5 },
                 py: 1.5,
                 borderRadius: '8px',
                 fontWeight: 600,
@@ -118,7 +125,7 @@ const Home = () => {
               sx={{
                 borderColor: '#1976d2',
                 color: '#1976d2',
-                px: 5,
+                px: { xs: 3, sm: 4, md: 5 },
                 py: 1.5,
                 borderRadius: '8px',
                 fontWeight: 600,
@@ -137,11 +144,11 @@ const Home = () => {
       </HeroSection>
 
       {/* Services Section */}
-      <Container maxWidth="lg" sx={{ py: 12 }}>
-        <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
+        <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
           Our Services
         </Typography>
-        <Typography variant="body1" sx={{ textAlign: 'center', mb: 8, color: '#666', maxWidth: '600px', margin: '0 auto' }}>
+        <Typography variant="body1" sx={{ textAlign: 'center', mb: { xs: 5, md: 8 }, color: '#666', maxWidth: '600px', margin: '0 auto', px: { xs: 1, sm: 0 } }}>
           Comprehensive digital marketing solutions tailored to elevate your brand and drive measurable results.
         </Typography>
         <Grid container spacing={3}>
@@ -172,12 +179,12 @@ const Home = () => {
       {/* CTA Section */}
       <Box sx={{
         background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
-        py: 10,
+        py: { xs: 7, md: 10 },
         borderTop: '1px solid rgba(25,118,210,0.1)',
         borderBottom: '1px solid rgba(25,118,210,0.1)',
       }}>
         <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" sx={{ mb: 1, fontWeight: 800, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+          <Typography variant="h4" sx={{ mb: 1, fontWeight: 800, fontSize: { xs: '1.6rem', sm: '2rem', md: '2.5rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Ready to Transform Your Business?
           </Typography>
           <Typography variant="body1" sx={{ color: '#666', mb: 4 }}>
