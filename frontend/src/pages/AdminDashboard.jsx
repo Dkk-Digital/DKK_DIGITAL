@@ -1,153 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Grid,
-  Card,
-  Typography,
-  Box,
-  Button,
-  TextField,
-  CircularProgress,
-  MenuItem,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import PeopleIcon from '@mui/icons-material/People';
-import EmailIcon from '@mui/icons-material/Email';
+import React, { useState } from 'react';
+import { Tabs, Tab, Box } from '@mui/material';
 import Layout from '../components/Layout';
-import {
-  inquiryService,
-  serviceService,
-  projectService,
-  authService,
-  messageService,
-} from '../services';
-import {
-  InquiryStatusChart,
-  ServiceCategoryChart,
-  QuickStatCard,
-} from '../components/admin/DashboardCharts';
-import { confirmAlert, errorAlert, successAlert } from '../utils/alerts';
+import UserManagement from '../components/UserManagement';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
+import NotificationCenter from '../components/NotificationCenter';
 
 const AdminDashboard = () => {
-  const [allStats, setAllStats] = useState({
-    inquiries: null,
-    services: null,
-    projects: null,
-    users: null,
-    messages: null,
-  });
-  const [inquiries, setInquiries] = useState([]);
-  const [servicesList, setServicesList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [newService, setNewService] = useState({
-    title: '',
-    description: '',
-    shortDescription: '',
-    price: '',
-    category: 'SEO',
-    features: '',
-  });
-  const [serviceImage, setServiceImage] = useState(null);
-  const [showServiceForm, setShowServiceForm] = useState(false);
-  const [editingServiceId, setEditingServiceId] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
 
-  useEffect(() => {
-    fetchAllDashboardData();
-    fetchServices();
-  }, []);
-
-  const fetchAllDashboardData = async () => {
-    try {
-      setLoading(true);
-      const [inquiryStatsRes, inquiriesRes, serviceStatsRes, projectStatsRes, userStatsRes, messageStatsRes] =
-        await Promise.all([
-          inquiryService.getStats(),
-          inquiryService.getAll({ status: 'new' }),
-          serviceService.getStats(),
-          projectService.getStats(),
-          authService.getStats(),
-          messageService.getStats(),
-        ]);
-
-      setAllStats({
-        inquiries: inquiryStatsRes.data.stats,
-        services: serviceStatsRes.data.stats,
-        projects: projectStatsRes.data.stats,
-        users: userStatsRes.data.stats,
-        messages: messageStatsRes.data.stats,
-      });
-      setInquiries(inquiriesRes.data.inquiries);
-    } catch (error) {
-      errorAlert('Error', 'Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
-
-  const fetchServices = async () => {
-    try {
-      const res = await serviceService.getAll();
-      setServicesList(res.data.services || []);
-    } catch (err) {
-      // ignore
-    }
-  };
-
-  const handleAddService = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('title', newService.title);
-      formData.append('description', newService.description);
-      formData.append('shortDescription', newService.shortDescription);
-      formData.append('price', newService.price);
-      formData.append('category', newService.category);
-      formData.append('features', newService.features);
-
-      if (serviceImage) formData.append('image', serviceImage);
-
-      if (editingServiceId) {
-        await serviceService.update(editingServiceId, formData);
-        successAlert('Success', 'Service updated successfully');
-      } else {
-        await serviceService.create(formData);
-        successAlert('Success', 'Service added successfully');
-      }
-      setNewService({
-        title: '',
-        description: '',
-        shortDescription: '',
-        price: '',
-        category: 'SEO',
-        features: '',
-      });
-      setServiceImage(null);
-      setShowServiceForm(false);
-      setEditingServiceId(null);
-      fetchServices();
-      fetchAllDashboardData();
-    } catch (error) {
-      errorAlert('Error', 'Failed to save service');
-    }
-  };
-
-  const handleEdit = (service) => {
-    setEditingServiceId(service._id);
-    setNewService({
-      title: service.title || '',
-      description: service.description || '',
-      shortDescription: service.shortDescription || '',
-      price: service.price || '',
-      category: service.category || 'SEO',
-      features: (service.features || []).join(', '),
-    });
-    setServiceImage(null);
-    setShowServiceForm(true);
-  };
-
-  const handleDelete = async (id) => {
     const confirmed = await confirmAlert(
       'Delete Service',
       'Are you sure you want to delete this service?',
@@ -155,96 +18,56 @@ const AdminDashboard = () => {
     );
     if (!confirmed) return;
     try {
-      await serviceService.delete(id);
-      successAlert('Success', 'Service deleted successfully');
-      fetchServices();
-      fetchAllDashboardData();
-    } catch (err) {
-      errorAlert('Error', 'Failed to delete service');
-    }
-  };
+      <Layout>
+            sx={{
+            Admin Dashboard
+              icon={AssignmentIcon}
+              value={allStats.inquiries?.total || 0}
+              color="#4caf50"
+                border: '1px solid rgba(25,118,210,0.1)',
 
-  if (loading) {
     return (
       <Layout>
-        <Container sx={{ display: 'flex', justifyContent: 'center', py: { xs: 6, md: 8 } }}>
-          <CircularProgress />
-        </Container>
-      </Layout>
-    );
-  }
-
-  return (
-    <Layout>
-      <Container maxWidth="xl" sx={{ py: { xs: 7, md: 12 } }}>
-        {/* Header */}
-        <Box className="fade-in-down" sx={{ mb: 8 }}>
-          <Typography
-            variant="h3"
+        <Box sx={{ mb: 3, bgcolor: '#f5f5f5', borderBottom: '2px solid #667eea' }}>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
             sx={{
-              fontWeight: 800,
-              fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' },
-              background: 'linear-gradient(90deg, #1976d2, #0ea5e9)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              color: 'transparent',
+              borderBottom: '1px solid #e0e0e0',
+              '& .MuiTab-root': {
+                fontWeight: 600,
+                fontSize: '1rem',
+                textTransform: 'none',
+                '&.Mui-selected': {
+                  color: '#667eea',
+                },
+              },
+              '& .MuiTabScrollButton-root': {
+                color: '#667eea',
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: '#667eea',
+              },
             }}
           >
-            Admin Dashboard
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#666', mt: 1 }}>
-            Manage your business metrics and operations
-          </Typography>
+            <Tab label="Analytics Dashboard" />
+            <Tab label="User Management" />
+            <Tab label="Notifications" />
+          </Tabs>
         </Box>
-
-        {/* Quick Stats Cards */}
-        <Grid container spacing={3} sx={{ mb: 6 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <QuickStatCard
-              icon={AssignmentIcon}
-              title="Total Inquiries"
-              value={allStats.inquiries?.total || 0}
-              color="#1976d2"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <QuickStatCard
-              icon={AddBusinessIcon}
-              title="Services"
-              value={allStats.services?.total || 0}
-              color="#ff9800"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <QuickStatCard
-              icon={AssignmentIcon}
-              title="Active Projects"
-              value={allStats.projects?.total || 0}
-              color="#2196f3"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <QuickStatCard
-              icon={PeopleIcon}
-              title="Total Users"
-              value={allStats.users?.total || 0}
-              color="#4caf50"
-            />
-          </Grid>
-        </Grid>
-
-        {/* Charts Section */}
-        <Grid container spacing={3} sx={{ mb: 6 }}>
-          <InquiryStatusChart data={allStats.inquiries} />
-          <ServiceCategoryChart data={allStats.services?.categories || []} />
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                p: 3,
-                background: 'linear-gradient(135deg, rgba(25,118,210,0.04), rgba(124,77,255,0.04))',
-                border: '1px solid rgba(25,118,210,0.1)',
-                borderRadius: '16px',
               }}
+        {activeTab === 0 && <AnalyticsDashboard />}
+        {activeTab === 1 && <UserManagement />}
+        {activeTab === 2 && <NotificationCenter />}
+      </Layout>
+    );
+  };
+
+  export default AdminDashboard;
+
+  // Legacy code - keeping for reference but not used with new tab layout
+  /*
+    const handleDelete = async (id) => {
             >
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Team Overview
