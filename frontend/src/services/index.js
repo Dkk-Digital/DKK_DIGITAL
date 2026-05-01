@@ -6,6 +6,7 @@ export const authService = {
   getProfile: () => api.get('/auth/profile'),
   updateProfile: (data) => api.put('/auth/profile', data),
   getAllUsers: () => api.get('/auth/users'),
+  updateUserRole: (id, data) => api.put(`/auth/users/${id}/role`, data),
   deleteUser: (id) => api.delete(`/auth/users/${id}`),
 };
 

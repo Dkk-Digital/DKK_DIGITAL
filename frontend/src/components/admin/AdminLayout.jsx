@@ -19,6 +19,7 @@ import { styled } from '@mui/material/styles';
 import { Link as RouterLink, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -84,6 +85,7 @@ const ShellListItem = styled(ListItemButton)({
 const navItems = [
   { label: 'Overview', to: '/admin/dashboard', icon: <DashboardOutlinedIcon fontSize="small" /> },
   { label: 'Services', to: '/admin/services', icon: <ViewModuleOutlinedIcon fontSize="small" /> },
+  { label: 'Users', to: '/admin/users', icon: <GroupOutlinedIcon fontSize="small" /> },
   { label: 'Inquiries', to: '/admin/inquiries', icon: <MailOutlineOutlinedIcon fontSize="small" /> },
 ];
 

@@ -22,6 +22,7 @@ import Profile from './pages/Profile';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminOverview from './pages/admin/AdminOverview';
 import AdminServices from './pages/admin/AdminServices';
+import AdminUsers from './pages/admin/AdminUsers';
 import AdminInquiries from './pages/admin/AdminInquiries';
 
 let theme = createTheme({
@@ -78,6 +79,7 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminOverview />} />
         <Route path="services" element={<AdminServices />} />
+        <Route path="users" element={<AdminUsers />} />
         <Route path="inquiries" element={<AdminInquiries />} />
       </Route>
       <Route

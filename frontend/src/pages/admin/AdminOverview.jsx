@@ -22,7 +22,7 @@ const SectionCard = styled(Card)({
 });
 
 const AdminOverview = () => {
-  const { stats, recentInquiries, services, loading } = useAdminPanelData();
+  const { stats, recentInquiries, services, users, loading } = useAdminPanelData();
 
   if (loading) {
     return (
@@ -49,8 +49,9 @@ const AdminOverview = () => {
           { label: 'New', value: stats?.new ?? 0, tone: '#f59e0b' },
           { label: 'Contacted', value: stats?.contacted ?? 0, tone: '#0ea5e9' },
           { label: 'Converted', value: stats?.converted ?? 0, tone: '#16a34a' },
+          { label: 'Users', value: users.length, tone: '#8b5cf6' },
         ].map((metric) => (
-          <Grid item xs={12} sm={6} md={3} key={metric.label}>
+          <Grid item xs={12} sm={6} md={metric.label === 'Users' ? 12 : 3} key={metric.label}>
             <MetricCard>
               <Typography variant="caption" sx={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 {metric.label}
@@ -75,6 +76,9 @@ const AdminOverview = () => {
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Button component={RouterLink} to="/admin/services" variant="contained" sx={{ textTransform: 'none', background: 'linear-gradient(90deg, #2563eb, #0ea5e9)' }}>
                 Manage services
+              </Button>
+              <Button component={RouterLink} to="/admin/users" variant="outlined" sx={{ textTransform: 'none' }}>
+                Manage users
               </Button>
               <Button component={RouterLink} to="/admin/inquiries" variant="outlined" sx={{ textTransform: 'none' }}>
                 Review inquiries
@@ -108,6 +112,31 @@ const AdminOverview = () => {
           </SectionCard>
         </Grid>
       </Grid>
+
+      <SectionCard sx={{ p: 3, mb: 4 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+          User snapshot
+        </Typography>
+        {users.length === 0 ? (
+          <Typography sx={{ color: '#64748b' }}>No users found.</Typography>
+        ) : (
+          <Stack spacing={1.5}>
+            {users.slice(0, 5).map((user) => (
+              <Box key={user._id} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, alignItems: 'center' }}>
+                <Box>
+                  <Typography sx={{ fontWeight: 700 }}>{user.name}</Typography>
+                  <Typography variant="caption" sx={{ color: '#64748b' }}>
+                    {user.email}
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontWeight: 700, color: user.role === 'admin' ? '#1d4ed8' : '#16a34a', textTransform: 'capitalize' }}>
+                  {user.role}
+                </Typography>
+              </Box>
+            ))}
+          </Stack>
+        )}
+      </SectionCard>
 
       <SectionCard sx={{ p: { xs: 2, md: 3 } }}>
         <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
