@@ -34,6 +34,7 @@ export const apiLimiter = rateLimit({
   max: 300, // limit each authenticated user to 300 requests per 15 minutes
   message: 'Too many API requests, please try again later.',
   keyGenerator: (req, res) => req.user?._id || req.ip,
+  validate: { default: false },
   standardHeaders: true,
   legacyHeaders: false,
 });
