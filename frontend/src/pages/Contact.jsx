@@ -3,7 +3,7 @@ import { Container, Box, TextField, Button, Typography, CircularProgress } from 
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { inquiryService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
@@ -54,14 +54,14 @@ const Contact = () => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      toast.error('Please fill all required fields');
+      errorAlert('Please fill all required fields');
       return;
     }
 
     try {
       setLoading(true);
       await inquiryService.create(formData);
-      toast.success('Inquiry submitted successfully!');
+      successAlert('Inquiry submitted successfully!');
       setFormData({
         name: '',
         email: '',
@@ -71,7 +71,7 @@ const Contact = () => {
         serviceInterest: '',
       });
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to submit inquiry');
+      errorAlert(error.response?.data?.message || 'Failed to submit inquiry');
     } finally {
       setLoading(false);
     }

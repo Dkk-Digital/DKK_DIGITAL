@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Button, Typography, Grid, Card } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import { serviceService } from '../services';
+import { errorAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.1) 0%, rgba(124,77,255,0.05) 100%)',
@@ -79,7 +79,7 @@ const Home = () => {
         const response = await serviceService.getAll();
         setServices(response.data.services.slice(0, 6));
       } catch (error) {
-        toast.error('Failed to load services');
+        errorAlert('Failed to load services');
       }
     };
 

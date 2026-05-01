@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { blogService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
@@ -55,7 +55,7 @@ const Blog = () => {
       const response = await blogService.getAll({ published: 'true' });
       setBlogs(response.data.blogs);
     } catch (error) {
-      toast.error('Failed to load blogs');
+      errorAlert('Failed to load blogs');
     } finally {
       setLoading(false);
     }

@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '../utils/alerts';
 
 const ProfileForm = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
@@ -41,9 +41,9 @@ const Profile = () => {
       setLoading(true);
       const response = await authService.updateProfile(formData);
       updateUser(response.data.user);
-      toast.success('Profile updated successfully');
+      successAlert('Profile updated successfully');
     } catch (error) {
-      toast.error('Failed to update profile');
+      errorAlert('Failed to update profile');
     } finally {
       setLoading(false);
     }

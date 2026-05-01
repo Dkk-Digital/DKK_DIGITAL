@@ -3,7 +3,7 @@ import { Container, Grid, Card, Typography, Box, CircularProgress, Button, Dialo
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { projectService, serviceService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '../utils/alerts';
 
 const ProjectCard = styled(Card)(({ theme }) => ({
   padding: '25px',
@@ -73,7 +73,7 @@ const ClientDashboard = () => {
       setProjects(projectsRes.data.projects);
       setServices(servicesRes.data.services);
     } catch (error) {
-      toast.error('Failed to load dashboard');
+      errorAlert('Failed to load dashboard');
     } finally {
       setLoading(false);
     }
@@ -81,18 +81,18 @@ const ClientDashboard = () => {
 
   const handleCreateProject = async () => {
     if (!newProject.title || !newProject.service || !newProject.budget) {
-      toast.error('Please fill all required fields');
+      errorAlert('Please fill all required fields');
       return;
     }
 
     try {
       await projectService.create(newProject);
-      toast.success('Project created successfully');
+      successAlert('Project created successfully');
       setShowNewProjectDialog(false);
       setNewProject({ title: '', description: '', service: '', budget: '' });
       fetchDashboardData();
     } catch (error) {
-      toast.error('Failed to create project');
+      errorAlert('Failed to create project');
     }
   };
 

@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { authService } from '../services';
 import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
@@ -54,7 +54,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      toast.error('Please fill all fields');
+      errorAlert('Please fill all fields');
       return;
     }
 
@@ -62,7 +62,7 @@ const Login = () => {
       setLoading(true);
       const response = await authService.login(formData);
       login(response.data.user, response.data.token);
-      toast.success('Logged in successfully!');
+      successAlert('Logged in successfully!');
 
       if (response.data.user.role === 'admin') {
         navigate('/admin/dashboard');
@@ -70,7 +70,7 @@ const Login = () => {
         navigate('/client/dashboard');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      errorAlert(error.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }

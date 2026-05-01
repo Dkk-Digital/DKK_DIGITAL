@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Card, CircularProgress, Container, Divider, Drawer, IconButton, MenuItem, Select, Stack, Typography, Chip, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import toast from 'react-hot-toast';
+import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
 import CloseIcon from '@mui/icons-material/Close';
 import { inquiryService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
@@ -42,22 +42,23 @@ const AdminInquiries = () => {
   const handleStatusChange = async (id, status) => {
     try {
       await inquiryService.updateStatus(id, { status });
-      toast.success('Inquiry updated');
+      successAlert('Inquiry updated');
       await refresh();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update inquiry');
+      errorAlert(error.response?.data?.message || 'Failed to update inquiry');
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this inquiry?')) return;
+    const confirmed = await confirmAlert('Delete this inquiry?', 'This will permanently remove the inquiry.');
+    if (!confirmed) return;
 
     try {
       await inquiryService.delete(id);
-      toast.success('Inquiry deleted');
+      successAlert('Inquiry deleted');
       await refresh();
     } catch (error) {
-      toast.error('Failed to delete inquiry');
+      errorAlert('Failed to delete inquiry');
     }
   };
 

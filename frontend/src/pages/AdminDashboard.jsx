@@ -3,7 +3,7 @@ import { Container, Grid, Card, Typography, Box, Button, TextField, CircularProg
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { inquiryService, serviceService } from '../services';
-import toast from 'react-hot-toast';
+import { confirmAlert, errorAlert, successAlert } from '../utils/alerts';
 
 const StatsCard = styled(Card)(({ theme }) => ({
   padding: '30px',
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
       setInquiryStats(statsRes.data.stats);
       setInquiries(inquiriesRes.data.inquiries);
     } catch (error) {
-      toast.error('Failed to load dashboard data');
+      errorAlert('Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
@@ -83,10 +83,10 @@ const AdminDashboard = () => {
 
       if (editingServiceId) {
         await serviceService.update(editingServiceId, formData);
-        toast.success('Service updated successfully');
+        successAlert('Service updated successfully');
       } else {
         await serviceService.create(formData);
-        toast.success('Service added successfully');
+        successAlert('Service added successfully');
       }
       setNewService({
         title: '',
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
       setEditingServiceId(null);
       fetchServices();
     } catch (error) {
-      toast.error('Failed to add service');
+      errorAlert('Failed to add service');
     }
   };
 
@@ -120,13 +120,14 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this service?')) return;
+    const confirmed = await confirmAlert('Delete this service?', 'This will permanently remove the service.');
+    if (!confirmed) return;
     try {
       await serviceService.delete(id);
-      toast.success('Service deleted');
+      successAlert('Service deleted');
       fetchServices();
     } catch (err) {
-      toast.error('Failed to delete service');
+      errorAlert('Failed to delete service');
     }
   };
 

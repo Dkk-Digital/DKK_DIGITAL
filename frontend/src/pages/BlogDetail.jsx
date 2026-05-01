@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Container, Box, Typography, CircularProgress } from '@mui/material';
 import Layout from '../components/Layout';
 import { blogService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert } from '../utils/alerts';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -20,7 +20,7 @@ const BlogDetail = () => {
       const response = await blogService.getBySlug(slug);
       setBlog(response.data.blog);
     } catch (error) {
-      toast.error('Failed to load blog');
+      errorAlert('Failed to load blog');
     } finally {
       setLoading(false);
     }

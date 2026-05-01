@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { serviceService } from '../services';
-import toast from 'react-hot-toast';
+import { errorAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
@@ -55,7 +55,7 @@ const Services = () => {
       const response = await serviceService.getAll();
       setServices(response.data.services);
     } catch (error) {
-      toast.error('Failed to load services');
+      errorAlert('Failed to load services');
     } finally {
       setLoading(false);
     }

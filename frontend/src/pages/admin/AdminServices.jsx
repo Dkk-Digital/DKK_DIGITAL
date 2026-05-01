@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, CircularProgress, Container, Drawer, Grid, IconButton, Stack, TextField, Typography, Chip, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import toast from 'react-hot-toast';
+import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
 import CloseIcon from '@mui/icons-material/Close';
 import { serviceService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
@@ -76,30 +76,31 @@ const AdminServices = () => {
 
       if (editingServiceId) {
         await serviceService.update(editingServiceId, formData);
-        toast.success('Service updated successfully');
+        successAlert('Service updated successfully');
       } else {
         await serviceService.create(formData);
-        toast.success('Service added successfully');
+        successAlert('Service added successfully');
       }
 
       resetForm();
       await refresh();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save service');
+      errorAlert(error.response?.data?.message || 'Failed to save service');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this service?')) return;
+    const confirmed = await confirmAlert('Delete this service?', 'This will permanently remove the service.');
+    if (!confirmed) return;
 
     try {
       await serviceService.delete(id);
-      toast.success('Service deleted');
+      successAlert('Service deleted');
       await refresh();
     } catch (error) {
-      toast.error('Failed to delete service');
+      errorAlert('Failed to delete service');
     }
   };
 

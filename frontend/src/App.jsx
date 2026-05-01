@@ -1,6 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 
@@ -121,7 +120,6 @@ function App() {
       <Router>
         <AuthProvider>
           <AppRoutes />
-          <Toaster position="bottom-right" />
         </AuthProvider>
       </Router>
     </ThemeProvider>

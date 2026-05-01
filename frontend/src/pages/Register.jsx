@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { authService } from '../services';
 import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
+import { errorAlert, successAlert } from '../utils/alerts';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, rgba(25,118,210,0.08) 0%, rgba(124,77,255,0.06) 100%)',
@@ -56,12 +56,12 @@ const Register = () => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      toast.error('Please fill all fields');
+      errorAlert('Please fill all fields');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
+      errorAlert('Passwords do not match');
       return;
     }
 
@@ -73,10 +73,10 @@ const Register = () => {
         password: formData.password,
       });
       login(response.data.user, response.data.token);
-      toast.success('Registered successfully!');
+      successAlert('Registered successfully!');
       navigate('/client/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      errorAlert(error.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }

@@ -22,7 +22,7 @@ import {
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import toast from 'react-hot-toast';
+import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
 import { authService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
 
@@ -90,27 +90,28 @@ const AdminUsers = () => {
     try {
       setSavingRoleId(id);
       await authService.updateUserRole(id, { role });
-      toast.success('User role updated');
+      successAlert('User role updated');
       await refresh();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update role');
+      errorAlert(error.response?.data?.message || 'Failed to update role');
     } finally {
       setSavingRoleId(null);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this user?')) return;
+    const confirmed = await confirmAlert('Delete this user?', 'This will permanently remove the user.');
+    if (!confirmed) return;
 
     try {
       await authService.deleteUser(id);
-      toast.success('User deleted');
+      successAlert('User deleted');
       await refresh();
       if (selectedUser?._id === id) {
         setSelectedUser(null);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to delete user');
+      errorAlert(error.response?.data?.message || 'Failed to delete user');
     }
   };
 
