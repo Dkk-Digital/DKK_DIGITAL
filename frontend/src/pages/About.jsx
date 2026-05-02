@@ -51,15 +51,15 @@ const PosterCard = styled(Card)(({ theme }) => ({
 const teamMembers = [
   {
     name: 'Deepanshu Khandelwal',
-    image: '/images/deepanshu.jpg',
+    image: '/images/deepanshu.png',
   },
   {
     name: 'Aakriti Khandelwal',
-    image: '/images/aakriti.jpg',
+    image: '/images/aakriti.png',
   },
   {
     name: 'Keshav Khandelwal',
-    image: '/images/keshav.jpg',
+    image: '/images/keshav.png',
   }
 ];
 
