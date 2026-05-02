@@ -28,18 +28,80 @@ const AdminInquiries = lazy(() => import('./pages/admin/AdminInquiries'));
 let theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#4f46e5',
+      light: '#818cf8',
+      dark: '#3730a3',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#d946ef',
+      light: '#f472b6',
+      dark: '#a21caf',
+      contrastText: '#fff',
     },
     background: {
-      default: '#fafafa',
+      default: '#f8fafc',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#1e293b',
+      secondary: '#64748b',
     },
   },
   typography: {
-    fontFamily: '"Segoe UI", "Roboto", "Oxygen", "Ubuntu", sans-serif',
+    fontFamily: '"Inter", "Poppins", "Segoe UI", "Roboto", sans-serif',
+    h1: { fontWeight: 800, letterSpacing: '-1px' },
+    h2: { fontWeight: 800, letterSpacing: '-0.8px' },
+    h3: { fontWeight: 700, letterSpacing: '-0.6px' },
+    h4: { fontWeight: 700, letterSpacing: '-0.4px' },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
+    button: { textTransform: 'none', fontWeight: 600 },
+  },
+  shape: {
+    borderRadius: 14,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+          padding: '10px 24px',
+          boxShadow: 'none',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 24px rgba(79,70,229,0.18)',
+          },
+        },
+        containedPrimary: {
+          background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #4338ca 0%, #2563eb 100%)',
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '16px',
+          border: '1px solid rgba(0,0,0,0.03)',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 20px 45px rgba(0,0,0,0.06)',
+            borderColor: 'rgba(79,70,229,0.1)',
+          },
+        },
+      },
+    },
   },
 });
 
 theme = responsiveFontSizes(theme);
+
 
 const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
