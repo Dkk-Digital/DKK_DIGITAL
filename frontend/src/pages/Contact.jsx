@@ -211,7 +211,7 @@ const Contact = () => {
         <HeroSection>
           <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-              <Box sx={{ 
+              <Box sx={{
                 display: 'inline-block',
                 padding: '12px 24px',
                 background: 'rgba(255,255,255,0.6)',
@@ -225,30 +225,30 @@ const Contact = () => {
                   GET IN TOUCH
                 </Typography>
               </Box>
-              
-              <Typography variant="h1" sx={{ 
-                fontWeight: 900, 
-                mb: 3, 
-                fontSize: { xs: '3rem', sm: '4rem', md: '5rem' }, 
+
+              <Typography variant="h1" sx={{
+                fontWeight: 900,
+                mb: 3,
+                fontSize: { xs: '3rem', sm: '4rem', md: '5rem' },
                 lineHeight: 1.1,
                 color: '#0f172a',
                 letterSpacing: '-0.03em'
               }}>
-                Let's Build Something <br/>
-                <Box component="span" sx={{ 
-                  background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899)', 
-                  WebkitBackgroundClip: 'text', 
+                Let's Build Something <br />
+                <Box component="span" sx={{
+                  background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899)',
+                  WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   display: 'inline-block'
                 }}>
                   Extraordinary
                 </Box>
               </Typography>
-              
-              <Typography variant="h6" sx={{ 
-                color: '#475569', 
-                maxWidth: '650px', 
-                margin: '0 auto', 
+
+              <Typography variant="h6" sx={{
+                color: '#475569',
+                maxWidth: '650px',
+                margin: '0 auto',
                 fontWeight: 400,
                 lineHeight: 1.8,
                 fontSize: { xs: '1.1rem', md: '1.25rem' }
@@ -275,7 +275,7 @@ const Contact = () => {
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   {contactInfo.map((info, idx) => (
-                    <motion.div 
+                    <motion.div
                       key={idx}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -310,7 +310,7 @@ const Contact = () => {
                   <Typography variant="h4" sx={{ fontWeight: 800, color: '#0f172a', mb: 4 }}>
                     Send us a message
                   </Typography>
-                  
+
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                       <StyledTextField
@@ -385,9 +385,9 @@ const Contact = () => {
                         variant="contained"
                         type="submit"
                         disabled={loading}
-                        endIcon={!loading ? <SendIcon /> : null}
-                        sx={{ 
-                          py: 2, 
+                        endIcon={!loading && <SendIcon />}
+                        sx={{
+                          py: 2,
                           mt: 2,
                           borderRadius: '12px',
                           background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
