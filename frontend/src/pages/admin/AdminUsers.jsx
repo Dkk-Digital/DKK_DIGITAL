@@ -18,22 +18,57 @@ import {
   Typography,
   Chip,
   TablePagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
 import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
 import { authService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
 
+const MotionCard = motion(Card);
+
 const PanelCard = styled(Card)({
   borderRadius: 22,
-  border: '1px solid rgba(148,163,184,0.12)',
+  border: '1px solid rgba(255,255,255,0.5)',
+  background: 'rgba(255,255,255,0.65)',
+  backdropFilter: 'blur(24px)',
   boxShadow: '0 10px 30px rgba(15,23,42,0.05)',
 });
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: 'rgba(241,245,249,0.8)',
+    transform: 'scale(1.002)',
+    boxShadow: '0 4px 12px rgba(15,23,42,0.05)',
+    zIndex: 1,
+    position: 'relative',
+  },
+  '& td': {
+    borderBottom: '1px solid rgba(148,163,184,0.1)',
+  },
+}));
 
 const statusTone = {
   admin: { bg: 'rgba(37,99,235,0.12)', color: '#1d4ed8' },
   client: { bg: 'rgba(22,163,74,0.12)', color: '#15803d' },
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
 };
 
 const AdminUsers = () => {
@@ -132,34 +167,34 @@ const AdminUsers = () => {
   }
 
   return (
-    <Container maxWidth="xl" disableGutters>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: '-0.04em', mb: 1 }}>
+    <Container maxWidth="xl" disableGutters component={motion.div} initial="hidden" animate="visible" variants={containerVariants}>
+      <Box sx={{ mb: 4 }} component={motion.div} variants={itemVariants}>
+        <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: '-0.04em', mb: 1, background: 'linear-gradient(90deg, #0f172a, #334155)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           Users
         </Typography>
-        <Typography sx={{ color: '#64748b', maxWidth: 760 }}>
+        <Typography sx={{ color: '#64748b', maxWidth: 760, fontSize: '1.1rem' }}>
           Manage admins and clients from one place with direct role and account actions.
         </Typography>
       </Box>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }} component={motion.div} variants={containerVariants}>
         {[
           { label: 'Total users', value: summary.total, tone: '#2563eb' },
           { label: 'Admins', value: summary.admins, tone: '#0ea5e9' },
           { label: 'Clients', value: summary.clients, tone: '#16a34a' },
         ].map((metric) => (
-          <PanelCard key={metric.label} sx={{ p: 2.5, minWidth: { xs: '100%', sm: 160 }, flex: 1 }}>
-            <Typography variant="caption" sx={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <PanelCard key={metric.label} component={motion.div} variants={itemVariants} sx={{ p: 2.5, minWidth: { xs: '100%', sm: 160 }, flex: 1 }}>
+            <Typography variant="caption" sx={{ color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>
               {metric.label}
             </Typography>
-            <Typography variant="h4" sx={{ mt: 1, fontWeight: 900, color: metric.tone }}>
+            <Typography variant="h3" sx={{ mt: 1, fontWeight: 900, color: metric.tone }}>
               {metric.value}
             </Typography>
           </PanelCard>
         ))}
       </Stack>
 
-      <PanelCard sx={{ p: { xs: 2, md: 3 }, mb: 3 }}>
+      <MotionCard variants={itemVariants} sx={{ borderRadius: 22, border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(24px)', p: { xs: 2, md: 3 }, mb: 3, boxShadow: '0 10px 30px rgba(15,23,42,0.05)' }}>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'stretch', md: 'center' }}>
           <TextField
             fullWidth
@@ -174,6 +209,7 @@ const AdminUsers = () => {
                 </InputAdornment>
               ),
             }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.8)' } }}
           />
 
           <FormControl sx={{ minWidth: { xs: '100%', md: 180 } }}>
@@ -183,6 +219,7 @@ const AdminUsers = () => {
               value={roleFilter}
               label="Role"
               onChange={handleRoleFilterChange}
+              sx={{ borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.8)' }}
             >
               <MenuItem value="all">All roles</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
@@ -190,65 +227,77 @@ const AdminUsers = () => {
             </Select>
           </FormControl>
         </Stack>
-      </PanelCard>
+      </MotionCard>
 
-      <PanelCard sx={{ p: { xs: 2, md: 3 } }}>
+      <MotionCard variants={itemVariants} sx={{ borderRadius: 22, border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(24px)', p: { xs: 2, md: 3 }, boxShadow: '0 10px 30px rgba(15,23,42,0.05)' }}>
         <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
-          User list
+          User Directory
         </Typography>
 
         {filteredUsers.length === 0 ? (
-          <Typography sx={{ color: '#64748b' }}>No users found.</Typography>
-        ) : (
-          <Box sx={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ textAlign: 'left', color: '#64748b' }}>
-                  <th style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>Name</th>
-                  <th style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>Email</th>
-                  <th style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>Role</th>
-                  <th style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>Joined</th>
-                  <th style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.2)' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedUsers.map((user) => {
-                  const tone = statusTone[user.role] || statusTone.client;
-
-                  return (
-                    <tr key={user._id}>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.12)', verticalAlign: 'top', fontWeight: 600 }}>{user.name}</td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.12)', verticalAlign: 'top' }}>{user.email}</td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.12)', verticalAlign: 'top' }}>
-                        <Chip label={user.role} sx={{ backgroundColor: tone.bg, color: tone.color, fontWeight: 700 }} />
-                      </td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.12)', verticalAlign: 'top', color: '#64748b' }}>
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(148,163,184,0.12)', verticalAlign: 'top' }}>
-                        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                          <Button variant="text" onClick={() => setSelectedUser(user)} sx={{ textTransform: 'none' }}>
-                            Details
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleRoleChange(user._id, user.role === 'admin' ? 'client' : 'admin')}
-                            disabled={savingRoleId === user._id}
-                            sx={{ textTransform: 'none' }}
-                          >
-                            {user.role === 'admin' ? 'Make Client' : 'Make Admin'}
-                          </Button>
-                          <Button variant="outlined" color="error" onClick={() => handleDelete(user._id)} sx={{ textTransform: 'none' }}>
-                            Delete
-                          </Button>
-                        </Stack>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <Box sx={{ py: 8, textAlign: 'center' }}>
+            <Typography sx={{ color: '#64748b', fontSize: '1.1rem' }}>No users found matching your filters.</Typography>
           </Box>
+        ) : (
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ color: '#64748b', fontWeight: 700, borderBottom: '2px solid rgba(148,163,184,0.1)' }}>Name</TableCell>
+                  <TableCell sx={{ color: '#64748b', fontWeight: 700, borderBottom: '2px solid rgba(148,163,184,0.1)' }}>Email</TableCell>
+                  <TableCell sx={{ color: '#64748b', fontWeight: 700, borderBottom: '2px solid rgba(148,163,184,0.1)' }}>Role</TableCell>
+                  <TableCell sx={{ color: '#64748b', fontWeight: 700, borderBottom: '2px solid rgba(148,163,184,0.1)' }}>Joined</TableCell>
+                  <TableCell align="right" sx={{ color: '#64748b', fontWeight: 700, borderBottom: '2px solid rgba(148,163,184,0.1)' }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody component={motion.tbody} variants={containerVariants} initial="hidden" animate="visible">
+                <AnimatePresence>
+                  {paginatedUsers.map((user) => {
+                    const tone = statusTone[user.role] || statusTone.client;
+
+                    return (
+                      <StyledTableRow key={user._id} component={motion.tr} variants={itemVariants} layout exit={{ opacity: 0, x: -50 }}>
+                        <TableCell sx={{ fontWeight: 600 }}>
+                          <Stack direction="row" alignItems="center" spacing={1.5}>
+                            <Box sx={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #e0f2fe, #bae6fd)', display: 'grid', placeItems: 'center', color: '#0284c7', fontWeight: 800 }}>
+                              {user.name.charAt(0).toUpperCase()}
+                            </Box>
+                            {user.name}
+                          </Stack>
+                        </TableCell>
+                        <TableCell sx={{ color: '#475569' }}>{user.email}</TableCell>
+                        <TableCell>
+                          <Chip label={user.role} sx={{ backgroundColor: tone.bg, color: tone.color, fontWeight: 700, textTransform: 'capitalize' }} />
+                        </TableCell>
+                        <TableCell sx={{ color: '#64748b' }}>
+                          {new Date(user.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Stack direction="row" spacing={1} justifyContent="flex-end">
+                            <Button variant="text" size="small" onClick={() => setSelectedUser(user)} sx={{ textTransform: 'none', fontWeight: 600 }}>
+                              Details
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleRoleChange(user._id, user.role === 'admin' ? 'client' : 'admin')}
+                              disabled={savingRoleId === user._id}
+                              sx={{ textTransform: 'none', borderRadius: 2 }}
+                            >
+                              {user.role === 'admin' ? 'Make Client' : 'Make Admin'}
+                            </Button>
+                            <Button variant="outlined" color="error" size="small" onClick={() => handleDelete(user._id)} sx={{ textTransform: 'none', borderRadius: 2 }}>
+                              Delete
+                            </Button>
+                          </Stack>
+                        </TableCell>
+                      </StyledTableRow>
+                    );
+                  })}
+                </AnimatePresence>
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
         {filteredUsers.length > 0 && (
@@ -260,59 +309,59 @@ const AdminUsers = () => {
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleRowsPerPageChange}
             rowsPerPageOptions={[5, 10, 20]}
-            sx={{ mt: 1 }}
+            sx={{ mt: 2, borderTop: '1px solid rgba(148,163,184,0.1)' }}
           />
         )}
-      </PanelCard>
+      </MotionCard>
 
       <Drawer anchor="right" open={Boolean(selectedUser)} onClose={() => setSelectedUser(null)}>
-        <Box sx={{ width: { xs: 320, sm: 420 }, p: 3, position: 'relative' }}>
-          <IconButton onClick={() => setSelectedUser(null)} sx={{ position: 'absolute', top: 12, right: 12 }} aria-label="Close user details">
+        <Box sx={{ width: { xs: 320, sm: 420 }, p: 4, position: 'relative', background: '#f8fafc', height: '100%' }}>
+          <IconButton onClick={() => setSelectedUser(null)} sx={{ position: 'absolute', top: 16, right: 16 }} aria-label="Close user details">
             <CloseIcon />
           </IconButton>
 
           {selectedUser && (
-            <Stack spacing={2.5} sx={{ pr: 3 }}>
+            <Stack spacing={3} sx={{ pr: 2 }}>
               <Box>
-                <Typography variant="overline" sx={{ color: '#64748b', letterSpacing: '0.12em' }}>
+                <Typography variant="overline" sx={{ color: '#64748b', letterSpacing: '0.12em', fontWeight: 700 }}>
                   User details
                 </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 900, lineHeight: 1.1, mt: 0.5 }}>
+                <Typography variant="h4" sx={{ fontWeight: 900, lineHeight: 1.1, mt: 0.5, color: '#0f172a' }}>
                   {selectedUser.name}
                 </Typography>
               </Box>
 
-              <Chip label={selectedUser.role} sx={{ width: 'fit-content', backgroundColor: (statusTone[selectedUser.role] || statusTone.client).bg, color: (statusTone[selectedUser.role] || statusTone.client).color, fontWeight: 700 }} />
+              <Chip label={selectedUser.role} sx={{ width: 'fit-content', backgroundColor: (statusTone[selectedUser.role] || statusTone.client).bg, color: (statusTone[selectedUser.role] || statusTone.client).color, fontWeight: 700, textTransform: 'capitalize' }} />
 
-              <Divider />
+              <Divider sx={{ borderColor: 'rgba(148,163,184,0.2)' }} />
 
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5 }}>
-                  Contact
+                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Contact Information
                 </Typography>
-                <Typography sx={{ fontWeight: 700 }}>{selectedUser.email}</Typography>
-                {selectedUser.phone && <Typography>{selectedUser.phone}</Typography>}
-                {selectedUser.company && <Typography>{selectedUser.company}</Typography>}
+                <Typography sx={{ fontWeight: 600, fontSize: '1.05rem', color: '#1e293b' }}>{selectedUser.email}</Typography>
+                {selectedUser.phone && <Typography sx={{ mt: 0.5, color: '#475569' }}>{selectedUser.phone}</Typography>}
+                {selectedUser.company && <Typography sx={{ mt: 0.5, color: '#475569' }}>{selectedUser.company}</Typography>}
               </Box>
 
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5 }}>
-                  Joined
+                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  System Info
                 </Typography>
-                <Typography>{new Date(selectedUser.createdAt).toLocaleString()}</Typography>
+                <Typography sx={{ color: '#475569' }}>Joined: {new Date(selectedUser.createdAt).toLocaleString()}</Typography>
               </Box>
 
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={1.5} sx={{ pt: 2 }}>
                 <Button
                   variant="contained"
-                  sx={{ background: 'linear-gradient(90deg, #2563eb, #0ea5e9)', textTransform: 'none' }}
+                  sx={{ background: 'linear-gradient(90deg, #2563eb, #0ea5e9)', textTransform: 'none', flex: 1, borderRadius: 2, boxShadow: '0 8px 20px rgba(37,99,235,0.2)' }}
                   onClick={() => handleRoleChange(selectedUser._id, selectedUser.role === 'admin' ? 'client' : 'admin')}
                   disabled={savingRoleId === selectedUser._id}
                 >
                   {selectedUser.role === 'admin' ? 'Make Client' : 'Make Admin'}
                 </Button>
-                <Button variant="outlined" color="error" onClick={() => handleDelete(selectedUser._id)} sx={{ textTransform: 'none' }}>
-                  Delete
+                <Button variant="outlined" color="error" onClick={() => handleDelete(selectedUser._id)} sx={{ textTransform: 'none', borderRadius: 2 }}>
+                  Delete Account
                 </Button>
               </Stack>
             </Stack>

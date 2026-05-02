@@ -102,7 +102,7 @@ const ServiceDetail = () => {
                   {service.shortDescription}
                 </Typography>
                 <Typography variant="h4" sx={{ color: '#1976d2', fontWeight: 800, fontSize: { xs: '1.7rem', sm: '2rem', md: '2.5rem' } }}>
-                  ₹{service.price}
+                  ₹{Number(service.price).toLocaleString('en-IN')}
                 </Typography>
               </Stack>
             </Grid>

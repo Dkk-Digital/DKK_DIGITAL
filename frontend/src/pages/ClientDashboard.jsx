@@ -157,7 +157,7 @@ const ClientDashboard = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Card sx={{ p: 3, textAlign: 'center', backgroundColor: '#f3e5f5' }}>
               <Typography variant="h6" sx={{ color: '#9c27b0', fontWeight: 700 }}>
-                ₹{projects.reduce((sum, p) => sum + (p.budget || 0), 0).toLocaleString()}
+                ₹{projects.reduce((sum, p) => sum + (p.budget || 0), 0).toLocaleString('en-IN')}
               </Typography>
               <Typography variant="body2" sx={{ color: '#666' }}>
                 Total Budget
@@ -229,7 +229,7 @@ const ClientDashboard = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#999' }}>
-                    <span>Budget: ₹{project.budget?.toLocaleString()}</span>
+                    <span>Budget: ₹{project.budget?.toLocaleString('en-IN')}</span>
                     <span>{new Date(project.createdAt).toLocaleDateString()}</span>
                   </Box>
                 </ProjectCard>
@@ -277,7 +277,7 @@ const ClientDashboard = () => {
               <option value="">Select a service</option>
               {services.map((service) => (
                 <option key={service._id} value={service._id}>
-                  {service.title} (₹{service.price})
+                  {service.title} (₹{Number(service.price).toLocaleString('en-IN')})
                 </option>
               ))}
             </TextField>

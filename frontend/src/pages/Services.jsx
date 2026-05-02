@@ -104,7 +104,7 @@ const Services = () => {
                     {service.shortDescription}
                   </Typography>
                   <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 600, mb: 2 }}>
-                    ₹{service.price}
+                    ₹{Number(service.price).toLocaleString('en-IN')}
                   </Typography>
                   <Box sx={{ mb: 2 }}>
                     <Typography variant="caption" sx={{ color: '#999' }}>
