@@ -1,7 +1,8 @@
 import React from 'react';
-import { Container, Box, Typography, Grid, Paper } from '@mui/material';
+import { Container, Box, Typography, Grid, Paper, Card, CardContent, CardMedia, Chip, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
+import { motion } from 'framer-motion';
 
 const AboutSection = styled(Box)(({ theme }) => ({
   padding: '80px 0',
@@ -33,6 +34,34 @@ const ValueCard = styled(Paper)(({ theme }) => ({
     boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
   },
 }));
+
+const PosterCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  borderRadius: '24px',
+  overflow: 'hidden',
+  boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+  border: '1px solid rgba(25,118,210,0.05)',
+  transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease',
+  '&:hover': {
+    transform: 'translateY(-12px) scale(1.02)',
+    boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
+  },
+}));
+
+const teamMembers = [
+  {
+    name: 'Deepanshu Khandelwal',
+    image: '/images/deepanshu.jpg',
+  },
+  {
+    name: 'Aakriti Khandelwal',
+    image: '/images/aakriti.jpg',
+  },
+  {
+    name: 'Keshav Khandelwal',
+    image: '/images/keshav.jpg',
+  }
+];
 
 const About = () => {
   return (
@@ -114,6 +143,44 @@ const About = () => {
               </Grid>
             ))}
           </Grid>
+
+          {/* Team Section */}
+          <Box sx={{ mt: 8, mb: 6 }}>
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, textAlign: 'center' }}>
+              Meet Our Team
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#666', textAlign: 'center', mb: 6, maxWidth: '600px', mx: 'auto' }}>
+              The creative minds and strategic thinkers driving your brand's growth and success.
+            </Typography>
+
+            <Grid container spacing={4}>
+              {teamMembers.map((member, index) => (
+                <Grid item xs={12} md={4} key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                    style={{ height: '100%' }}
+                  >
+                    <PosterCard>
+                      <Box 
+                        component="img"
+                        src={member.image}
+                        alt={member.name}
+                        sx={{ 
+                          width: '100%', 
+                          height: 'auto', 
+                          display: 'block',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </PosterCard>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
       </AboutSection>
       </Container>
     </Layout>
