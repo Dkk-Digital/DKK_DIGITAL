@@ -280,6 +280,7 @@ const About = () => {
                 </Grid>
               ))}
             </Box>
+          </Box>
         </AboutSection>
       </Container>
     </Layout>
