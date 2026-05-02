@@ -385,7 +385,7 @@ const Contact = () => {
                         variant="contained"
                         type="submit"
                         disabled={loading}
-                        endIcon={!loading && <SendIcon />}
+                        endIcon={!loading ? <SendIcon /> : null}
                         sx={{ 
                           py: 2, 
                           mt: 2,

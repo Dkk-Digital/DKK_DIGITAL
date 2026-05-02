@@ -17,7 +17,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import HandymanIcon from '@mui/icons-material/Handyman';
 
-const AnimatedBox = motion.create(Box);
 
 const PageWrapper = styled(Box)({
   background: '#ffffff',
@@ -106,12 +105,14 @@ const SectionTitle = ({ children, align = 'center', subtitle }) => (
         {children}
       </Typography>
     </motion.div>
-    <motion.div initial={{ width: 0 }} whileInView={{ width: '80px' }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.6 }}>
+    <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.6 }}>
       <Box sx={{ 
+        width: '80px',
         height: '6px', 
         background: 'linear-gradient(90deg, #6366f1, #a855f7)', 
         borderRadius: '4px',
-        margin: align === 'center' ? '0 auto' : '0'
+        margin: align === 'center' ? '0 auto' : '0',
+        transformOrigin: align === 'center' ? 'center' : 'left'
       }} />
     </motion.div>
   </Box>
@@ -303,12 +304,12 @@ const About = () => {
                 { icon: <FavoriteIcon />, title: 'Customer Focus', desc: 'Your success is our ultimate KPI. We listen, understand, and tailor our approach to align perfectly with your business goals.', color: '#ef4444' },
               ].map((value, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
-                  <AnimatedBox
+                  <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1, duration: 0.6 }}
-                    sx={{ height: '100%' }}
+                    style={{ height: '100%' }}
                   >
                     <GlassCard>
                       <IconWrapper color={value.color}>
@@ -321,7 +322,7 @@ const About = () => {
                         {value.desc}
                       </Typography>
                     </GlassCard>
-                  </AnimatedBox>
+                  </motion.div>
                 </Grid>
               ))}
             </Grid>
@@ -376,9 +377,10 @@ const About = () => {
                         justifyContent: 'center',
                         p: 1.5,
                         background: 'rgba(56, 189, 248, 0.1)',
-                        borderRadius: '12px'
+                        borderRadius: '12px',
+                        '& svg': { fontSize: '28px' }
                       }}>
-                        {React.cloneElement(reason.icon, { sx: { fontSize: '28px' }})}
+                        {reason.icon}
                       </Box>
                       <Box>
                         <Typography variant="h6" sx={{ color: '#fff', fontWeight: 700, mb: 1 }}>
@@ -537,4 +539,3 @@ const About = () => {
 };
 
 export default About;
-

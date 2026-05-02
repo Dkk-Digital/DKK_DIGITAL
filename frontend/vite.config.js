@@ -1,18 +1,8 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import electron from 'vite-plugin-electron/simple';
-
 export default defineConfig({
   plugins: [
     react(),
-    electron({
-      main: {
-        entry: 'electron/main.js',
-      },
-      preload: {
-        input: 'electron/preload.js',
-      },
-    }),
   ],
   server: {
     host: true, // Listens on all local IPs (essential for Android/iOS testing via Capacitor)
