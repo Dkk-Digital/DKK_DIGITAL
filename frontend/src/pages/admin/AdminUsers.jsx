@@ -229,10 +229,11 @@ const AdminUsers = () => {
         </Stack>
       </MotionCard>
 
-      <MotionCard variants={itemVariants} sx={{ borderRadius: 22, border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(24px)', p: { xs: 2, md: 3 }, boxShadow: '0 10px 30px rgba(15,23,42,0.05)' }}>
-        <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+      <MotionCard variants={itemVariants} sx={{ borderRadius: 22, border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.65)', backdropFilter: 'blur(24px)', p: { xs: 3, md: 4 }, mt: 3, overflow: 'visible', boxShadow: '0 10px 30px rgba(15,23,42,0.05)' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, mb: 3 }}>
           User Directory
         </Typography>
+
 
         {filteredUsers.length === 0 ? (
           <Box sx={{ py: 8, textAlign: 'center' }}>
