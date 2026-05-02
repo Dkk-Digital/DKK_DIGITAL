@@ -166,10 +166,10 @@ const About = () => {
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {teamMembers.map((member, index) => (
-                <Grid 
-                  container 
-                  spacing={6} 
-                  key={index} 
+                <Grid
+                  container
+                  spacing={6}
+                  key={index}
                   alignItems="center"
                   direction={index % 2 === 0 ? 'row' : 'row-reverse'}
                 >
@@ -193,13 +193,13 @@ const About = () => {
                           pointerEvents: 'none'
                         }
                       }}>
-                        <Box 
+                        <Box
                           component="img"
                           src={member.image}
                           alt={member.name}
-                          sx={{ 
-                            width: '100%', 
-                            height: 'auto', 
+                          sx={{
+                            width: '100%',
+                            height: 'auto',
                             display: 'block',
                             objectFit: 'cover'
                           }}
@@ -254,22 +254,22 @@ const About = () => {
                             ))}
                           </Box>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={6}>
                           <Typography variant="overline" sx={{ fontWeight: 700, color: '#999', mb: 1, display: 'block' }}>
                             Core Skills & Platforms
                           </Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                             {member.skills.map((skill, i) => (
-                              <Chip 
-                                key={i} 
-                                label={skill} 
-                                sx={{ 
-                                  bgcolor: 'rgba(0,0,0,0.04)', 
+                              <Chip
+                                key={i}
+                                label={skill}
+                                sx={{
+                                  bgcolor: 'rgba(0,0,0,0.04)',
                                   color: '#333',
                                   fontWeight: 500,
                                   borderRadius: '8px'
-                                }} 
+                                }}
                               />
                             ))}
                           </Box>
@@ -280,6 +280,7 @@ const About = () => {
                 </Grid>
               ))}
             </Box>
+          </Box>
         </AboutSection>
       </Container>
     </Layout>
