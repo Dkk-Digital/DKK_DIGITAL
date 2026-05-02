@@ -12,8 +12,6 @@ export default defineConfig({
       preload: {
         input: 'electron/preload.js',
       },
-      // Optional: Use Node.js API in the Renderer process
-      renderer: {},
     }),
   ],
   server: {
