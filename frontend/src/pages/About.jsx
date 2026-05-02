@@ -4,16 +4,18 @@ import { styled, alpha } from '@mui/material/styles';
 import Layout from '../components/Layout';
 import { motion } from 'framer-motion';
 
-import StarIcon from '@mui/icons-material/StarRounded';
-import LightbulbIcon from '@mui/icons-material/LightbulbRounded';
-import ShieldIcon from '@mui/icons-material/ShieldRounded';
-import FavoriteIcon from '@mui/icons-material/FavoriteRounded';
-import GroupIcon from '@mui/icons-material/GroupRounded';
-import ShowChartIcon from '@mui/icons-material/ShowChartRounded';
-import HeadsetMicIcon from '@mui/icons-material/HeadsetMicRounded';
-import DesignServicesIcon from '@mui/icons-material/DesignServicesRounded';
-import MemoryIcon from '@mui/icons-material/MemoryRounded';
-import AssessmentIcon from '@mui/icons-material/AssessmentRounded';
+import StarIcon from '@mui/icons-material/Star';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import ShieldIcon from '@mui/icons-material/Shield';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import GroupIcon from '@mui/icons-material/Group';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import MemoryIcon from '@mui/icons-material/Memory';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import HandymanIcon from '@mui/icons-material/Handyman';
 
 const AnimatedBox = motion.create(Box);
 

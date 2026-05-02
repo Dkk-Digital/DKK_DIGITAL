@@ -7,11 +7,11 @@ import { errorAlert, successAlert } from '../utils/alerts';
 import { motion } from 'framer-motion';
 
 // Icons
-import EmailIcon from '@mui/icons-material/EmailRounded';
-import PhoneIcon from '@mui/icons-material/PhoneRounded';
-import LocationOnIcon from '@mui/icons-material/LocationOnRounded';
-import AccessTimeIcon from '@mui/icons-material/AccessTimeRounded';
-import SendIcon from '@mui/icons-material/SendRounded';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import SendIcon from '@mui/icons-material/Send';
 
 const PageWrapper = styled(Box)({
   background: '#ffffff',
