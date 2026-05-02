@@ -35,32 +35,42 @@ const ValueCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const PosterCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  borderRadius: '24px',
-  overflow: 'hidden',
-  boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
-  border: '1px solid rgba(25,118,210,0.05)',
-  transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease',
-  '&:hover': {
-    transform: 'translateY(-12px) scale(1.02)',
-    boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
-  },
-}));
-
 const teamMembers = [
   {
     name: 'Deepanshu Khandelwal',
+    role: 'Digital Marketing Specialist',
+    tagline: 'Turning Clicks into Customers 📈',
+    description: 'A growth-focused marketer dedicated to scaling brands online with content that converts.',
+    whatIDo: ['SEO', 'Paid Ads', 'Analytics'],
+    skills: ['Meta Ads', 'Google Ads', 'Sales Funnels', 'GA4'],
+    highlights: ['Growth-Focused', 'Content that Converts', 'Scaling Brands'],
     image: '/images/deepanshu.png',
-  },
-
-  {
-    name: 'Keshav Khandelwal',
-    image: '/images/keshav.png',
+    gradient: 'linear-gradient(135deg, #ff6b00 0%, #ff8e3c 100%)',
+    color: '#ff6b00'
   },
   {
     name: 'Aakriti Khandelwal',
+    role: 'Visual Designer',
+    tagline: 'Designs that tell stories & sell ✨',
+    description: 'Crafting clean, modern, and impactful designs that elevate brand identity and drive engagement.',
+    whatIDo: ['Clean', 'Modern', 'Impactful'],
+    skills: ['Logos', 'Branding', 'Social Media Design', 'Brand Identity', 'UI Design'],
+    highlights: ['5-Star Skills', 'Creative Storytelling', 'Brand Growth'],
     image: '/images/aakriti.png',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+    color: '#8b5cf6'
+  },
+  {
+    name: 'Keshav Khandelwal',
+    role: 'Digital Marketing Specialist',
+    tagline: 'I help brands grow online 🚀',
+    description: 'Turning clicks into customers by driving results and generating high-quality leads for scaling businesses.',
+    whatIDo: ['Digital Marketing Specialist'],
+    skills: ['Meta Ads', 'Google Ads', 'Sales Funnels'],
+    highlights: ['1+ Years Driving Results', '10+ Brands Scaled', 'Generated Leads', '3X Increased ROI'],
+    image: '/images/keshav.png',
+    gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+    color: '#f59e0b'
   }
 ];
 
@@ -154,34 +164,122 @@ const About = () => {
               The creative minds and strategic thinkers driving your brand's growth and success.
             </Typography>
 
-            <Grid container spacing={4}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {teamMembers.map((member, index) => (
-                <Grid item xs={12} md={4} key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.2 }}
-                    style={{ height: '100%' }}
-                  >
-                    <PosterCard>
-                      <Box
-                        component="img"
-                        src={member.image}
-                        alt={member.name}
-                        sx={{
-                          width: '100%',
-                          height: 'auto',
-                          display: 'block',
-                          objectFit: 'contain'
-                        }}
-                      />
-                    </PosterCard>
-                  </motion.div>
+                <Grid 
+                  container 
+                  spacing={6} 
+                  key={index} 
+                  alignItems="center"
+                  direction={index % 2 === 0 ? 'row' : 'row-reverse'}
+                >
+                  <Grid item xs={12} md={5}>
+                    <motion.div
+                      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Box sx={{
+                        position: 'relative',
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0, left: 0, right: 0, bottom: 0,
+                          background: `linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%)`,
+                          pointerEvents: 'none'
+                        }
+                      }}>
+                        <Box 
+                          component="img"
+                          src={member.image}
+                          alt={member.name}
+                          sx={{ 
+                            width: '100%', 
+                            height: 'auto', 
+                            display: 'block',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </Box>
+                    </motion.div>
+                  </Grid>
+
+                  <Grid item xs={12} md={7}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, fontSize: { xs: '2rem', md: '2.5rem' } }}>
+                          {member.name}
+                        </Typography>
+                        <Box sx={{ display: 'inline-block', px: 2, py: 0.5, borderRadius: '12px', background: member.gradient, color: 'white', mb: 2 }}>
+                          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                            {member.role}
+                          </Typography>
+                        </Box>
+                        <Typography variant="h6" sx={{ color: '#444', fontWeight: 600, mb: 2 }}>
+                          {member.tagline}
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: '#666', mb: 4, lineHeight: 1.8 }}>
+                          {member.description}
+                        </Typography>
+                      </Box>
+
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="overline" sx={{ fontWeight: 700, color: '#999', mb: 1, display: 'block' }}>
+                            What I Do
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            {member.whatIDo.map((item, i) => (
+                              <Typography key={i} variant="body2" sx={{ display: 'flex', alignItems: 'center', fontWeight: 500, color: '#444' }}>
+                                <Box component="span" sx={{ color: member.color, mr: 1 }}>✦</Box> {item}
+                              </Typography>
+                            ))}
+                          </Box>
+
+                          <Typography variant="overline" sx={{ fontWeight: 700, color: '#999', mt: 3, mb: 1, display: 'block' }}>
+                            Highlights
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            {member.highlights.map((item, i) => (
+                              <Chip key={i} label={item} size="small" sx={{ bgcolor: `${member.color}15`, color: member.color, fontWeight: 600 }} />
+                            ))}
+                          </Box>
+                        </Grid>
+                        
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="overline" sx={{ fontWeight: 700, color: '#999', mb: 1, display: 'block' }}>
+                            Core Skills & Platforms
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            {member.skills.map((skill, i) => (
+                              <Chip 
+                                key={i} 
+                                label={skill} 
+                                sx={{ 
+                                  bgcolor: 'rgba(0,0,0,0.04)', 
+                                  color: '#333',
+                                  fontWeight: 500,
+                                  borderRadius: '8px'
+                                }} 
+                              />
+                            ))}
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </motion.div>
+                  </Grid>
                 </Grid>
               ))}
-            </Grid>
-          </Box>
+            </Box>
         </AboutSection>
       </Container>
     </Layout>
