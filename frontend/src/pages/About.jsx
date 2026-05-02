@@ -53,13 +53,14 @@ const teamMembers = [
     name: 'Deepanshu Khandelwal',
     image: '/images/deepanshu.png',
   },
-  {
-    name: 'Aakriti Khandelwal',
-    image: '/images/aakriti.png',
-  },
+
   {
     name: 'Keshav Khandelwal',
     image: '/images/keshav.png',
+  },
+  {
+    name: 'Aakriti Khandelwal',
+    image: '/images/aakriti.png',
   }
 ];
 
@@ -76,8 +77,8 @@ const About = () => {
           </Typography>
         </HeroSection>
 
-      <AboutSection>
-        <Box sx={{ mb: 6, animation: 'fadeInUp 0.8s ease' }}>
+        <AboutSection>
+          <Box sx={{ mb: 6, animation: 'fadeInUp 0.8s ease' }}>
             <Typography variant="body1" sx={{ color: '#666', lineHeight: 1.8, mb: 3 }}>
               DKK Digital is a leading digital marketing agency dedicated to helping businesses grow in the online space. With years of experience and a team of passionate professionals, we deliver results-driven strategies tailored to your business needs.
             </Typography>
@@ -164,13 +165,13 @@ const About = () => {
                     style={{ height: '100%' }}
                   >
                     <PosterCard>
-                      <Box 
+                      <Box
                         component="img"
                         src={member.image}
                         alt={member.name}
-                        sx={{ 
-                          width: '100%', 
-                          height: 'auto', 
+                        sx={{
+                          width: '100%',
+                          height: 'auto',
                           display: 'block',
                           objectFit: 'contain'
                         }}
@@ -181,7 +182,7 @@ const About = () => {
               ))}
             </Grid>
           </Box>
-      </AboutSection>
+        </AboutSection>
       </Container>
     </Layout>
   );
