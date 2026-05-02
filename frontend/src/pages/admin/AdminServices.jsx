@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Card, CircularProgress, Container, Drawer, Grid, IconButton, Stack, TextField, Typography, Chip, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { serviceService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
 

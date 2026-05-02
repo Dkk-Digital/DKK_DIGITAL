@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Card, CircularProgress, Container, Divider, Drawer, IconButton, MenuItem, Select, Stack, Typography, Chip, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { inquiryService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';
 

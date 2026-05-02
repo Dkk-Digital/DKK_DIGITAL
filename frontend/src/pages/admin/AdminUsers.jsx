@@ -20,8 +20,7 @@ import {
   TablePagination,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
-import SearchIcon from '@mui/icons-material/Search';
+import { Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { confirmAlert, errorAlert, successAlert } from '../../utils/alerts';
 import { authService } from '../../services';
 import useAdminPanelData from './useAdminPanelData';

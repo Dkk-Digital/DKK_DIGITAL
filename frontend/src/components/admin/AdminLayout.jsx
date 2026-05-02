@@ -18,14 +18,16 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import ViewModuleOutlinedIcon from '@mui/icons-material/ViewModuleOutlined';
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
-import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
+import {
+  DashboardOutlined as DashboardOutlinedIcon,
+  ViewModuleOutlined as ViewModuleOutlinedIcon,
+  GroupOutlined as GroupOutlinedIcon,
+  MailOutlineOutlined as MailOutlineOutlinedIcon,
+  LogoutOutlined as LogoutOutlinedIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  LanguageOutlined as LanguageOutlinedIcon
+} from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 
 const drawerWidth = 320;
