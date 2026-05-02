@@ -49,18 +49,6 @@ const teamMembers = [
     color: '#ff6b00'
   },
   {
-    name: 'Aakriti Khandelwal',
-    role: 'Visual Designer',
-    tagline: 'Designs that tell stories & sell ✨',
-    description: 'Crafting clean, modern, and impactful designs that elevate brand identity and drive engagement.',
-    whatIDo: ['Clean', 'Modern', 'Impactful'],
-    skills: ['Logos', 'Branding', 'Social Media Design', 'Brand Identity', 'UI Design'],
-    highlights: ['5-Star Skills', 'Creative Storytelling', 'Brand Growth'],
-    image: '/images/aakriti.png',
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
-    color: '#8b5cf6'
-  },
-  {
     name: 'Keshav Khandelwal',
     role: 'Digital Marketing Specialist',
     tagline: 'I help brands grow online 🚀',
@@ -71,6 +59,18 @@ const teamMembers = [
     image: '/images/keshav.png',
     gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
     color: '#f59e0b'
+  },
+  {
+    name: 'Aakriti Khandelwal',
+    role: 'Visual Designer',
+    tagline: 'Designs that tell stories & sell ✨',
+    description: 'Crafting clean, modern, and impactful designs that elevate brand identity and drive engagement.',
+    whatIDo: ['Clean', 'Modern', 'Impactful'],
+    skills: ['Logos', 'Branding', 'Social Media Design', 'Brand Identity', 'UI Design'],
+    highlights: ['5-Star Skills', 'Creative Storytelling', 'Brand Growth'],
+    image: '/images/aakriti.png',
+    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+    color: '#8b5cf6'
   }
 ];
 
