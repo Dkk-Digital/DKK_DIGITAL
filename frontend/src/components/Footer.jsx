@@ -69,6 +69,7 @@ const Footer = () => {
             <FooterLink href="/privacy">Privacy Policy</FooterLink>
             <FooterLink href="/terms">Terms & Conditions</FooterLink>
             <FooterLink href="/support">Support Center</FooterLink>
+            <FooterLink href="/dkk-digital">DKK Digital Info</FooterLink>
           </Grid>
         </Grid>
         <Box sx={{ borderTop: '1px solid rgba(241,245,249,0.08)', pt: 3.5, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>

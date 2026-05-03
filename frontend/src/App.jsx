@@ -19,6 +19,7 @@ import Register from './pages/Register';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions';
 import SupportCenter from './pages/SupportCenter';
+import DkkDigital from './pages/DkkDigital';
 
 const ClientDashboard = lazy(() => import('./pages/ClientDashboard'));
 const Profile = lazy(() => import('./pages/Profile'));
@@ -61,6 +62,7 @@ const AppRoutes = () => {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsConditions />} />
         <Route path="/support" element={<SupportCenter />} />
+        <Route path="/dkk-digital" element={<DkkDigital />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
