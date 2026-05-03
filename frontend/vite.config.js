@@ -3,9 +3,10 @@ import { defineConfig } from 'vite';
 import electron from 'vite-plugin-electron/simple';
 
 export default defineConfig({
+  base: process.env.VERCEL === '1' ? '/' : './',
   plugins: [
     react(),
-    electron({
+    process.env.VERCEL !== '1' && electron({
       main: {
         entry: 'electron/main.js',
       },
@@ -13,7 +14,7 @@ export default defineConfig({
         input: 'electron/preload.js',
       },
     }),
-  ],
+  ].filter(Boolean),
   server: {
     host: true, // Listens on all local IPs (essential for Android/iOS testing via Capacitor)
     port: 3000,
@@ -25,3 +26,5 @@ export default defineConfig({
     },
   },
 });
+
+
