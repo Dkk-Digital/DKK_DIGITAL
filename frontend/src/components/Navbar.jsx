@@ -117,7 +117,7 @@ const Navbar = () => {
     <Box sx={{ width: 300, p: 3, height: '100%', background: isDarkMode ? '#1e293b' : '#ffffff', color: isDarkMode ? '#f8fafc' : '#1e293b' }} role="presentation">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <LogoImage src="/logo.png" alt="DKK Digital logo" />
+          <LogoImage src="/apple-touch-icon" alt="DKK Digital logo" />
           <BrandText className="brand-gradient" sx={{ fontSize: '20px' }}>
             DKK Digital
           </BrandText>
@@ -190,7 +190,7 @@ const Navbar = () => {
       <Container maxWidth="lg">
         <StyledToolbar>
           <LogoText component={RouterLink} to="/" aria-label="DKK Digital home">
-            <LogoImage src="/logo.png" alt="DKK Digital logo" />
+            <LogoImage src="/apple-touch-icon" alt="DKK Digital logo" />
             <BrandText className="brand-gradient">DKK Digital</BrandText>
           </LogoText>
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
