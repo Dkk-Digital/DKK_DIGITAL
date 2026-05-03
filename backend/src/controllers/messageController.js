@@ -19,7 +19,10 @@ export const sendMessage = async (req, res) => {
       attachments: attachments || [],
     });
 
-    await newMessage.populate('sender', 'name email').populate('recipient', 'name email');
+    await newMessage.populate([
+      { path: 'sender', select: 'name email' },
+      { path: 'recipient', select: 'name email' }
+    ]);
 
     // Send notification email to recipient
     if (newMessage.recipient) {

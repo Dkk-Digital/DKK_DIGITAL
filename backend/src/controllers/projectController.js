@@ -17,7 +17,11 @@ export const createProject = async (req, res) => {
       notes,
     });
 
-    await project.populate('service').populate('client', 'name email').populate('assignedTo', 'name email');
+    await project.populate([
+      { path: 'service' },
+      { path: 'client', select: 'name email' },
+      { path: 'assignedTo', select: 'name email' }
+    ]);
 
     res.status(201).json({
       success: true,
@@ -146,7 +150,11 @@ export const updateProject = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    await project.populate('service').populate('client', 'name email').populate('assignedTo', 'name email');
+    await project.populate([
+      { path: 'service' },
+      { path: 'client', select: 'name email' },
+      { path: 'assignedTo', select: 'name email' }
+    ]);
 
     // Send notification email to client about status update
     if (status && project.client) {
