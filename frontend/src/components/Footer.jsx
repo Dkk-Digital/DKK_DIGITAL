@@ -47,10 +47,10 @@ const Footer = () => {
             <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 700, color: '#f8fafc', fontSize: '1.05rem', letterSpacing: '-0.2px' }}>
               Solutions
             </Typography>
-            <FooterLink href="/services">SEO Optimization</FooterLink>
-            <FooterLink href="/services">Content Marketing</FooterLink>
-            <FooterLink href="/services">Paid Advertising (PPC)</FooterLink>
-            <FooterLink href="/services">Social Media Strategy</FooterLink>
+            <FooterLink href="/services?category=SEO">SEO Optimization</FooterLink>
+            <FooterLink href="/services?category=Content Marketing">Content Marketing</FooterLink>
+            <FooterLink href="/services?category=PPC">Paid Advertising (PPC)</FooterLink>
+            <FooterLink href="/services?category=Social Media Marketing">Social Media Strategy</FooterLink>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 700, color: '#f8fafc', fontSize: '1.05rem', letterSpacing: '-0.2px' }}>

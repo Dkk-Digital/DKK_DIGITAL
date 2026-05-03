@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Card, Typography, CircularProgress, Box, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
 import { serviceService } from '../services';
@@ -55,16 +55,25 @@ const ServiceImage = styled('img')(() => ({
 const Services = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
 
   useEffect(() => {
     fetchServices();
-  }, []);
+  }, [categoryParam]);
 
   const fetchServices = async () => {
     try {
       setLoading(true);
       const response = await serviceService.getAll();
-      setServices(response.data.services);
+      let filtered = response.data.services || [];
+      if (categoryParam) {
+        filtered = filtered.filter(s => 
+          s.category?.toLowerCase().includes(categoryParam.toLowerCase()) || 
+          s.title?.toLowerCase().includes(categoryParam.toLowerCase())
+        );
+      }
+      setServices(filtered);
     } catch (error) {
       errorAlert('Failed to load services');
     } finally {
