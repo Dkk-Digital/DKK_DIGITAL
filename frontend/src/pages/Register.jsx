@@ -76,20 +76,7 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Social states
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState('');
-  const [socialData, setSocialData] = useState({ name: '', email: '', phone: '', company: '' });
-  const [googleClientId, setGoogleClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || '843073176458-fv66p5vhd649mbjsluffmbvgn4unh1ff.apps.googleusercontent.com');
-
-  useEffect(() => {
-    if (openDialog && selectedProvider === 'Google' && googleClientId) {
-      const timer = setTimeout(() => {
-        handleRenderGsi();
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [openDialog, selectedProvider, googleClientId]);
+  const [googleClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || '843073176458-fv66p5vhd649mbjsluffmbvgn4unh1ff.apps.googleusercontent.com');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,16 +86,8 @@ const Register = () => {
     }));
   };
 
-
   const handleRenderGsi = () => {
-    if (!googleClientId) {
-      errorAlert('Please enter your valid Google Client ID');
-      return;
-    }
-    if (!window.google) {
-      errorAlert('Google script is still loading or blocked. Please refresh.');
-      return;
-    }
+    if (!googleClientId || !window.google) return;
 
     try {
       window.google.accounts.id.initialize({
@@ -123,16 +102,13 @@ const Register = () => {
             const payload = JSON.parse(jsonPayload);
 
             setLoading(true);
-            setOpenDialog(false);
             const apiResponse = await authService.socialLogin({
               name: payload.name,
               email: payload.email,
-              phone: socialData.phone,
-              company: socialData.company,
               provider: 'Google'
             });
             login(apiResponse.data.user, apiResponse.data.token);
-            successAlert('Registered with Google Identity Services successfully!');
+            successAlert('Registered with Google successfully!');
 
             if (apiResponse.data.user.role === 'admin') {
               navigate('/admin/dashboard');
@@ -147,14 +123,30 @@ const Register = () => {
         }
       });
 
-      window.google.accounts.id.renderButton(
-        document.getElementById("gsi-button"),
-        { theme: "outline", size: "large", width: 350 }
-      );
+      const btnEl = document.getElementById("gsi-button");
+      if (btnEl) {
+        window.google.accounts.id.renderButton(
+          btnEl,
+          { theme: "outline", size: "large", width: 350 }
+        );
+      }
     } catch (err) {
-      errorAlert('Failed to initialize Google Identity Services. Check your Client ID.');
+      console.error(err);
     }
   };
+
+  useEffect(() => {
+    let intervalId;
+    if (googleClientId) {
+      intervalId = setInterval(() => {
+        if (window.google && document.getElementById("gsi-button")) {
+          handleRenderGsi();
+          clearInterval(intervalId);
+        }
+      }, 500);
+    }
+    return () => clearInterval(intervalId);
+  }, [googleClientId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -188,47 +180,6 @@ const Register = () => {
     }
   };
 
-  const handleOpenSocialDialog = (provider) => {
-    setSelectedProvider(provider);
-    setSocialData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-    });
-    setOpenDialog(true);
-  };
-
-  const handleSocialSubmit = async (e) => {
-    e.preventDefault();
-    if (!socialData.email || !socialData.name) {
-      errorAlert('Please provide all details for the social login.');
-      return;
-    }
-    try {
-      setLoading(true);
-      setOpenDialog(false);
-      const response = await authService.socialLogin({
-        name: socialData.name,
-        email: socialData.email,
-        phone: socialData.phone,
-        company: socialData.company,
-        provider: selectedProvider
-      });
-      login(response.data.user, response.data.token);
-      successAlert(`Registered with ${selectedProvider} successfully!`);
-
-      if (response.data.user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/client/dashboard');
-      }
-    } catch (error) {
-      errorAlert(error.response?.data?.message || 'Social login/registration failed');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <Layout>
@@ -326,63 +277,8 @@ const Register = () => {
             </Typography>
           </Divider>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleOpenSocialDialog('Google')}
-              startIcon={<GoogleIcon />}
-              sx={{
-                borderColor: '#EA4335',
-                color: '#EA4335',
-                fontWeight: 600,
-                py: 1.2,
-                '&:hover': {
-                  backgroundColor: 'rgba(234,67,53,0.06)',
-                  borderColor: '#EA4335'
-                }
-              }}
-            >
-              Continue with Google
-            </Button>
-
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleOpenSocialDialog('Facebook')}
-              startIcon={<FacebookIcon />}
-              sx={{
-                borderColor: '#1877F2',
-                color: '#1877F2',
-                fontWeight: 600,
-                py: 1.2,
-                '&:hover': {
-                  backgroundColor: 'rgba(24,119,242,0.06)',
-                  borderColor: '#1877F2'
-                }
-              }}
-            >
-              Continue with Facebook
-            </Button>
-
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleOpenSocialDialog('Instagram')}
-              startIcon={<InstagramIcon />}
-              sx={{
-                borderColor: '#dc2743',
-                color: '#dc2743',
-                fontWeight: 600,
-                py: 1.2,
-                '&:hover': {
-                  backgroundColor: 'rgba(220,39,67,0.06)',
-                  borderColor: '#dc2743'
-                }
-              }}
-            >
-              Continue with Instagram
-            </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <Box id="gsi-button" sx={{ display: 'flex', justifyContent: 'center' }}></Box>
           </Box>
 
           <Box sx={{ textAlign: 'center' }}>
@@ -394,151 +290,6 @@ const Register = () => {
             </Typography>
           </Box>
         </AuthForm>
-
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="xs" fullWidth>
-          <DialogTitle sx={{ textAlign: 'center', pb: 1, fontWeight: 700 }}>
-            {selectedProvider} Sign Up
-          </DialogTitle>
-          <DialogContent>
-            {selectedProvider === 'Google' ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                {/* Real GSI Option */}
-                <Box sx={{ p: 2, border: '1px solid rgba(25,118,210,0.12)', borderRadius: '12px', background: 'rgba(25,118,210,0.02)' }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
-                    Option A: Real Google Identity Services
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
-                    Put your Real Google Client ID and click Initialize to test official registration.
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Google Client ID"
-                    value={googleClientId}
-                    onChange={(e) => setGoogleClientId(e.target.value)}
-                    variant="outlined"
-                    sx={{ mb: 1.5 }}
-                  />
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Phone (Optional)"
-                    value={socialData.phone}
-                    onChange={(e) => setSocialData({ ...socialData, phone: e.target.value })}
-                    variant="outlined"
-                    sx={{ mb: 1.5 }}
-                  />
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Company (Optional)"
-                    value={socialData.company}
-                    onChange={(e) => setSocialData({ ...socialData, company: e.target.value })}
-                    variant="outlined"
-                    sx={{ mb: 1.5 }}
-                  />
-                  <Button variant="outlined" fullWidth onClick={handleRenderGsi} sx={{ mb: 1.5 }}>
-                    Initialize Google Sign-In
-                  </Button>
-                  <Box id="gsi-button" sx={{ display: 'flex', justifyContent: 'center' }}></Box>
-                </Box>
-
-                <Divider sx={{ my: 1 }}><Typography color="textSecondary" variant="body2">OR SIMULATE</Typography></Divider>
-
-                {/* Simulation Option */}
-                <Box sx={{ p: 2, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px' }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#555' }}>
-                    Option B: Simulation Mode
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
-                    Register instantly with custom credentials without needing a Client ID.
-                  </Typography>
-                  <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                      fullWidth
-                      label="Full Name"
-                      value={socialData.name}
-                      onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
-                      required
-                      variant="outlined"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      type="email"
-                      value={socialData.email}
-                      onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
-                      required
-                      variant="outlined"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Phone (Optional)"
-                      value={socialData.phone}
-                      onChange={(e) => setSocialData({ ...socialData, phone: e.target.value })}
-                      variant="outlined"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Company (Optional)"
-                      value={socialData.company}
-                      onChange={(e) => setSocialData({ ...socialData, company: e.target.value })}
-                      variant="outlined"
-                    />
-                    <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: '#EA4335' }}>
-                      Register via Simulation
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
-            ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Typography variant="body2" sx={{ mb: 3, color: '#555', textAlign: 'center' }}>
-                  Register instantly using our secure OAuth testing simulator.
-                </Typography>
-                <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Full Name"
-                    value={socialData.name}
-                    onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
-                    required
-                    variant="outlined"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    type="email"
-                    value={socialData.email}
-                    onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
-                    required
-                    variant="outlined"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Phone (Optional)"
-                    value={socialData.phone}
-                    onChange={(e) => setSocialData({ ...socialData, phone: e.target.value })}
-                    variant="outlined"
-                  />
-                  <TextField
-                    fullWidth
-                    label="Company (Optional)"
-                    value={socialData.company}
-                    onChange={(e) => setSocialData({ ...socialData, company: e.target.value })}
-                    variant="outlined"
-                  />
-                  <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: selectedProvider === 'Facebook' ? '#1877F2' : '#dc2743' }}>
-                    Confirm Registration via {selectedProvider}
-                  </Button>
-                </Box>
-              </Box>
-            )}
-          </DialogContent>
-          <DialogActions sx={{ px: 3, pb: 2 }}>
-            <Button onClick={() => setOpenDialog(false)} color="inherit" fullWidth>Cancel</Button>
-          </DialogActions>
-        </Dialog>
       </Container>
     </Layout>
   );
