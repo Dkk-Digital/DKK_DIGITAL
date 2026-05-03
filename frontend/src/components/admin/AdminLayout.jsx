@@ -26,7 +26,8 @@ import {
   LogoutOutlined as LogoutOutlinedIcon,
   Menu as MenuIcon,
   Close as CloseIcon,
-  LanguageOutlined as LanguageOutlinedIcon
+  LanguageOutlined as LanguageOutlinedIcon,
+  LibraryBooksOutlined as LibraryBooksIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,6 +51,7 @@ const accentMap = {
   Services: '#a78bfa',
   Users: '#34d399',
   Inquiries: '#f59e0b',
+  Blogs: '#ec4899',
 };
 
 const Shell = styled(Box)(({ theme }) => ({
@@ -143,6 +145,7 @@ const navItems = [
   { label: 'Services', to: '/admin/services', icon: <ViewModuleOutlinedIcon fontSize="small" /> },
   { label: 'Users', to: '/admin/users', icon: <GroupOutlinedIcon fontSize="small" /> },
   { label: 'Inquiries', to: '/admin/inquiries', icon: <MailOutlineOutlinedIcon fontSize="small" /> },
+  { label: 'Blogs', to: '/admin/blogs', icon: <LibraryBooksIcon fontSize="small" /> },
 ];
 
 const AdminLayout = () => {

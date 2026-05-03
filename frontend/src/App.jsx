@@ -27,6 +27,7 @@ const AdminOverview = lazy(() => import('./pages/admin/AdminOverview'));
 const AdminServices = lazy(() => import('./pages/admin/AdminServices'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminInquiries = lazy(() => import('./pages/admin/AdminInquiries'));
+const AdminBlogs = lazy(() => import('./pages/admin/AdminBlogs'));
 
 let theme = createTheme({
   palette: {
@@ -156,6 +157,7 @@ const AppRoutes = () => {
           <Route path="services" element={<AdminServices />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="inquiries" element={<AdminInquiries />} />
+          <Route path="blogs" element={<AdminBlogs />} />
         </Route>
         <Route
           path="/client/dashboard"
