@@ -92,6 +92,7 @@ const About = () => {
           transition={{ duration: 0.6 }}
         >
           <HeroSection>
+            <Box component="img" src="/logo.png" alt="DKK Digital logo" sx={{ height: 80, mb: 3, mx: 'auto', display: 'block' }} />
             <Typography variant="h3" sx={{ fontWeight: 900, mb: 2.5, fontSize: { xs: '2.25rem', sm: '2.75rem', md: '3.5rem' }, background: 'linear-gradient(135deg, #4f46e5 0%, #d946ef 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-1.2px' }}>
               We Are DKK Digital
             </Typography>

@@ -53,6 +53,7 @@ const Profile = () => {
     <Layout>
       <Container maxWidth="md" sx={{ py: { xs: 7, md: 12 } }}>
         <Box className="fade-in-down" sx={{ mb: 6 }}>
+          <Box component="img" src="/logo.png" alt="DKK Digital logo" sx={{ height: 60, mb: 2, display: 'block' }} />
           <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             My Profile
           </Typography>

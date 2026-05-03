@@ -179,17 +179,15 @@ const AdminLayout = () => {
         <Box sx={{ p: 0.5 }}>
           <Stack direction="row" alignItems="center" spacing={1.6} sx={{ mb: 2.4 }}>
             <Avatar
+              src="/logo.png"
+              alt="DKK Digital logo"
               sx={{
                 width: 44,
                 height: 44,
-                bgcolor: 'rgba(56,189,248,0.18)',
-                color: '#e0f2fe',
-                fontWeight: 900,
+                bgcolor: 'transparent',
                 boxShadow: '0 0 0 1px rgba(255,255,255,0.08) inset, 0 18px 30px rgba(15,23,42,0.22)',
               }}
-            >
-              D
-            </Avatar>
+            />
             <Box>
               <Typography variant="subtitle1" sx={{ fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.05 }}>
                 DKK Admin

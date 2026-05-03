@@ -175,6 +175,7 @@ const Login = () => {
     <Layout>
       <Container maxWidth="lg" sx={{ py: { xs: 7, md: 12 } }}>
         <HeroSection className="fade-in-down">
+          <Box component="img" src="/logo.png" alt="DKK Digital logo" sx={{ height: 80, mb: 3, mx: 'auto', display: 'block' }} />
           <Typography variant="h3" sx={{ fontWeight: 800, mb: 2, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.25rem' }, background: 'linear-gradient(90deg, #1976d2, #0ea5e9)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
             Welcome Back
           </Typography>

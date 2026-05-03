@@ -83,6 +83,7 @@ const DkkDigitalInfo = () => {
           transition={{ duration: 0.6 }}
         >
           <HeroSection>
+            <Box component="img" src="/logo.png" alt="DKK Digital logo" sx={{ height: 80, mb: 3, mx: 'auto', display: 'block' }} />
             <Typography
               variant="h3"
               sx={{

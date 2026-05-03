@@ -36,9 +36,12 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={{ xs: 4, md: 5 }} sx={{ mb: { xs: 4, md: 6 }, textAlign: { xs: 'center', md: 'left' } }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 800, background: 'linear-gradient(90deg, #4f46e5, #d946ef)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-0.5px' }}>
-              DKK Digital
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, justifyContent: { xs: 'center', md: 'flex-start' } }}>
+              <Box component="img" src="/logo.png" alt="DKK Digital logo" sx={{ height: 36, width: 'auto' }} />
+              <Typography variant="h6" sx={{ fontWeight: 800, background: 'linear-gradient(90deg, #4f46e5, #d946ef)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-0.5px' }}>
+                DKK Digital
+              </Typography>
+            </Box>
             <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.5)', lineHeight: 1.7 }}>
               Creating impactful digital marketing solutions tailored to elevate your brand and exceed expectations.
             </Typography>
