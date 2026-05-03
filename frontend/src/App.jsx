@@ -16,6 +16,9 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
+import SupportCenter from './pages/SupportCenter';
 
 const ClientDashboard = lazy(() => import('./pages/ClientDashboard'));
 const Profile = lazy(() => import('./pages/Profile'));
@@ -131,6 +134,9 @@ const AppRoutes = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogDetail />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsConditions />} />
+        <Route path="/support" element={<SupportCenter />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />

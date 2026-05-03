@@ -66,9 +66,9 @@ const Footer = () => {
             <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 700, color: '#f8fafc', fontSize: '1.05rem', letterSpacing: '-0.2px' }}>
               Trust & Legal
             </Typography>
-            <FooterLink href="#">Privacy Policy</FooterLink>
-            <FooterLink href="#">Terms & Conditions</FooterLink>
-            <FooterLink href="#">Support Center</FooterLink>
+            <FooterLink href="/privacy">Privacy Policy</FooterLink>
+            <FooterLink href="/terms">Terms & Conditions</FooterLink>
+            <FooterLink href="/support">Support Center</FooterLink>
           </Grid>
         </Grid>
         <Box sx={{ borderTop: '1px solid rgba(241,245,249,0.08)', pt: 3.5, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
