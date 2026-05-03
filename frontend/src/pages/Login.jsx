@@ -132,17 +132,6 @@ const Login = () => {
             </Typography>
           </Box>
 
-          <Box sx={{ mt: 3, p: 2, backgroundColor: '#f0f4ff', borderRadius: '4px' }}>
-            <Typography variant="caption" sx={{ color: '#666' }}>
-              Demo Credentials:
-            </Typography>
-            <Typography variant="caption" sx={{ display: 'block', color: '#666' }}>
-              Email: admin@dkkdigital.com
-            </Typography>
-            <Typography variant="caption" sx={{ display: 'block', color: '#666' }}>
-              Password: Admin@123
-            </Typography>
-          </Box>
         </AuthForm>
       </Container>
     </Layout>
