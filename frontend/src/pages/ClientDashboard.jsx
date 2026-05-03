@@ -100,7 +100,12 @@ const ClientDashboard = () => {
 
       // Load update dialog directly for new project
       if (response.data && response.data.project) {
-        setProjectToUpdate(response.data.project);
+        setProjectToUpdate({
+          _id: response.data.project._id || '',
+          title: response.data.project.title || '',
+          description: response.data.project.description || '',
+          budget: response.data.project.budget || '',
+        });
         setShowUpdateProjectDialog(true);
       }
       fetchDashboardData();

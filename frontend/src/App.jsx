@@ -30,6 +30,7 @@ const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminInquiries = lazy(() => import('./pages/admin/AdminInquiries'));
 const AdminBlogs = lazy(() => import('./pages/admin/AdminBlogs'));
 const AdminMessages = lazy(() => import('./pages/admin/AdminMessages'));
+const AdminProjects = lazy(() => import('./pages/admin/AdminProjects'));
 
 const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -84,6 +85,7 @@ const AppRoutes = () => {
           <Route path="inquiries" element={<AdminInquiries />} />
           <Route path="blogs" element={<AdminBlogs />} />
           <Route path="messages" element={<AdminMessages />} />
+          <Route path="projects" element={<AdminProjects />} />
         </Route>
         <Route
           path="/client/dashboard"

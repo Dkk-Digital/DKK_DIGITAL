@@ -27,7 +27,8 @@ import {
   Menu as MenuIcon,
   Close as CloseIcon,
   LanguageOutlined as LanguageOutlinedIcon,
-  LibraryBooksOutlined as LibraryBooksIcon
+  LibraryBooksOutlined as LibraryBooksIcon,
+  AssignmentOutlined as AssignmentIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -53,6 +54,7 @@ const accentMap = {
   Inquiries: '#f59e0b',
   Blogs: '#ec4899',
   Messages: '#8b5cf6',
+  Projects: '#f43f5e',
 };
 
 const Shell = styled(Box)(({ theme }) => ({
@@ -144,6 +146,7 @@ const ShellListItem = styled(ListItemButton)({
 const navItems = [
   { label: 'Overview', to: '/admin/dashboard', icon: <DashboardOutlinedIcon fontSize="small" /> },
   { label: 'Services', to: '/admin/services', icon: <ViewModuleOutlinedIcon fontSize="small" /> },
+  { label: 'Projects', to: '/admin/projects', icon: <AssignmentIcon fontSize="small" /> },
   { label: 'Users', to: '/admin/users', icon: <GroupOutlinedIcon fontSize="small" /> },
   { label: 'Inquiries', to: '/admin/inquiries', icon: <MailOutlineOutlinedIcon fontSize="small" /> },
   { label: 'Blogs', to: '/admin/blogs', icon: <LibraryBooksIcon fontSize="small" /> },

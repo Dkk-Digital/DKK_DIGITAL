@@ -1,26 +1,33 @@
-import { BrowserWindow as e, app as t } from "electron";
-import n from "path";
-import { fileURLToPath as r } from "url";
+import { BrowserWindow, app } from "electron";
+import path from "path";
+import { fileURLToPath } from "url";
 //#region electron/main.js
-var i = r(import.meta.url), a = n.dirname(i), o;
-function s() {
-	o = new e({
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = path.dirname(__filename);
+var mainWindow;
+function createWindow() {
+	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 800,
 		webPreferences: {
-			preload: n.join(a, "preload.js"),
-			nodeIntegration: !0,
-			contextIsolation: !1
+			preload: path.join(__dirname, "preload.js"),
+			nodeIntegration: true,
+			contextIsolation: false
 		}
-	}), process.env.VITE_DEV_SERVER_URL ? o.loadURL(process.env.VITE_DEV_SERVER_URL) : o.loadFile(n.join(a, "../dist/index.html")), o.on("closed", () => {
-		o = null;
+	});
+	if (process.env.VITE_DEV_SERVER_URL) mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+	else mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
+	mainWindow.on("closed", () => {
+		mainWindow = null;
 	});
 }
-t.whenReady().then(() => {
-	s(), t.on("activate", () => {
-		e.getAllWindows().length === 0 && s();
+app.whenReady().then(() => {
+	createWindow();
+	app.on("activate", () => {
+		if (BrowserWindow.getAllWindows().length === 0) createWindow();
 	});
-}), t.on("window-all-closed", () => {
-	process.platform !== "darwin" && t.quit();
+});
+app.on("window-all-closed", () => {
+	if (process.platform !== "darwin") app.quit();
 });
 //#endregion
