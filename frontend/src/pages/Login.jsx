@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Box, TextField, Button, Typography, CircularProgress, Link, Divider, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
@@ -76,6 +76,16 @@ const Login = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState('');
   const [socialData, setSocialData] = useState({ name: '', email: '' });
+  const [googleClientId, setGoogleClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || '843073176458-fv66p5vhd649mbjsluffmbvgn4unh1ff.apps.googleusercontent.com');
+
+  useEffect(() => {
+    if (openDialog && selectedProvider === 'Google' && googleClientId) {
+      const timer = setTimeout(() => {
+        handleRenderGsi();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [openDialog, selectedProvider, googleClientId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,6 +93,61 @@ const Login = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+
+  const handleRenderGsi = () => {
+    if (!googleClientId) {
+      errorAlert('Please enter your valid Google Client ID');
+      return;
+    }
+    if (!window.google) {
+      errorAlert('Google script is still loading or blocked. Please refresh.');
+      return;
+    }
+
+    try {
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: async (response) => {
+          try {
+            const base64Url = response.credential.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            const payload = JSON.parse(jsonPayload);
+
+            setLoading(true);
+            setOpenDialog(false);
+            const apiResponse = await authService.socialLogin({
+              name: payload.name,
+              email: payload.email,
+              provider: 'Google'
+            });
+            login(apiResponse.data.user, apiResponse.data.token);
+            successAlert('Logged in with Google Identity Services successfully!');
+
+            if (apiResponse.data.user.role === 'admin') {
+              navigate('/admin/dashboard');
+            } else {
+              navigate('/client/dashboard');
+            }
+          } catch (err) {
+            errorAlert('Google Identity authentication failed or token invalid.');
+          } finally {
+            setLoading(false);
+          }
+        }
+      });
+
+      window.google.accounts.id.renderButton(
+        document.getElementById("gsi-button"),
+        { theme: "outline", size: "large", width: 350 }
+      );
+    } catch (err) {
+      errorAlert('Failed to initialize Google Identity Services. Check your Client ID.');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -270,34 +335,97 @@ const Login = () => {
 
         <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="xs" fullWidth>
           <DialogTitle sx={{ textAlign: 'center', pb: 1, fontWeight: 700 }}>
-            {selectedProvider} Authentication Simulation
+            {selectedProvider} Authentication
           </DialogTitle>
           <DialogContent>
-            <Typography variant="body2" sx={{ mb: 3, color: '#555', textAlign: 'center' }}>
-              Sign in instantly using our secure OAuth testing simulator. Customize the details or use the generated demo accounts.
-            </Typography>
-            <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                fullWidth
-                label="Full Name"
-                value={socialData.name}
-                onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
-                required
-                variant="outlined"
-              />
-              <TextField
-                fullWidth
-                label="Email"
-                type="email"
-                value={socialData.email}
-                onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
-                required
-                variant="outlined"
-              />
-              <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: selectedProvider === 'Google' ? '#EA4335' : selectedProvider === 'Facebook' ? '#1877F2' : '#dc2743' }}>
-                Confirm Sign In via {selectedProvider}
-              </Button>
-            </Box>
+            {selectedProvider === 'Google' ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {/* Real GSI Option */}
+                <Box sx={{ p: 2, border: '1px solid rgba(25,118,210,0.12)', borderRadius: '12px', background: 'rgba(25,118,210,0.02)' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#1976d2' }}>
+                    Option A: Real Google Identity Services
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
+                    Put your Real Google Client ID and click Initialize to test official login.
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Google Client ID"
+                    value={googleClientId}
+                    onChange={(e) => setGoogleClientId(e.target.value)}
+                    variant="outlined"
+                    sx={{ mb: 1.5 }}
+                  />
+                  <Button variant="outlined" fullWidth onClick={handleRenderGsi} sx={{ mb: 1.5 }}>
+                    Initialize Google Sign-In
+                  </Button>
+                  <Box id="gsi-button" sx={{ display: 'flex', justifyContent: 'center' }}></Box>
+                </Box>
+
+                <Divider sx={{ my: 1 }}><Typography color="textSecondary" variant="body2">OR SIMULATE</Typography></Divider>
+
+                {/* Simulation Option */}
+                <Box sx={{ p: 2, border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#555' }}>
+                    Option B: Simulation Mode
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
+                    Sign in instantly with custom credentials without needing a Client ID.
+                  </Typography>
+                  <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <TextField
+                      fullWidth
+                      label="Full Name"
+                      value={socialData.name}
+                      onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
+                      required
+                      variant="outlined"
+                    />
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      type="email"
+                      value={socialData.email}
+                      onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
+                      required
+                      variant="outlined"
+                    />
+                    <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: '#EA4335' }}>
+                      Sign In via Simulation
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            ) : (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Typography variant="body2" sx={{ mb: 3, color: '#555', textAlign: 'center' }}>
+                  Sign in instantly using our secure OAuth testing simulator. Customize the details or use the generated demo accounts.
+                </Typography>
+                <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Full Name"
+                    value={socialData.name}
+                    onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
+                    required
+                    variant="outlined"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    type="email"
+                    value={socialData.email}
+                    onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
+                    required
+                    variant="outlined"
+                  />
+                  <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: selectedProvider === 'Facebook' ? '#1877F2' : '#dc2743' }}>
+                    Confirm Sign In via {selectedProvider}
+                  </Button>
+                </Box>
+              </Box>
+            )}
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>
             <Button onClick={() => setOpenDialog(false)} color="inherit" fullWidth>Cancel</Button>
