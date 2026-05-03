@@ -190,7 +190,7 @@ const Navbar = () => {
       <Container maxWidth="lg">
         <StyledToolbar>
           <LogoText component={RouterLink} to="/" aria-label="DKK Digital home">
-            <LogoImage src="./public/android-chrome-192x192.png" alt="DKK Digital logo" />
+            <LogoImage src="./android-chrome-192x192.png" alt="DKK Digital logo" />
             <BrandText className="brand-gradient">DKK Digital</BrandText>
           </LogoText>
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
