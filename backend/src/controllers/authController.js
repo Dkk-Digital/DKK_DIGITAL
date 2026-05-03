@@ -5,7 +5,7 @@ import { logUserActivity } from '../utils/userActivity.js';
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, phone, company, role } = req.body;
 
     // Validation
     if (!name || !email || !password) {
@@ -26,6 +26,8 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      phone,
+      company,
       role: role || 'client',
     });
 
@@ -307,7 +309,7 @@ export const getUserActivityStats = async (req, res) => {
 
 export const socialLogin = async (req, res) => {
   try {
-    const { email, name, provider } = req.body;
+    const { email, name, provider, phone, company } = req.body;
 
     if (!email || !name || !provider) {
       return res.status(400).json({ success: false, message: 'Please provide all fields' });
@@ -323,6 +325,8 @@ export const socialLogin = async (req, res) => {
         name,
         email,
         password: hashedPassword,
+        phone,
+        company,
         role: 'client',
       });
 

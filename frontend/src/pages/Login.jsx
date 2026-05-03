@@ -84,8 +84,8 @@ const Login = () => {
   const handleOpenSocialDialog = (provider) => {
     setSelectedProvider(provider);
     setSocialData({
-      name: `Demo ${provider} User`,
-      email: `${provider.toLowerCase().replace(/\s+/g, '')}-user@example.com`
+      name: '',
+      email: ''
     });
     setOpenDialog(true);
   };

@@ -41,13 +41,15 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
+    company: '',
   });
   const [loading, setLoading] = useState(false);
 
   // Social states
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState('');
-  const [socialData, setSocialData] = useState({ name: '', email: '' });
+  const [socialData, setSocialData] = useState({ name: '', email: '', phone: '', company: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,6 +78,8 @@ const Register = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        phone: formData.phone,
+        company: formData.company,
       });
       login(response.data.user, response.data.token);
       successAlert('Registered successfully!');
@@ -90,8 +94,10 @@ const Register = () => {
   const handleOpenSocialDialog = (provider) => {
     setSelectedProvider(provider);
     setSocialData({
-      name: `New ${provider} User`,
-      email: `new-${provider.toLowerCase().replace(/\s+/g, '')}-user@example.com`
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
     });
     setOpenDialog(true);
   };
@@ -108,6 +114,8 @@ const Register = () => {
       const response = await authService.socialLogin({
         name: socialData.name,
         email: socialData.email,
+        phone: socialData.phone,
+        company: socialData.company,
         provider: selectedProvider
       });
       login(response.data.user, response.data.token);
@@ -181,6 +189,26 @@ const Register = () => {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            variant="outlined"
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            label="Phone (Optional)"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            variant="outlined"
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            label="Company (Optional)"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
             variant="outlined"
             sx={{ mb: 3 }}
           />
@@ -269,7 +297,7 @@ const Register = () => {
           </DialogTitle>
           <DialogContent>
             <Typography variant="body2" sx={{ mb: 3, color: '#555', textAlign: 'center' }}>
-              Register instantly using our secure OAuth testing simulator. Customize the details or use the generated demo accounts.
+              Register instantly using our secure OAuth testing simulator.
             </Typography>
             <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
@@ -287,6 +315,20 @@ const Register = () => {
                 value={socialData.email}
                 onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
                 required
+                variant="outlined"
+              />
+              <TextField
+                fullWidth
+                label="Phone (Optional)"
+                value={socialData.phone}
+                onChange={(e) => setSocialData({ ...socialData, phone: e.target.value })}
+                variant="outlined"
+              />
+              <TextField
+                fullWidth
+                label="Company (Optional)"
+                value={socialData.company}
+                onChange={(e) => setSocialData({ ...socialData, company: e.target.value })}
                 variant="outlined"
               />
               <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: selectedProvider === 'Google' ? '#EA4335' : selectedProvider === 'Facebook' ? '#1877F2' : '#dc2743' }}>
