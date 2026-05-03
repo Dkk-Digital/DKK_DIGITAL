@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Box, TextField, Button, Typography, CircularProgress, Link } from '@mui/material';
+import { Container, Box, TextField, Button, Typography, CircularProgress, Link, Divider, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Layout from '../components/Layout';
@@ -42,6 +42,11 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  // Social Login states
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState('');
+  const [socialData, setSocialData] = useState({ name: '', email: '' });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -71,6 +76,44 @@ const Login = () => {
       }
     } catch (error) {
       errorAlert(error.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenSocialDialog = (provider) => {
+    setSelectedProvider(provider);
+    setSocialData({
+      name: `Demo ${provider} User`,
+      email: `${provider.toLowerCase().replace(/\s+/g, '')}-user@example.com`
+    });
+    setOpenDialog(true);
+  };
+
+  const handleSocialSubmit = async (e) => {
+    e.preventDefault();
+    if (!socialData.email || !socialData.name) {
+      errorAlert('Please provide all details for the social login.');
+      return;
+    }
+    try {
+      setLoading(true);
+      setOpenDialog(false);
+      const response = await authService.socialLogin({
+        name: socialData.name,
+        email: socialData.email,
+        provider: selectedProvider
+      });
+      login(response.data.user, response.data.token);
+      successAlert(`Logged in with ${selectedProvider} successfully!`);
+
+      if (response.data.user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/client/dashboard');
+      }
+    } catch (error) {
+      errorAlert(error.response?.data?.message || 'Social login failed');
     } finally {
       setLoading(false);
     }
@@ -123,6 +166,64 @@ const Login = () => {
             {loading ? <CircularProgress size={24} /> : 'Login'}
           </Button>
 
+          <Divider sx={{ my: 3 }}><Typography color="textSecondary" variant="body2">OR CONTINUE WITH</Typography></Divider>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Google')}
+              sx={{
+                borderColor: '#EA4335',
+                color: '#EA4335',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(234,67,53,0.06)',
+                  borderColor: '#EA4335'
+                }
+              }}
+            >
+              Continue with Google
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Facebook')}
+              sx={{
+                borderColor: '#1877F2',
+                color: '#1877F2',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(24,119,242,0.06)',
+                  borderColor: '#1877F2'
+                }
+              }}
+            >
+              Continue with Facebook
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Instagram')}
+              sx={{
+                borderColor: '#dc2743',
+                color: '#dc2743',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(220,39,67,0.06)',
+                  borderColor: '#dc2743'
+                }
+              }}
+            >
+              Continue with Instagram
+            </Button>
+          </Box>
+
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body2" sx={{ color: '#666' }}>
               Don't have an account?{' '}
@@ -133,9 +234,46 @@ const Login = () => {
           </Box>
 
         </AuthForm>
+
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="xs" fullWidth>
+          <DialogTitle sx={{ textAlign: 'center', pb: 1, fontWeight: 700 }}>
+            {selectedProvider} Authentication Simulation
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body2" sx={{ mb: 3, color: '#555', textAlign: 'center' }}>
+              Sign in instantly using our secure OAuth testing simulator. Customize the details or use the generated demo accounts.
+            </Typography>
+            <Box component="form" onSubmit={handleSocialSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <TextField
+                fullWidth
+                label="Full Name"
+                value={socialData.name}
+                onChange={(e) => setSocialData({ ...socialData, name: e.target.value })}
+                required
+                variant="outlined"
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={socialData.email}
+                onChange={(e) => setSocialData({ ...socialData, email: e.target.value })}
+                required
+                variant="outlined"
+              />
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, py: 1.2, backgroundColor: selectedProvider === 'Google' ? '#EA4335' : selectedProvider === 'Facebook' ? '#1877F2' : '#dc2743' }}>
+                Confirm Sign In via {selectedProvider}
+              </Button>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={() => setOpenDialog(false)} color="inherit" fullWidth>Cancel</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </Layout>
   );
 };
 
 export default Login;
+

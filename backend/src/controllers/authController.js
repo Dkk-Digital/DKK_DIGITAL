@@ -304,3 +304,63 @@ export const getUserActivityStats = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const socialLogin = async (req, res) => {
+  try {
+    const { email, name, provider } = req.body;
+
+    if (!email || !name || !provider) {
+      return res.status(400).json({ success: false, message: 'Please provide all fields' });
+    }
+
+    // Find if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Register user seamlessly
+      const hashedPassword = await bcrypt.hash(Math.random().toString(36), 10);
+      user = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+        role: 'client',
+      });
+
+      await logUserActivity({
+        userId: user._id,
+        action: 'register_social',
+        details: { provider },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+        status: 'success',
+      });
+    } else {
+      // Log successful login
+      await logUserActivity({
+        userId: user._id,
+        action: 'login_social',
+        details: { provider },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent'),
+        status: 'success',
+      });
+    }
+
+    const token = generateToken(user._id, user.role);
+
+    res.status(200).json({
+      success: true,
+      message: `Logged in with ${provider} successfully`,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
