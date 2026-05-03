@@ -251,75 +251,81 @@ const Register = () => {
             disabled={loading}
           >
             {loading ? <CircularProgress size={24} /> : 'Register'}
-            <Divider sx={{ my: 3 }}><Typography color="textSecondary" variant="body2">OR CONTINUE WITH</Typography></Divider>
+          </Button>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => handleOpenSocialDialog('Google')}
-                startIcon={<GoogleIcon />}
-                sx={{
-                  borderColor: '#EA4335',
-                  color: '#EA4335',
-                  fontWeight: 600,
-                  py: 1.2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(234,67,53,0.06)',
-                    borderColor: '#EA4335'
-                  }
-                }}
-              >
-                Continue with Google
-              </Button>
+          <Divider sx={{ my: 3 }}>
+            <Typography color="textSecondary" variant="body2">
+              OR CONTINUE WITH
+            </Typography>
+          </Divider>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => handleOpenSocialDialog('Facebook')}
-                startIcon={<FacebookIcon />}
-                sx={{
-                  borderColor: '#1877F2',
-                  color: '#1877F2',
-                  fontWeight: 600,
-                  py: 1.2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(24,119,242,0.06)',
-                    borderColor: '#1877F2'
-                  }
-                }}
-              >
-                Continue with Facebook
-              </Button>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Google')}
+              startIcon={<GoogleIcon />}
+              sx={{
+                borderColor: '#EA4335',
+                color: '#EA4335',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(234,67,53,0.06)',
+                  borderColor: '#EA4335'
+                }
+              }}
+            >
+              Continue with Google
+            </Button>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={() => handleOpenSocialDialog('Instagram')}
-                startIcon={<InstagramIcon />}
-                sx={{
-                  borderColor: '#dc2743',
-                  color: '#dc2743',
-                  fontWeight: 600,
-                  py: 1.2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(220,39,67,0.06)',
-                    borderColor: '#dc2743'
-                  }
-                }}
-              >
-                Continue with Instagram
-              </Button>
-            </Box>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Facebook')}
+              startIcon={<FacebookIcon />}
+              sx={{
+                borderColor: '#1877F2',
+                color: '#1877F2',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(24,119,242,0.06)',
+                  borderColor: '#1877F2'
+                }
+              }}
+            >
+              Continue with Facebook
+            </Button>
 
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                Already have an account?{' '}
-                <Link component={RouterLink} to="/login" sx={{ color: '#1976d2' }}>
-                  Login here
-                </Link>
-              </Typography>
-            </Box>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => handleOpenSocialDialog('Instagram')}
+              startIcon={<InstagramIcon />}
+              sx={{
+                borderColor: '#dc2743',
+                color: '#dc2743',
+                fontWeight: 600,
+                py: 1.2,
+                '&:hover': {
+                  backgroundColor: 'rgba(220,39,67,0.06)',
+                  borderColor: '#dc2743'
+                }
+              }}
+            >
+              Continue with Instagram
+            </Button>
+          </Box>
+
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="body2" sx={{ color: '#666' }}>
+              Already have an account?{' '}
+              <Link component={RouterLink} to="/login" sx={{ color: '#1976d2' }}>
+                Login here
+              </Link>
+            </Typography>
+          </Box>
         </AuthForm>
 
         <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="xs" fullWidth>
