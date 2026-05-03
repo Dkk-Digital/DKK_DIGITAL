@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 const ThemeContext = createContext({
@@ -21,6 +21,18 @@ export const CustomThemeProvider = ({ children }) => {
       return nextMode;
     });
   };
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+      document.body.style.background = '#0f172a';
+      document.body.style.color = '#f8fafc';
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+      document.body.style.background = '#f8fafc';
+      document.body.style.color = '#1e293b';
+    }
+  }, [isDarkMode]);
 
   const theme = useMemo(() => {
     let baseTheme = createTheme({
