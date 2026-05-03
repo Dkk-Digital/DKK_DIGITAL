@@ -52,6 +52,7 @@ const accentMap = {
   Users: '#34d399',
   Inquiries: '#f59e0b',
   Blogs: '#ec4899',
+  Messages: '#8b5cf6',
 };
 
 const Shell = styled(Box)(({ theme }) => ({
@@ -146,6 +147,7 @@ const navItems = [
   { label: 'Users', to: '/admin/users', icon: <GroupOutlinedIcon fontSize="small" /> },
   { label: 'Inquiries', to: '/admin/inquiries', icon: <MailOutlineOutlinedIcon fontSize="small" /> },
   { label: 'Blogs', to: '/admin/blogs', icon: <LibraryBooksIcon fontSize="small" /> },
+  { label: 'Messages', to: '/admin/messages', icon: <MailOutlineOutlinedIcon fontSize="small" /> },
 ];
 
 const AdminLayout = () => {

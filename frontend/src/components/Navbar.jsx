@@ -17,23 +17,24 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Close as CloseIcon, LightMode as LightModeIcon, DarkMode as DarkModeIcon } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import { useThemeToggle } from '../context/ThemeContext';
 
-const StyledToolbar = styled(Toolbar)({
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.7)',
   backdropFilter: 'blur(16px)',
   WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.4)',
+  border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0.4)',
   borderRadius: '16px',
   marginTop: '12px',
   marginBottom: '4px',
   boxShadow: '0 10px 40px rgba(0,0,0,0.02)',
   minHeight: '76px',
   padding: '0 24px',
-});
+}));
 
 const LogoText = styled('div')({
   display: 'flex',
@@ -63,8 +64,8 @@ const BrandText = styled('span')({
   letterSpacing: '-0.5px',
 });
 
-const NavButton = styled(Button)({
-  color: '#4b5563',
+const NavButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.mode === 'dark' ? '#cbd5e1' : '#4b5563',
   textTransform: 'none',
   fontSize: '15px',
   fontWeight: 600,
@@ -74,13 +75,14 @@ const NavButton = styled(Button)({
   borderRadius: '10px',
   transition: 'all 0.3s ease',
   '&:hover': {
-    backgroundColor: 'rgba(79, 70, 229, 0.05)',
+    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(79, 70, 229, 0.05)',
     color: '#4f46e5',
   },
-});
+}));
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useThemeToggle();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -112,7 +114,7 @@ const Navbar = () => {
   const closeMobileMenu = () => setMobileOpen(false);
 
   const renderDrawerContent = () => (
-    <Box sx={{ width: 300, p: 3, height: '100%', background: '#ffffff' }} role="presentation">
+    <Box sx={{ width: 300, p: 3, height: '100%', background: isDarkMode ? '#1e293b' : '#ffffff', color: isDarkMode ? '#f8fafc' : '#1e293b' }} role="presentation">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <LogoImage src="/logo.png" alt="DKK Digital logo" />
@@ -120,20 +122,27 @@ const Navbar = () => {
             DKK Digital
           </BrandText>
         </Box>
-        <IconButton onClick={closeMobileMenu} aria-label="Close menu">
+        <IconButton onClick={closeMobileMenu} aria-label="Close menu" sx={{ color: isDarkMode ? '#f8fafc' : '#1e293b' }}>
           <CloseIcon />
         </IconButton>
       </Stack>
 
       <List sx={{ px: 0 }}>
         {navItems.map((item) => (
-          <ListItemButton key={item.to} component={RouterLink} to={item.to} onClick={closeMobileMenu} sx={{ borderRadius: '12px', mb: 0.5, '&:hover': { color: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.04)' } }}>
+          <ListItemButton key={item.to} component={RouterLink} to={item.to} onClick={closeMobileMenu} sx={{ borderRadius: '12px', mb: 0.5, '&:hover': { color: '#4f46e5', backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(79, 70, 229, 0.04)' } }}>
             <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 600, fontSize: '15px' }} />
           </ListItemButton>
         ))}
       </List>
 
-      <Divider sx={{ my: 2, borderColor: 'rgba(0,0,0,0.05)' }} />
+      <Divider sx={{ my: 2, borderColor: isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }} />
+
+      <Stack sx={{ mb: 2 }} direction="row" alignItems="center" justifyContent="space-between">
+        <span style={{ fontWeight: 600 }}>Theme Mode</span>
+        <IconButton onClick={toggleTheme} sx={{ color: '#4f46e5' }}>
+          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
+      </Stack>
 
       {isAuthenticated ? (
         <List sx={{ px: 0 }}>
@@ -172,7 +181,7 @@ const Navbar = () => {
       position="sticky"
       sx={{
         backgroundColor: 'transparent',
-        color: '#1e293b',
+        color: isDarkMode ? '#f8fafc' : '#1e293b',
         boxShadow: 'none',
         borderBottom: 'none',
         zIndex: 1100,
@@ -191,12 +200,16 @@ const Navbar = () => {
               </NavButton>
             ))}
 
+            <IconButton onClick={toggleTheme} sx={{ ml: 1, color: isDarkMode ? '#f59e0b' : '#4b5563', '&:hover': { backgroundColor: 'rgba(0,0,0,0.03)' } }} aria-label="Toggle theme">
+              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+
             {isAuthenticated ? (
               <>
-                <Button onClick={handleMenuOpen} sx={{ textTransform: 'none', fontWeight: 600, color: '#1e293b', ml: 2, borderRadius: '12px', px: 2, py: 1, '&:hover': { backgroundColor: 'rgba(0,0,0,0.03)' } }}>
+                <Button onClick={handleMenuOpen} sx={{ textTransform: 'none', fontWeight: 600, color: isDarkMode ? '#f8fafc' : '#1e293b', ml: 2, borderRadius: '12px', px: 2, py: 1, '&:hover': { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' } }}>
                   {user?.name}
                 </Button>
-                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} PaperProps={{ sx: { borderRadius: '12px', mt: 1, boxShadow: '0 10px 40px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.04)' } }}>
+                <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} PaperProps={{ sx: { borderRadius: '12px', mt: 1, boxShadow: '0 10px 40px rgba(0,0,0,0.08)', border: isDarkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.04)', background: isDarkMode ? '#1e293b' : '#fff', color: isDarkMode ? '#f8fafc' : '#1e293b' } }}>
                   {user?.role === 'admin' && (
                     <MenuItem component={RouterLink} to="/admin/dashboard" onClick={handleMenuClose} sx={{ fontWeight: 600, fontSize: '14px', py: 1, px: 2.5 }}>
                       Admin Panel
@@ -240,14 +253,19 @@ const Navbar = () => {
             )}
           </Box>
 
-          <IconButton
-            edge="end"
-            onClick={() => setMobileOpen(true)}
-            sx={{ display: { xs: 'inline-flex', md: 'none' }, color: '#1e293b' }}
-            aria-label="Open navigation menu"
-          >
-            <MenuIcon />
-          </IconButton>
+          <Box sx={{ display: { xs: 'inline-flex', md: 'none' }, alignItems: 'center' }}>
+            <IconButton onClick={toggleTheme} sx={{ color: isDarkMode ? '#f59e0b' : '#4b5563', mr: 1 }} aria-label="Toggle theme">
+              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+            <IconButton
+              edge="end"
+              onClick={() => setMobileOpen(true)}
+              sx={{ color: isDarkMode ? '#f8fafc' : '#1e293b' }}
+              aria-label="Open navigation menu"
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
         </StyledToolbar>
       </Container>
 

@@ -368,3 +368,17 @@ export const socialLogin = async (req, res) => {
   }
 };
 
+export const getAdmins = async (req, res) => {
+  try {
+    const admins = await User.find({ role: 'admin' }).select('name email');
+    res.status(200).json({
+      success: true,
+      count: admins.length,
+      admins,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
