@@ -235,8 +235,8 @@ const DkkDigitalInfo = () => {
                 </Typography>
                 <Typography variant="body1" sx={{ color: '#4f46e5', fontWeight: 700, mb: 1 }}>
                   📧 Email:{' '}
-                  <a href="mailto:support@dkkdigital.co.in" style={{ textDecoration: 'none', color: '#4f46e5' }}>
-                    support@dkkdigital.co.in
+                  <a href="mailto:dkkdigital.support@gmail.com" style={{ textDecoration: 'none', color: '#4f46e5' }}>
+                    dkkdigital.support@gmail.com
                   </a>
                 </Typography>
               </FeatureCard>
