@@ -25,7 +25,7 @@ export const CustomThemeProvider = ({ children }) => {
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark-mode');
-      document.body.style.background = '#090d16';
+      document.body.style.background = 'radial-gradient(circle at 12% 14%, rgba(79, 70, 229, 0.08), transparent 40%), radial-gradient(circle at 88% 86%, rgba(217, 70, 239, 0.07), transparent 40%), #050811';
       document.body.style.color = '#f8fafc';
     } else {
       document.documentElement.classList.remove('dark-mode');
@@ -39,20 +39,20 @@ export const CustomThemeProvider = ({ children }) => {
       palette: {
         mode: isDarkMode ? 'dark' : 'light',
         primary: {
-          main: '#4f46e5',
-          light: '#818cf8',
-          dark: '#3730a3',
+          main: isDarkMode ? '#6366f1' : '#4f46e5',
+          light: isDarkMode ? '#818cf8' : '#6366f1',
+          dark: isDarkMode ? '#4f46e5' : '#3730a3',
           contrastText: '#fff',
         },
         secondary: {
-          main: '#d946ef',
-          light: '#f472b6',
-          dark: '#a21caf',
+          main: isDarkMode ? '#f43f5e' : '#d946ef',
+          light: isDarkMode ? '#fb7185' : '#f472b6',
+          dark: isDarkMode ? '#e11d48' : '#a21caf',
           contrastText: '#fff',
         },
         background: {
-          default: isDarkMode ? '#090d16' : '#f8fafc',
-          paper: isDarkMode ? '#111827' : '#ffffff',
+          default: isDarkMode ? '#050811' : '#f8fafc',
+          paper: isDarkMode ? '#0d1222' : '#ffffff',
         },
         text: {
           primary: isDarkMode ? '#f8fafc' : '#1e293b',
@@ -82,13 +82,13 @@ export const CustomThemeProvider = ({ children }) => {
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: isDarkMode ? '0 8px 24px rgba(79,70,229,0.3)' : '0 8px 24px rgba(79,70,229,0.18)',
+                boxShadow: isDarkMode ? '0 8px 24px rgba(99,102,241,0.3)' : '0 8px 24px rgba(79,70,229,0.18)',
               },
             },
             containedPrimary: {
-              background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)',
+              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
               '&:hover': {
-                background: 'linear-gradient(135deg, #4338ca 0%, #2563eb 100%)',
+                background: 'linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)',
               },
             },
           },
@@ -99,15 +99,15 @@ export const CustomThemeProvider = ({ children }) => {
               backgroundImage: 'none',
               borderRadius: '20px',
               border: isDarkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.03)',
-              background: isDarkMode ? 'rgba(17, 24, 39, 0.7)' : 'rgba(255, 255, 255, 0.85)',
+              background: isDarkMode ? 'rgba(13, 18, 34, 0.75)' : 'rgba(255, 255, 255, 0.85)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              boxShadow: isDarkMode ? '0 10px 40px rgba(0,0,0,0.4)' : '0 10px 40px rgba(0,0,0,0.03)',
+              boxShadow: isDarkMode ? '0 12px 40px rgba(0,0,0,0.5)' : '0 10px 40px rgba(0,0,0,0.03)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
               '&:hover': {
                 transform: 'translateY(-6px)',
-                boxShadow: isDarkMode ? '0 24px 50px rgba(79,70,229,0.25)' : '0 24px 50px rgba(0,0,0,0.06)',
-                borderColor: 'rgba(79,70,229,0.22)',
+                boxShadow: isDarkMode ? '0 24px 50px rgba(99,102,241,0.25)' : '0 24px 50px rgba(0,0,0,0.06)',
+                borderColor: 'rgba(99,102,241,0.22)',
               },
             },
           },
@@ -118,7 +118,7 @@ export const CustomThemeProvider = ({ children }) => {
               backgroundImage: 'none',
               borderRadius: '20px',
               border: isDarkMode ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.02)',
-              background: isDarkMode ? 'rgba(17, 24, 39, 0.65)' : 'rgba(255, 255, 255, 0.8)',
+              background: isDarkMode ? 'rgba(13, 18, 34, 0.7)' : 'rgba(255, 255, 255, 0.8)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
             },

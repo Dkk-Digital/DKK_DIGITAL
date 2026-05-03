@@ -203,7 +203,9 @@ const AdminMessages = () => {
                     </Typography>
                   ) : (
                     chatMessages.map((msg) => {
-                      const isMe = msg.sender._id === user.id;
+                      const senderId = typeof msg.sender === 'object' ? (msg.sender?._id || msg.sender?.id) : msg.sender;
+                      const currentUserId = user?._id || user?.id;
+                      const isMe = senderId === currentUserId;
                       return (
                         <Box
                           key={msg._id}

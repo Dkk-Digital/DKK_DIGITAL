@@ -11,12 +11,12 @@ const ProjectCard = styled(Card)(({ theme }) => ({
   transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
   border: '1px solid rgba(25,118,210,0.08)',
   borderRadius: '16px',
-  background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
+  background: theme.palette.mode === 'dark' ? 'rgba(30, 41, 59, 0.6)' : 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,255,0.8) 100%)',
   [theme.breakpoints.down('sm')]: {
     padding: '20px',
   },
   '&:hover': {
-    boxShadow: '0 20px 40px rgba(25,118,210,0.15)',
+    boxShadow: theme.palette.mode === 'dark' ? '0 20px 40px rgba(0,0,0,0.45)' : '0 20px 40px rgba(25,118,210,0.15)',
     transform: 'translateY(-8px)',
   },
 }));
@@ -52,10 +52,17 @@ const ClientDashboard = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [showUpdateProjectDialog, setShowUpdateProjectDialog] = useState(false);
   const [newProject, setNewProject] = useState({
     title: '',
     description: '',
     service: '',
+    budget: '',
+  });
+  const [projectToUpdate, setProjectToUpdate] = useState({
+    _id: '',
+    title: '',
+    description: '',
     budget: '',
   });
 
@@ -86,13 +93,45 @@ const ClientDashboard = () => {
     }
 
     try {
-      await projectService.create(newProject);
-      successAlert('Project created successfully');
+      const response = await projectService.create(newProject);
+      await successAlert('Project created successfully! Loading page for update.');
       setShowNewProjectDialog(false);
       setNewProject({ title: '', description: '', service: '', budget: '' });
+
+      // Load update dialog directly for new project
+      if (response.data && response.data.project) {
+        setProjectToUpdate(response.data.project);
+        setShowUpdateProjectDialog(true);
+      }
       fetchDashboardData();
     } catch (error) {
       errorAlert('Failed to create project');
+    }
+  };
+
+  const handleOpenUpdateDialog = (project) => {
+    setProjectToUpdate({
+      _id: project._id,
+      title: project.title,
+      description: project.description || '',
+      budget: project.budget || '',
+    });
+    setShowUpdateProjectDialog(true);
+  };
+
+  const handleUpdateProject = async () => {
+    if (!projectToUpdate.title || !projectToUpdate.budget) {
+      errorAlert('Title and budget are required');
+      return;
+    }
+
+    try {
+      await projectService.update(projectToUpdate._id, projectToUpdate);
+      await successAlert('Project updated successfully');
+      setShowUpdateProjectDialog(false);
+      fetchDashboardData();
+    } catch (error) {
+      errorAlert('Failed to update project');
     }
   };
 
@@ -125,41 +164,41 @@ const ClientDashboard = () => {
         {/* Project Stats */}
         <Grid container spacing={3} sx={{ mb: 6 }}>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: '#f0f4ff' }}>
+            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: 'background.paper' }}>
               <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 700 }}>
                 {projects.length}
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Total Projects
               </Typography>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: '#fff3e0' }}>
+            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: 'background.paper' }}>
               <Typography variant="h6" sx={{ color: '#ff9800', fontWeight: 700 }}>
                 {projects.filter((p) => p.status === 'in-progress').length}
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 In Progress
               </Typography>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9' }}>
+            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: 'background.paper' }}>
               <Typography variant="h6" sx={{ color: '#4caf50', fontWeight: 700 }}>
                 {projects.filter((p) => p.status === 'completed').length}
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Completed
               </Typography>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: '#f3e5f5' }}>
+            <Card sx={{ p: 3, textAlign: 'center', backgroundColor: 'background.paper' }}>
               <Typography variant="h6" sx={{ color: '#9c27b0', fontWeight: 700 }}>
                 ₹{projects.reduce((sum, p) => sum + (p.budget || 0), 0).toLocaleString('en-IN')}
               </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Total Budget
               </Typography>
             </Card>
@@ -172,7 +211,7 @@ const ClientDashboard = () => {
         </Typography>
         {projects.length === 0 ? (
           <Card sx={{ p: 4, textAlign: 'center' }}>
-            <Typography sx={{ color: '#666', mb: 2 }}>
+            <Typography sx={{ color: 'text.secondary', mb: 2 }}>
               No projects yet. Create your first project to get started!
             </Typography>
             <Button
@@ -187,13 +226,13 @@ const ClientDashboard = () => {
           <Grid container spacing={3}>
             {projects.map((project) => (
               <Grid item xs={12} md={6} key={project._id}>
-                <ProjectCard>
+                <ProjectCard onClick={() => handleOpenUpdateDialog(project)}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
                     <Box>
                       <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                         {project.title}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                         {project.service?.title}
                       </Typography>
                     </Box>
@@ -202,17 +241,17 @@ const ClientDashboard = () => {
 
                   <Box sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="caption" sx={{ color: '#999' }}>
+                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                         Progress
                       </Typography>
-                      <Typography variant="caption" sx={{ color: '#999' }}>
+                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                         {project.progress}%
                       </Typography>
                     </Box>
                     <Box
                       sx={{
                         height: '8px',
-                        backgroundColor: '#f0f0f0',
+                        backgroundColor: 'background.default',
                         borderRadius: '4px',
                         overflow: 'hidden',
                       }}
@@ -228,10 +267,14 @@ const ClientDashboard = () => {
                     </Box>
                   </Box>
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#999' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'text.secondary', mt: 1 }}>
                     <span>Budget: ₹{project.budget?.toLocaleString('en-IN')}</span>
                     <span>{new Date(project.createdAt).toLocaleDateString()}</span>
                   </Box>
+
+                  <Button variant="text" size="small" onClick={(e) => { e.stopPropagation(); handleOpenUpdateDialog(project); }} sx={{ mt: 2, textTransform: 'none', fontWeight: 600 }}>
+                    Edit & Update &rarr;
+                  </Button>
                 </ProjectCard>
               </Grid>
             ))}
@@ -301,6 +344,56 @@ const ClientDashboard = () => {
                 Create
               </Button>
               <Button variant="outlined" onClick={() => setShowNewProjectDialog(false)} fullWidth>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        </Dialog>
+
+        {/* Update Project Dialog */}
+        <Dialog open={showUpdateProjectDialog} onClose={() => setShowUpdateProjectDialog(false)} maxWidth="sm" fullWidth>
+          <Box sx={{ p: 3 }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              Edit & Update Project Details
+            </Typography>
+
+            <TextField
+              fullWidth
+              label="Project Title"
+              value={projectToUpdate.title}
+              onChange={(e) => setProjectToUpdate({ ...projectToUpdate, title: e.target.value })}
+              sx={{ mb: 2 }}
+            />
+
+            <TextField
+              fullWidth
+              label="Description"
+              value={projectToUpdate.description}
+              onChange={(e) => setProjectToUpdate({ ...projectToUpdate, description: e.target.value })}
+              multiline
+              rows={3}
+              sx={{ mb: 2 }}
+            />
+
+            <TextField
+              fullWidth
+              label="Budget"
+              type="number"
+              value={projectToUpdate.budget}
+              onChange={(e) => setProjectToUpdate({ ...projectToUpdate, budget: e.target.value })}
+              sx={{ mb: 3 }}
+            />
+
+            <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: '#1976d2' }}
+                onClick={handleUpdateProject}
+                fullWidth
+              >
+                Update
+              </Button>
+              <Button variant="outlined" onClick={() => setShowUpdateProjectDialog(false)} fullWidth>
                 Cancel
               </Button>
             </Box>
