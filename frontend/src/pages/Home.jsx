@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
+import TiltCard from '../components/TiltCard';
 import { serviceService } from '../services';
 import { errorAlert } from '../utils/alerts';
 
@@ -54,22 +55,21 @@ const ServiceCard = styled(Card)(({ theme }) => ({
   padding: '44px 32px',
   textAlign: 'center',
   cursor: 'pointer',
-  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-  background: 'rgba(255, 255, 255, 0.65)',
-  backdropFilter: 'blur(12px)',
-  WebkitBackdropFilter: 'blur(12px)',
-  border: '1px solid rgba(255, 255, 255, 0.5)',
+  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+  background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.7)',
   borderRadius: '24px',
-  boxShadow: '0 8px 30px rgba(0,0,0,0.02)',
+  boxShadow: '0 12px 40px rgba(31, 38, 135, 0.05)',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   '&:hover': {
-    boxShadow: '0 24px 50px rgba(79, 70, 229, 0.08)',
-    transform: 'translateY(-8px)',
-    borderColor: 'rgba(79, 70, 229, 0.15)',
-    background: '#ffffff',
+    boxShadow: '0 24px 60px rgba(79, 70, 229, 0.12)',
+    borderColor: 'rgba(79, 70, 229, 0.3)',
+    background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%)',
   },
 }));
 
@@ -199,25 +199,27 @@ const Home = () => {
                 transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
                 style={{ height: '100%' }}
               >
-                <ServiceCard>
-                  <Box>
-                    {service.image?.url && <ServiceImage src={service.image.url} alt={service.title} />}
-                    <Typography variant="h5" sx={{ mb: 1.5, fontWeight: 800, background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-0.3px', fontSize: '1.35rem' }}>
-                      {service.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: '#64748b', lineHeight: 1.7, fontWeight: 400, fontSize: '0.95rem' }}>
-                      {service.shortDescription}
-                    </Typography>
-                  </Box>
-                  <Button
-                    component={RouterLink}
-                    to={`/services/${service._id}`}
-                    variant="text"
-                    sx={{ mt: 3.5, textTransform: 'none', fontWeight: 700, color: '#4f46e5', fontSize: '1rem', '&:hover': { background: 'transparent', color: '#a21caf' } }}
-                  >
-                    View Details &rarr;
-                  </Button>
-                </ServiceCard>
+                <TiltCard style={{ height: '100%' }}>
+                  <ServiceCard>
+                    <Box>
+                      {service.image?.url && <ServiceImage src={service.image.url} alt={service.title} />}
+                      <Typography variant="h5" sx={{ mb: 1.5, fontWeight: 800, background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-0.3px', fontSize: '1.35rem' }}>
+                        {service.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#64748b', lineHeight: 1.7, fontWeight: 400, fontSize: '0.95rem' }}>
+                        {service.shortDescription}
+                      </Typography>
+                    </Box>
+                    <Button
+                      component={RouterLink}
+                      to={`/services/${service._id}`}
+                      variant="text"
+                      sx={{ mt: 3.5, textTransform: 'none', fontWeight: 700, color: '#4f46e5', fontSize: '1rem', '&:hover': { background: 'transparent', color: '#a21caf' } }}
+                    >
+                      View Details &rarr;
+                    </Button>
+                  </ServiceCard>
+                </TiltCard>
               </motion.div>
             </Grid>
           ))}
