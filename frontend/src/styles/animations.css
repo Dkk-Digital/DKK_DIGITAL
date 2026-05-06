@@ -1,0 +1,51 @@
+/* Page entrance animations - small, performant keyframes */
+.animated-wrapper {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Fade */
+.anim-fade {
+  animation-name: fadeIn;
+  animation-timing-function: cubic-bezier(.22,.9,.34,1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Slide Up */
+.anim-slide-up { animation-name: slideUp; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes slideUp { from { opacity: 0; transform: translateY(28px); } to { opacity:1; transform: translateY(0);} }
+
+/* Slide Left */
+.anim-slide-left { animation-name: slideLeft; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes slideLeft { from { opacity:0; transform: translateX(28px); } to { opacity:1; transform: translateX(0);} }
+
+/* Slide Right */
+.anim-slide-right { animation-name: slideRight; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes slideRight { from { opacity:0; transform: translateX(-28px); } to { opacity:1; transform: translateX(0);} }
+
+/* Zoom In */
+.anim-zoom-in { animation-name: zoomIn; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes zoomIn { from { opacity:0; transform: scale(.96); } to { opacity:1; transform: scale(1);} }
+
+/* Rotate In */
+.anim-rotate-in { animation-name: rotateIn; animation-timing-function: cubic-bezier(.2,.9,.3,1); transform-origin: center; }
+@keyframes rotateIn { from { opacity:0; transform: rotate(-6deg) translateY(8px); } to { opacity:1; transform: rotate(0) translateY(0);} }
+
+/* Flip In */
+.anim-flip-in { animation-name: flipIn; animation-timing-function: cubic-bezier(.2,.9,.3,1); transform-origin: center; }
+@keyframes flipIn { from { opacity:0; transform: perspective(600px) rotateX(20deg) translateY(6px);} to { opacity:1; transform: perspective(600px) rotateX(0) translateY(0);} }
+
+/* Bounce In */
+.anim-bounce-in { animation-name: bounceIn; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes bounceIn { 0% { opacity:0; transform: translateY(30px); } 60% { opacity:1; transform: translateY(-8px);} 100% { transform: translateY(0);} }
+
+/* Skew In */
+.anim-skew-in { animation-name: skewIn; animation-timing-function: cubic-bezier(.22,.9,.34,1); }
+@keyframes skewIn { from { opacity:0; transform: skewX(8deg) translateY(10px);} to { opacity:1; transform: skewX(0) translateY(0);} }
+
+/* Default duration fallback */
+.animated-wrapper { animation-duration: 0.9s; animation-fill-mode: both; }
