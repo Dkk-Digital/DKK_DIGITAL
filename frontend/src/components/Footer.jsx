@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Link } from '@mui/material';
+import { Box, Container, Typography, Grid, Link, IconButton } from '@mui/material';
+import { Instagram } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 const FooterBox = styled(Box)(({ theme }) => ({
@@ -79,13 +80,45 @@ const Footer = () => {
           <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.4)', textAlign: 'center', fontSize: '0.85rem' }}>
             &copy; {new Date().getFullYear()} DKK Digital. Innovating online spaces.
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: { xs: 'center', sm: 'flex-end' } }}>
-            <FooterLink href="https://www.instagram.com/dkk.digital/" target="_blank" rel="noopener noreferrer">
-              @dkk.digital
-            </FooterLink>
-            <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.3)', fontSize: '0.85rem' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, justifyContent: { xs: 'center', sm: 'flex-end' } }}>
+            <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.3)', fontSize: '0.85rem', display: { xs: 'none', sm: 'block' } }}>
               Elevate your reach, expand your horizon.
             </Typography>
+            <IconButton
+              component="a"
+              href="https://www.instagram.com/dkk.digital/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: 'rgba(241,245,249,0.65)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  color: '#d946ef',
+                  transform: 'scale(1.1)',
+                  background: 'rgba(217,70,239,0.1)'
+                }
+              }}
+            >
+              <Instagram fontSize="small" />
+            </IconButton>
+            <Link
+              href="https://www.instagram.com/dkk.digital/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: 'rgba(241,245,249,0.65)',
+                textDecoration: 'none',
+                fontSize: '0.925rem',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  color: '#d946ef',
+                  textShadow: '0 0 8px rgba(217,70,239,0.3)',
+                }
+              }}
+            >
+              @dkk.digital
+            </Link>
           </Box>
         </Box>
       </Container>
