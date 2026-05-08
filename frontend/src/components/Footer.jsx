@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Link, IconButton } from '@mui/material';
+import { Box, Container, Typography, Grid, Link, IconButton, Stack } from '@mui/material';
 import { Instagram } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
@@ -74,6 +74,26 @@ const Footer = () => {
             <FooterLink href="/terms">Terms & Conditions</FooterLink>
             <FooterLink href="/support">Support Center</FooterLink>
             <FooterLink href="/dkk-digital">DKK Digital Info</FooterLink>
+            <br />
+            <Stack>
+              <IconButton
+                component="a"
+                href="https://www.instagram.com/dkk.digital/"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  color: 'rgba(241,245,249,0.65)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    color: '#d946ef',
+                    transform: 'scale(1.1)',
+                    background: 'rgba(217,70,239,0.1)'
+                  }
+                }}
+              >
+                <Instagram fontSize="small" />
+              </IconButton>
+            </Stack>
           </Grid>
         </Grid>
         <Box sx={{ borderTop: '1px solid rgba(241,245,249,0.08)', pt: 3.5, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
@@ -84,41 +104,6 @@ const Footer = () => {
             <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.3)', fontSize: '0.85rem', display: { xs: 'none', sm: 'block' } }}>
               Elevate your reach, expand your horizon.
             </Typography>
-            <IconButton
-              component="a"
-              href="https://www.instagram.com/dkk.digital/"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: 'rgba(241,245,249,0.65)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  color: '#d946ef',
-                  transform: 'scale(1.1)',
-                  background: 'rgba(217,70,239,0.1)'
-                }
-              }}
-            >
-              <Instagram fontSize="small" />
-            </IconButton>
-            {/* <Link
-              href="https://www.instagram.com/dkk.digital/"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: 'rgba(241,245,249,0.65)',
-                textDecoration: 'none',
-                fontSize: '0.925rem',
-                fontWeight: 500,
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  color: '#d946ef',
-                  textShadow: '0 0 8px rgba(217,70,239,0.3)',
-                }
-              }}
-            >
-              @dkk.digital
-            </Link> */}
           </Box>
         </Box>
       </Container>

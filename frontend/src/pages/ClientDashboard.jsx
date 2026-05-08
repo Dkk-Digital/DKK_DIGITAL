@@ -71,6 +71,12 @@ const statusColors = {
   'on-hold': { bg: 'rgba(139, 92, 246, 0.12)', text: '#7c3aed' },
 };
 
+const textFieldSx = {
+  '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' },
+  '& .MuiInputLabel-root': { color: 'text.secondary' },
+  '& .MuiInputBase-input': { color: 'text.primary' }
+};
+
 const ClientDashboard = () => {
   const [projects, setProjects] = useState([]);
   const [services, setServices] = useState([]);
@@ -124,10 +130,10 @@ const ClientDashboard = () => {
 
     try {
       const response = await projectService.create(newProject);
-      await successAlert('Project successfully created!');
       setShowNewProjectDialog(false);
       setNewProject({ title: '', description: '', service: '', budget: '' });
       fetchDashboardData();
+      await successAlert('Project successfully created!');
     } catch (error) {
       errorAlert('Failed to create project');
     }
@@ -153,9 +159,9 @@ const ClientDashboard = () => {
 
     try {
       await projectService.update(projectToUpdate._id, projectToUpdate);
-      await successAlert('Project successfully updated');
       setShowUpdateProjectDialog(false);
       fetchDashboardData();
+      await successAlert('Project successfully updated');
     } catch (error) {
       errorAlert('Failed to update project');
     }
@@ -183,7 +189,7 @@ const ClientDashboard = () => {
     <Layout>
       <Box
         sx={{
-          background: 'linear-gradient(135deg, rgba(248,250,252,0.6) 0%, rgba(241,245,249,0.8) 100%)',
+          background: (theme) => theme.palette.mode === 'dark' ? 'transparent' : 'linear-gradient(135deg, rgba(248,250,252,0.6) 0%, rgba(241,245,249,0.8) 100%)',
           minHeight: '85vh',
           py: { xs: 6, md: 10 }
         }}
@@ -221,8 +227,8 @@ const ClientDashboard = () => {
             </Box>
 
             <Stack direction="row" spacing={1.5} sx={{ alignSelf: { xs: 'flex-start', md: 'center' } }}>
-              <IconButton onClick={fetchDashboardData} sx={{ backgroundColor: 'white', border: '1px solid #e2e8f0', p: 1.5, borderRadius: '14px', '&:hover': { backgroundColor: '#f1f5f9' } }}>
-                <RefreshIcon sx={{ color: '#0f172a' }} />
+              <IconButton onClick={fetchDashboardData} sx={{ backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'white', border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0', p: 1.5, borderRadius: '14px', '&:hover': { backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#f1f5f9' } }}>
+                <RefreshIcon sx={{ color: 'text.primary' }} />
               </IconButton>
               <Button
                 variant="contained"
@@ -319,10 +325,14 @@ const ClientDashboard = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '16px',
-                      backgroundColor: 'rgba(255,255,255,0.7)',
+                      backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.7)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(226,232,240,0.8)',
+                      color: 'text.primary',
                     },
+                    '& .MuiInputBase-input': {
+                      color: 'text.primary',
+                    }
                   }}
                 />
               </Grid>
@@ -364,7 +374,7 @@ const ClientDashboard = () => {
                 variant="contained"
                 onClick={() => setShowNewProjectDialog(true)}
                 sx={{
-                  backgroundColor: '#0f172a',
+                  backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#334155' : '#0f172a',
                   color: '#fff',
                   fontWeight: 700,
                   px: 4,
@@ -401,10 +411,10 @@ const ClientDashboard = () => {
                             <AssignmentIcon sx={{ color: '#2563eb' }} />
                           </Box>
                           <Box>
-                            <Typography sx={{ fontWeight: 800, color: '#0f172a', fontSize: '1.2rem' }}>
+                            <Typography sx={{ fontWeight: 800, color: 'text.primary', fontSize: '1.2rem' }}>
                               {project.title}
                             </Typography>
-                            <Typography variant="body2" sx={{ color: '#64748b' }}>
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                               {project.service?.title || 'Custom Enterprise Setup'}
                             </Typography>
                           </Box>
@@ -422,13 +432,13 @@ const ClientDashboard = () => {
                         />
                       </Box>
 
-                      <Typography sx={{ color: '#334155', mb: 3, minHeight: '44px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <Typography sx={{ color: 'text.primary', mb: 3, minHeight: '44px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {project.description || 'No specialized brief details given.'}
                       </Typography>
 
                       <Box sx={{ mb: 3 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                          <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600 }}>
+                          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>
                             Track Completion
                           </Typography>
                           <Typography variant="caption" sx={{ color: '#2563eb', fontWeight: 800 }}>
@@ -450,7 +460,7 @@ const ClientDashboard = () => {
                       </Box>
 
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                        <Typography sx={{ fontWeight: 800, color: '#0f172a', fontSize: '1rem' }}>
+                        <Typography sx={{ fontWeight: 800, color: 'text.primary', fontSize: '1rem' }}>
                           ₹{Number(project.budget || 0).toLocaleString('en-IN')}
                         </Typography>
                         <Button
@@ -478,7 +488,7 @@ const ClientDashboard = () => {
               sx: {
                 borderRadius: '24px',
                 p: { xs: 3, md: 5 },
-                backgroundColor: 'rgba(255,255,255,0.9)',
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(15,23,42,0.95)' : 'rgba(255,255,255,0.9)',
                 backdropFilter: 'blur(25px)',
               }
             }}
@@ -494,7 +504,7 @@ const ClientDashboard = () => {
                 <Typography variant="overline" sx={{ color: '#2563eb', letterSpacing: '0.12em', fontWeight: 800 }}>
                   Detailed Analysis
                 </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 900, color: '#0f172a', mb: 2 }}>
+                <Typography variant="h4" sx={{ fontWeight: 900, color: 'text.primary', mb: 2 }}>
                   {selectedProject.title}
                 </Typography>
 
@@ -533,10 +543,10 @@ const ClientDashboard = () => {
 
                 <Divider sx={{ mb: 3 }} />
 
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                   Project Description & Specifications
                 </Typography>
-                <Typography sx={{ whiteSpace: 'pre-wrap', color: '#1e293b', lineHeight: 1.8, fontSize: '1.05rem', mb: 4 }}>
+                <Typography sx={{ whiteSpace: 'pre-wrap', color: 'text.primary', lineHeight: 1.8, fontSize: '1.05rem', mb: 4 }}>
                   {selectedProject.description || 'No descriptive context provided.'}
                 </Typography>
 
@@ -548,12 +558,12 @@ const ClientDashboard = () => {
                     <Box
                       sx={{
                         p: 2.5,
-                        background: 'rgba(15,23,42,0.03)',
+                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(15,23,42,0.03)',
                         borderRadius: '16px',
                         borderLeft: '4px solid #2563eb'
                       }}
                     >
-                      <Typography sx={{ whiteSpace: 'pre-wrap', color: '#334155', fontStyle: 'italic' }}>
+                      <Typography sx={{ whiteSpace: 'pre-wrap', color: 'text.primary', fontStyle: 'italic' }}>
                         {selectedProject.notes}
                       </Typography>
                     </Box>
@@ -597,17 +607,17 @@ const ClientDashboard = () => {
               sx: {
                 borderRadius: '24px',
                 p: { xs: 3, md: 4 },
-                backgroundColor: 'rgba(255,255,255,0.92)',
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(15,23,42,0.95)' : 'rgba(255,255,255,0.92)',
                 backdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255,255,255,0.4)',
+                border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.4)',
               }
             }}
           >
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: '#0f172a' }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: 'text.primary' }}>
                 Establish New Portfolio
               </Typography>
-              <Typography sx={{ color: '#64748b', mb: 4, fontSize: '0.95rem' }}>
+              <Typography sx={{ color: 'text.secondary', mb: 4, fontSize: '0.95rem' }}>
                 Complete the details below to assign your specialized work to our experts.
               </Typography>
 
@@ -617,7 +627,7 @@ const ClientDashboard = () => {
                   label="Project Title"
                   value={newProject.title}
                   onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <TextField
@@ -627,7 +637,7 @@ const ClientDashboard = () => {
                   onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                   multiline
                   rows={4}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <TextField
@@ -637,7 +647,7 @@ const ClientDashboard = () => {
                   value={newProject.service}
                   onChange={(e) => setNewProject({ ...newProject, service: e.target.value })}
                   SelectProps={{ native: true }}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 >
                   <option value="">Choose a portfolio service...</option>
                   {services.map((service) => (
@@ -653,7 +663,7 @@ const ClientDashboard = () => {
                   type="number"
                   value={newProject.budget}
                   onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
@@ -696,17 +706,17 @@ const ClientDashboard = () => {
               sx: {
                 borderRadius: '24px',
                 p: { xs: 3, md: 4 },
-                backgroundColor: 'rgba(255,255,255,0.92)',
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(15,23,42,0.95)' : 'rgba(255,255,255,0.92)',
                 backdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255,255,255,0.4)',
+                border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.4)',
               }
             }}
           >
             <Box>
-              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: '#0f172a' }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: 'text.primary' }}>
                 Refine Your Project Brief
               </Typography>
-              <Typography sx={{ color: '#64748b', mb: 4, fontSize: '0.95rem' }}>
+              <Typography sx={{ color: 'text.secondary', mb: 4, fontSize: '0.95rem' }}>
                 Adjust title, specifics, budget, and add any collaborative feedback for the team.
               </Typography>
 
@@ -716,7 +726,7 @@ const ClientDashboard = () => {
                   label="Project Title"
                   value={projectToUpdate.title}
                   onChange={(e) => setProjectToUpdate({ ...projectToUpdate, title: e.target.value })}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <TextField
@@ -726,7 +736,7 @@ const ClientDashboard = () => {
                   onChange={(e) => setProjectToUpdate({ ...projectToUpdate, description: e.target.value })}
                   multiline
                   rows={4}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <TextField
@@ -735,7 +745,7 @@ const ClientDashboard = () => {
                   type="number"
                   value={projectToUpdate.budget}
                   onChange={(e) => setProjectToUpdate({ ...projectToUpdate, budget: e.target.value })}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <TextField
@@ -746,7 +756,7 @@ const ClientDashboard = () => {
                   multiline
                   rows={2}
                   onChange={(e) => setProjectToUpdate({ ...projectToUpdate, notes: e.target.value })}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                  sx={textFieldSx}
                 />
 
                 <Stack direction="row" spacing={2} sx={{ pt: 2 }}>

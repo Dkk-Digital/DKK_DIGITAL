@@ -171,7 +171,7 @@ const AdminProjects = () => {
       maxWidth="xl"
       sx={{
         py: { xs: 4, md: 6 },
-        background: 'rgba(248,250,252,0.5)',
+        background: (theme) => theme.palette.mode === 'dark' ? 'transparent' : 'rgba(248,250,252,0.5)',
         minHeight: '85vh',
         borderRadius: '32px'
       }}
@@ -198,8 +198,8 @@ const AdminProjects = () => {
           </Typography>
         </Box>
         <Stack direction="row" spacing={1} sx={{ alignSelf: { xs: 'flex-start', sm: 'center' } }}>
-          <IconButton onClick={refresh} sx={{ backgroundColor: 'white', border: '1px solid #e2e8f0', p: 1.5, borderRadius: '14px', '&:hover': { backgroundColor: '#f1f5f9' } }}>
-            <RefreshIcon />
+          <IconButton onClick={refresh} sx={{ backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'white', border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0', p: 1.5, borderRadius: '14px', '&:hover': { backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : '#f1f5f9' } }}>
+            <RefreshIcon sx={{ color: 'text.primary' }} />
           </IconButton>
         </Stack>
       </Box>
@@ -258,7 +258,7 @@ const AdminProjects = () => {
               placeholder="Find projects by title, client, or details..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: '16px', backgroundColor: 'rgba(255,255,255,0.7)' } }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: '16px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.7)', color: 'text.primary' } }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -293,7 +293,7 @@ const AdminProjects = () => {
       <Grid container spacing={4}>
         <Grid item xs={12} lg={editingProject ? 6 : 12}>
           <GlassCard>
-            <Typography variant="h5" sx={{ fontWeight: 900, mb: 3, color: '#0f172a' }}>
+            <Typography variant="h5" sx={{ fontWeight: 900, mb: 3, color: 'text.primary' }}>
               Project Records ({filteredProjects.length})
             </Typography>
 
@@ -315,8 +315,8 @@ const AdminProjects = () => {
                       onClick={(e) => handleView(e, project)}
                       sx={{
                         p: 3,
-                        background: 'rgba(255,255,255,0.4)',
-                        border: '1px solid rgba(226,232,240,0.6)',
+                        background: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.4)',
+                        border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(226,232,240,0.6)',
                         borderRadius: '20px',
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
@@ -346,10 +346,10 @@ const AdminProjects = () => {
                           <AssignmentIcon sx={{ color: '#2563eb' }} />
                         </Box>
                         <Box>
-                          <Typography sx={{ fontWeight: 800, color: '#0f172a', fontSize: '1.1rem', mb: 0.25 }}>
+                          <Typography sx={{ fontWeight: 800, color: 'text.primary', fontSize: '1.1rem', mb: 0.25 }}>
                             {project.title}
                           </Typography>
-                          <Typography variant="body2" sx={{ color: '#475569', mb: 1 }}>
+                          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                             Client: <strong>{project.client?.name || 'User Client'}</strong> ({project.client?.email || 'No email'})
                           </Typography>
                           <Stack direction="row" spacing={1.5} alignItems="center">
@@ -408,10 +408,10 @@ const AdminProjects = () => {
         {editingProject && (
           <Grid item xs={12} lg={6} component={motion.div} layout>
             <GlassCard>
-              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: '#0f172a' }}>
+              <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: 'text.primary' }}>
                 Refining Project Matrix
               </Typography>
-              <Typography variant="body2" sx={{ color: '#64748b', mb: 4 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 4 }}>
                 Adjust visual progress, change client-facing notes, or internal updates below.
               </Typography>
 
@@ -424,7 +424,7 @@ const AdminProjects = () => {
                     required
                     fullWidth
                     variant="outlined"
-                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' } }}
                   />
 
                   <TextField
@@ -434,7 +434,7 @@ const AdminProjects = () => {
                     fullWidth
                     multiline
                     rows={4}
-                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' } }}
                   />
 
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
@@ -445,7 +445,7 @@ const AdminProjects = () => {
                       onChange={(e) => setForm({ ...form, status: e.target.value })}
                       SelectProps={{ native: true }}
                       fullWidth
-                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' } }}
                     >
                       {['pending', 'in-progress', 'completed', 'on-hold'].map((opt) => (
                         <option key={opt} value={opt}>
@@ -461,7 +461,7 @@ const AdminProjects = () => {
                       onChange={(e) => setForm({ ...form, progress: Number(e.target.value) })}
                       fullWidth
                       inputProps={{ min: 0, max: 100 }}
-                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                      sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' } }}
                     />
                   </Stack>
 
@@ -494,7 +494,7 @@ const AdminProjects = () => {
                     multiline
                     rows={3}
                     placeholder="Enter context, deadlines or task comments..."
-                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: '#fff' } }}
+                    sx={{ '& .MuiOutlinedInput-root': { borderRadius: '14px', backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.2)' : '#fff', color: 'text.primary' } }}
                   />
 
                   <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
@@ -533,7 +533,7 @@ const AdminProjects = () => {
 
       {/* Comprehensive Summary Overlay Drawer */}
       <Drawer anchor="right" open={Boolean(selectedProject)} onClose={() => setSelectedProject(null)}>
-        <Box sx={{ width: { xs: 330, sm: 460 }, p: { xs: 3, sm: 5 }, position: 'relative', background: 'linear-gradient(135deg, #f8fafc, #f1f5f9)', height: '100%', borderLeft: '1px solid #e2e8f0' }}>
+        <Box sx={{ width: { xs: 330, sm: 460 }, p: { xs: 3, sm: 5 }, position: 'relative', background: (theme) => theme.palette.mode === 'dark' ? 'rgba(15,23,42,0.95)' : 'linear-gradient(135deg, #f8fafc, #f1f5f9)', height: '100%', borderLeft: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0' }}>
           <IconButton onClick={() => setSelectedProject(null)} sx={{ position: 'absolute', top: 16, right: 16 }}>
             <CloseIcon />
           </IconButton>
@@ -544,7 +544,7 @@ const AdminProjects = () => {
                 <Typography variant="overline" sx={{ color: '#2563eb', letterSpacing: '0.12em', fontWeight: 800 }}>
                   Strategic Project Outline
                 </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 900, lineHeight: 1.15, mt: 0.5, color: '#0f172a' }}>
+                <Typography variant="h4" sx={{ fontWeight: 900, lineHeight: 1.15, mt: 0.5, color: 'text.primary' }}>
                   {selectedProject.title}
                 </Typography>
               </Box>
@@ -576,27 +576,27 @@ const AdminProjects = () => {
               <Divider />
 
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                   Client Credentials
                 </Typography>
-                <Typography sx={{ fontWeight: 800, color: '#1e293b' }}>
+                <Typography sx={{ fontWeight: 800, color: 'text.primary' }}>
                   {selectedProject.client?.name || 'Direct Business Client'}
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#475569' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   Email ID: {selectedProject.client?.email || 'N/A'}
                 </Typography>
               </Box>
 
               {selectedProject.service && (
                 <Box>
-                  <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                     Assigned Strategy Service
                   </Typography>
-                  <Typography sx={{ fontWeight: 700, color: '#1e293b' }}>
+                  <Typography sx={{ fontWeight: 700, color: 'text.primary' }}>
                     {selectedProject.service?.title || 'Bespoke Integration'}
                   </Typography>
                   {selectedProject.service?.category && (
-                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700 }}>
                       Operational Domain: {selectedProject.service.category}
                     </Typography>
                   )}
@@ -604,29 +604,29 @@ const AdminProjects = () => {
               )}
 
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                   Budgeting Framework
                 </Typography>
-                <Typography sx={{ fontWeight: 900, color: '#0f172a', fontSize: '1.2rem' }}>
+                <Typography sx={{ fontWeight: 900, color: 'text.primary', fontSize: '1.2rem' }}>
                   ₹{Number(selectedProject.budget || 0).toLocaleString('en-IN')}
                 </Typography>
               </Box>
 
               <Box>
-                <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                   Operational Detail
                 </Typography>
-                <Typography sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.8, color: '#334155' }}>
+                <Typography sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.8, color: 'text.primary' }}>
                   {selectedProject.description || 'No specialized operations given.'}
                 </Typography>
               </Box>
 
               {selectedProject.notes && (
                 <Box>
-                  <Typography variant="subtitle2" sx={{ color: '#64748b', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                     Official Internal Analysis
                   </Typography>
-                  <Typography sx={{ whiteSpace: 'pre-wrap', color: '#334155', p: 2, backgroundColor: 'rgba(0,0,0,0.03)', borderRadius: '16px', borderLeft: '4px solid #2563eb' }}>
+                  <Typography sx={{ whiteSpace: 'pre-wrap', color: 'text.primary', p: 2, backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', borderRadius: '16px', borderLeft: '4px solid #2563eb' }}>
                     {selectedProject.notes}
                   </Typography>
                 </Box>

@@ -161,3 +161,27 @@ body{
 /* Utils */
 .muted{color:var(--muted)}
 .gradient-text{background:linear-gradient(90deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Form Input Fixes for Dark Mode */
+.dark-mode .MuiOutlinedInput-root,
+.dark-mode .MuiInputBase-root {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .MuiInputBase-input {
+  color: #f8fafc !important;
+}
+
+.dark-mode .MuiInputLabel-root {
+  color: #94a3b8 !important;
+}
+
+.dark-mode .MuiSelect-select {
+  color: #f8fafc !important;
+}
+
+.dark-mode option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
