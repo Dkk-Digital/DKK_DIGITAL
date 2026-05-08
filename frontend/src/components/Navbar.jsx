@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Menu as MenuIcon, Close as CloseIcon, LightMode as LightModeIcon, DarkMode as DarkModeIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Close as CloseIcon, LightMode as LightModeIcon, DarkMode as DarkModeIcon, Instagram as InstagramIcon } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useThemeToggle } from '../context/ThemeContext';
 
@@ -204,6 +204,25 @@ const Navbar = () => {
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
 
+            <IconButton 
+              component="a" 
+              href="https://www.instagram.com/dkk.digital/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              sx={{ 
+                ml: 1, 
+                color: '#d946ef', 
+                '&:hover': { 
+                  backgroundColor: 'rgba(217,70,239,0.08)',
+                  transform: 'scale(1.1)'
+                },
+                transition: 'all 0.2s ease'
+              }} 
+              aria-label="Instagram"
+            >
+              <InstagramIcon />
+            </IconButton>
+
             {isAuthenticated ? (
               <>
                 <Button onClick={handleMenuOpen} sx={{ textTransform: 'none', fontWeight: 600, color: isDarkMode ? '#f8fafc' : '#1e293b', ml: 2, borderRadius: '12px', px: 2, py: 1, '&:hover': { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)' } }}>
@@ -256,6 +275,22 @@ const Navbar = () => {
           <Box sx={{ display: { xs: 'inline-flex', md: 'none' }, alignItems: 'center' }}>
             <IconButton onClick={toggleTheme} sx={{ color: isDarkMode ? '#f59e0b' : '#4b5563', mr: 1 }} aria-label="Toggle theme">
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+            <IconButton 
+              component="a" 
+              href="https://www.instagram.com/dkk.digital/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              sx={{ 
+                color: '#d946ef', 
+                mr: 1,
+                '&:hover': { 
+                  backgroundColor: 'rgba(217,70,239,0.08)'
+                }
+              }} 
+              aria-label="Instagram"
+            >
+              <InstagramIcon />
             </IconButton>
             <IconButton
               edge="end"
