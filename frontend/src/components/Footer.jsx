@@ -79,9 +79,14 @@ const Footer = () => {
           <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.4)', textAlign: 'center', fontSize: '0.85rem' }}>
             &copy; {new Date().getFullYear()} DKK Digital. Innovating online spaces.
           </Typography>
-          <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.3)', fontSize: '0.85rem' }}>
-            Elevate your reach, expand your horizon.
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: { xs: 'center', sm: 'flex-end' } }}>
+            <FooterLink href="https://www.instagram.com/dkk.digital/" target="_blank" rel="noopener noreferrer">
+              @dkk.digital
+            </FooterLink>
+            <Typography variant="body2" sx={{ color: 'rgba(241,245,249,0.3)', fontSize: '0.85rem' }}>
+              Elevate your reach, expand your horizon.
+            </Typography>
+          </Box>
         </Box>
       </Container>
     </FooterBox>
