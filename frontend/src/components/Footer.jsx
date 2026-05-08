@@ -101,7 +101,7 @@ const Footer = () => {
             >
               <Instagram fontSize="small" />
             </IconButton>
-            <Link
+            {/* <Link
               href="https://www.instagram.com/dkk.digital/"
               target="_blank"
               rel="noopener noreferrer"
@@ -118,7 +118,7 @@ const Footer = () => {
               }}
             >
               @dkk.digital
-            </Link>
+            </Link> */}
           </Box>
         </Box>
       </Container>
