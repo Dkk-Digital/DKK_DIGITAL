@@ -204,7 +204,7 @@ const Navbar = () => {
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
 
-            <IconButton 
+            {/* <IconButton 
               component="a" 
               href="https://www.instagram.com/dkk.digital/" 
               target="_blank" 
@@ -221,7 +221,7 @@ const Navbar = () => {
               aria-label="Instagram"
             >
               <InstagramIcon />
-            </IconButton>
+            </IconButton> */}
 
             {isAuthenticated ? (
               <>
@@ -276,18 +276,18 @@ const Navbar = () => {
             <IconButton onClick={toggleTheme} sx={{ color: isDarkMode ? '#f59e0b' : '#4b5563', mr: 1 }} aria-label="Toggle theme">
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
-            <IconButton 
-              component="a" 
-              href="https://www.instagram.com/dkk.digital/" 
-              target="_blank" 
+            <IconButton
+              component="a"
+              href="https://www.instagram.com/dkk.digital/"
+              target="_blank"
               rel="noopener noreferrer"
-              sx={{ 
-                color: '#d946ef', 
+              sx={{
+                color: '#d946ef',
                 mr: 1,
-                '&:hover': { 
+                '&:hover': {
                   backgroundColor: 'rgba(217,70,239,0.08)'
                 }
-              }} 
+              }}
               aria-label="Instagram"
             >
               <InstagramIcon />
