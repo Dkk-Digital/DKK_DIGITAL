@@ -127,17 +127,6 @@ const ClientDashboard = () => {
       await successAlert('Project successfully created!');
       setShowNewProjectDialog(false);
       setNewProject({ title: '', description: '', service: '', budget: '' });
-
-      if (response.data && response.data.project) {
-        setProjectToUpdate({
-          _id: response.data.project._id || '',
-          title: response.data.project.title || '',
-          description: response.data.project.description || '',
-          budget: response.data.project.budget || '',
-          notes: response.data.project.notes || '',
-        });
-        setShowUpdateProjectDialog(true);
-      }
       fetchDashboardData();
     } catch (error) {
       errorAlert('Failed to create project');
