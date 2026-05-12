@@ -276,7 +276,7 @@ const Navbar = () => {
             <IconButton onClick={toggleTheme} sx={{ color: isDarkMode ? '#f59e0b' : '#4b5563', mr: 1 }} aria-label="Toggle theme">
               {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
-            <IconButton
+            {/* <IconButton
               component="a"
               href="https://www.instagram.com/dkk.digital/"
               target="_blank"
@@ -291,7 +291,7 @@ const Navbar = () => {
               aria-label="Instagram"
             >
               <InstagramIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               edge="end"
               onClick={() => setMobileOpen(true)}
