@@ -43,44 +43,44 @@ const ValueCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const teamMembers = [
-  {
-    name: 'Deepanshu Khandelwal',
-    role: 'Digital Marketing Specialist',
-    tagline: 'Turning Clicks into Customers 📈',
-    description: 'A growth-focused marketer dedicated to scaling brands online with content that converts.',
-    whatIDo: ['SEO Strategy', 'Paid Advertising', 'Analytics Monitoring'],
-    skills: ['Meta Ads', 'Google Ads', 'Sales Funnels', 'GA4'],
-    highlights: ['Growth-Focused', 'Content that Converts', 'Scaling Brands'],
-    image: '/images/deepanshu.png',
-    gradient: 'linear-gradient(135deg, #ff6b00 0%, #ff8e3c 100%)',
-    color: '#ff6b00'
-  },
-  {
-    name: 'Aakriti Khandelwal',
-    role: 'Visual Designer',
-    tagline: 'Designs that tell stories & sell ✨',
-    description: 'Crafting clean, modern, and impactful designs that elevate brand identity and drive engagement.',
-    whatIDo: ['Aesthetics Overhaul', 'Visual Strategy', 'Creative Direction'],
-    skills: ['Logos', 'Branding', 'Social Media Design', 'Brand Identity', 'UI Design'],
-    highlights: ['5-Star Skills', 'Creative Storytelling', 'Brand Growth'],
-    image: '/images/aakriti.png',
-    gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
-    color: '#8b5cf6'
-  },
-  {
-    name: 'Keshav Khandelwal',
-    role: 'Digital Marketing Specialist',
-    tagline: 'I help brands grow online 🚀',
-    description: 'Turning clicks into customers by driving results and generating high-quality leads for scaling businesses.',
-    whatIDo: ['Digital Specialist', 'Performance Marketing'],
-    skills: ['Meta Ads', 'Google Ads', 'Sales Funnels'],
-    highlights: ['1+ Years Driving Results', '10+ Brands Scaled', 'High Quality Leads', '3X Increased ROI'],
-    image: '/images/keshav.png',
-    gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
-    color: '#f59e0b'
-  }
-];
+// const teamMembers = [
+//   {
+//     name: 'Deepanshu Khandelwal',
+//     role: 'Digital Marketing Specialist',
+//     tagline: 'Turning Clicks into Customers 📈',
+//     description: 'A growth-focused marketer dedicated to scaling brands online with content that converts.',
+//     whatIDo: ['SEO Strategy', 'Paid Advertising', 'Analytics Monitoring'],
+//     skills: ['Meta Ads', 'Google Ads', 'Sales Funnels', 'GA4'],
+//     highlights: ['Growth-Focused', 'Content that Converts', 'Scaling Brands'],
+//     image: '/images/deepanshu.png',
+//     gradient: 'linear-gradient(135deg, #ff6b00 0%, #ff8e3c 100%)',
+//     color: '#ff6b00'
+//   },
+//   {
+//     name: 'Aakriti Khandelwal',
+//     role: 'Visual Designer',
+//     tagline: 'Designs that tell stories & sell ✨',
+//     description: 'Crafting clean, modern, and impactful designs that elevate brand identity and drive engagement.',
+//     whatIDo: ['Aesthetics Overhaul', 'Visual Strategy', 'Creative Direction'],
+//     skills: ['Logos', 'Branding', 'Social Media Design', 'Brand Identity', 'UI Design'],
+//     highlights: ['5-Star Skills', 'Creative Storytelling', 'Brand Growth'],
+//     image: '/images/aakriti.png',
+//     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+//     color: '#8b5cf6'
+//   },
+//   {
+//     name: 'Keshav Khandelwal',
+//     role: 'Digital Marketing Specialist',
+//     tagline: 'I help brands grow online 🚀',
+//     description: 'Turning clicks into customers by driving results and generating high-quality leads for scaling businesses.',
+//     whatIDo: ['Digital Specialist', 'Performance Marketing'],
+//     skills: ['Meta Ads', 'Google Ads', 'Sales Funnels'],
+//     highlights: ['1+ Years Driving Results', '10+ Brands Scaled', 'High Quality Leads', '3X Increased ROI'],
+//     image: '/images/keshav.png',
+//     gradient: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
+//     color: '#f59e0b'
+//   }
+// ];
 
 const About = () => {
   return (
@@ -193,7 +193,7 @@ const About = () => {
           </Grid>
 
           {/* Team Section */}
-          <Box sx={{ mt: 8, mb: 6 }}>
+          {/* <Box sx={{ mt: 8, mb: 6 }}>
             <Typography variant="h3" sx={{ mb: 1.5, fontWeight: 900, textAlign: 'center', background: 'linear-gradient(135deg, #4f46e5 0%, #d946ef 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', letterSpacing: '-1px' }}>
               Meet Our Team
             </Typography>
@@ -318,7 +318,7 @@ const About = () => {
                 </Grid>
               ))}
             </Box>
-          </Box>
+          </Box> */}
         </AboutSection>
       </Container>
     </Layout>
